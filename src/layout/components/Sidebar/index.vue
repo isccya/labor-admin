@@ -1,25 +1,53 @@
 <template>
   <div :class="{ 'has-logo': showLogo }" :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
     <logo v-if="showLogo" :collapse="isCollapse" />
-    <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
-      <el-menu
-        :default-active="activeMenu"
-        :collapse="isCollapse"
-        :background-color="sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground"
-        :text-color="sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor"
-        :unique-opened="true"
-        :active-text-color="theme"
-        :collapse-transition="false"
-        mode="vertical"
+    <el-menu
+        default-active="1-1"
+        class="el-menu-vertical-demo"
+        @open="handleOpen"
+        @close="handleClose"
       >
-        <sidebar-item
-          v-for="(route, index) in sidebarRouters"
-          :key="route.path + index"
-          :item="route"
-          :base-path="route.path"
-        />
+        <el-menu-item index="1">
+          <template #title>
+            <router-link to="/student/center">
+              <el-icon><location /></el-icon>
+              <span>学生信息</span>
+            </router-link>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="2">
+          <template #title>
+            <router-link to="/manager/info">
+              <el-icon><location /></el-icon>
+              <span>管理员信息</span>
+            </router-link>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="3">
+          <template #title>
+            <router-link to="/notice/info">
+              <el-icon><location /></el-icon>
+              <span>公告管理</span>
+            </router-link>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="4">
+          <template #title>
+            <router-link to="/log/info">
+              <el-icon><location /></el-icon>
+              <span>系统日志</span>
+            </router-link>
+          </template>
+        </el-menu-item>
+        <el-menu-item index="5">
+          <template #title>
+            <router-link to="/edit/info">
+              <el-icon><location /></el-icon>
+              <span>通知编辑</span>
+            </router-link>
+          </template>
+        </el-menu-item>
       </el-menu>
-    </el-scrollbar>
   </div>
 </template>
 

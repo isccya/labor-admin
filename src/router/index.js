@@ -1,7 +1,6 @@
 import { createWebHistory, createRouter } from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
-
 /**
  * Note: 路由配置项
  *
@@ -81,6 +80,76 @@ export const constantRoutes = [
         component: () => import('@/views/system/user/profile/index'),
         name: 'Profile',
         meta: { title: '个人中心', icon: 'user' }
+      }
+    ]
+  },
+  {
+    path: '/student',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'center',
+        component: () => import('@/views/student/index'),
+        name: 'Student',
+        meta: { title: '学生信息', icon: 'student' }
+      }
+    ]
+  },
+  {
+    path: '/manager',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'info',
+        component: () => import('@/views/manager/index'),
+        name: 'Manager',
+        meta: { title: '管理员信息', icon: 'manager' }
+      }
+    ]
+  },
+  {
+    path: '/notice',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'info',
+        component: () => import('@/views/notice/index'),
+        name: 'Notice',
+        meta: { title: '公告管理', icon: 'notice' }
+      }
+    ]
+  },
+  {
+    path: '/log',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'info',
+        component: () => import('@/views/log/index'),
+        name: 'Log',
+        meta: { title: '系统日志', icon: 'log' }
+      }
+    ]
+  },
+  {
+    path: '/edit',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'info',
+        component: () => import('@/views/edit/index'),
+        name: 'Edit',
+        meta: { title: '通知编辑', icon: 'edit' }
       }
     ]
   }
