@@ -58,19 +58,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '',
-    component: Layout,
-    redirect: '/index',
-    children: [
-      {
-        path: '/index',
-        component: () => import('@/views/index'),
-        name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
     path: '/user',
     component: Layout,
     hidden: true,
@@ -83,7 +70,58 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  }
+  },
+
+  //主页
+  {
+    path: '',
+    component: Layout,
+    redirect: '/index',
+    children: [
+      {
+        path: '/index',
+        component: () => import('@/views/index'),
+        name: 'Index',
+        meta: { title: '首页', icon: 'null', affix: true }
+      }
+    ]
+  },
+  //审核功能
+  {
+    path: '/audit',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'waitAudit',
+        component: () => import('@/views/audit/waitAudit'),
+        name: 'waitAudit',
+        meta: { title: '待审核', icon: 'null' }
+      },
+      {
+        path: 'audited',
+        component: () => import('@/views/audit/waitAudit'),
+        name: 'audited',
+        meta: { title: '已审核', icon: 'null' }
+      }
+    ]
+  },
+  //劳动计划
+  {
+    path: '/laborplane',
+    component: Layout,
+    hidden: true,
+    redirect: 'noredirect',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/laborPlane'),
+        name: '劳动计划',
+        meta: { title: '劳动计划', icon: 'dashboard' }
+      }
+    ]
+  },
 ]
 
 // 动态路由，基于用户权限动态去加载
