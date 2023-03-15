@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import dates from '@/store/data.json'
+import dates from '@/store/notice.json'
 export default {
     data () {
     const datas = dates.tableData

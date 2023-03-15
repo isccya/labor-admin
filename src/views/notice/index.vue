@@ -3,7 +3,11 @@
   <list></list>
 </template>
 
-<script setup>
+<script>
 import List from './list';
 import Search from './search';
+export default{
+  name:'Notice',
+  components:{List,Search}
+}
 </script>

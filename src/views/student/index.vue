@@ -3,9 +3,14 @@
   <list></list>
 </template>
 
-<script setup>
+<script>
 import Search from './search'
 import List from './list'
+export default{
+  name:'Student',
+  components:{Search,List}
+}
+
 
 </script>
 

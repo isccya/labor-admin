@@ -3,9 +3,13 @@
   <list></list>
 </template>
 
-<script setup>
+<script>
 import Search from './search'
 import List from './list'
+export default{
+  name:'Manager',
+  components:{Search,List}
+}
 
 </script>
 

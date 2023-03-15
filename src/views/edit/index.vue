@@ -4,50 +4,120 @@
       <el-icon><Setting /></el-icon>
       <span>基本信息</span>
     </div>
-    <div class="select">
-      <div class="item">
-        <div class="text">
-          <el-icon><Calendar /></el-icon>
-          <p>学期</p>
+    <el-form :mode="form">
+      <div class="select">
+        <div class="item">
+          <div class="text">
+            <el-icon><Calendar /></el-icon>
+            <p>学期</p>
+          </div>
+          <el-select v-model="form.semester" class="m-2" placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </div>
-        <el-select v-model="value" class="m-2" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </div>
-      <div class="item">
-        <div class="text">
-          <el-icon><Avatar /></el-icon>
-          <p>指导教师</p>
+        <div class="item">
+          <div class="text">
+            <el-icon><Avatar /></el-icon>
+            <p>指导教师</p>
+          </div>
+          <el-input v-model="form.teacher" class="w-50 m-2" placeholder="请输入" />
         </div>
-        <el-input v-model="input2" class="w-50 m-2" placeholder="请输入" />
-      </div>
-      <div class="item">
-        <div class="text">
-          <el-icon><HomeFilled /></el-icon>
-          <p>面向对象</p>
+        <div class="item">
+          <div class="text">
+            <el-icon><HomeFilled /></el-icon>
+            <p>面向对象</p>
+          </div>
+          <el-select v-model="form.object" class="m-2" placeholder="请选择">
+            <el-option
+              v-for="item in Objectoriented"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </div>
-        <el-select v-model="value" class="m-2" placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
       </div>
-    </div>
-    <write></write>
-    
+      <write @ok="handleEdit"></write>
+    </el-form>
   </div>
 </template>
 
-<script setup>
-  import Write from './write'
+<script>
+  import Write from './write';
+  export default{
+    name:'Edit',
+    components:{Write},
+    data(){
+      return {
+        form:[
+          {
+            semester:'',
+            teacher:'',
+            object:'',
+            valueHtml:"",
+            theme: "",
+          }
+        ],
+        options:[
+          {
+            value: '第一学期',
+            label: '第一学期',
+          },
+          {
+            value: '第二学期',
+            label: '第二学期',
+          },
+          {
+            value: '第三学期',
+            label: '第三学期',
+          },
+          {
+            value: '第四学期',
+            label: '第四学期',
+          },
+          {
+            value: '第五学期',
+            label: '第五学期',
+          },
+          {
+            value: '第六学期',
+            label: '第六学期',
+          },
+          {
+            value: '第七学期',
+            label: '第七学期',
+          },
+          {
+            value: '第八学期',
+            label: '第八学期',
+          },
+        ],
+        Objectoriented:[
+          {
+            value: '全校',
+            label: '全校',
+          },
+          {
+            value: '计算机科学与工程学院',
+            label: '计算机科学与工程学院',
+          }
+        ]
+      }
+    },
+    methods:{
+      //接收子组件的数据
+      handleEdit(message){
+        this.form.valueHtml = message.valueHtml;
+        this.form.theme = message.theme;
+      }
+    }
+  }
+  
 </script>
 
 <style lang="scss" scoped>
