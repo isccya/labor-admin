@@ -10,7 +10,7 @@
         <el-menu-item index="1">
           <template #title>
             <router-link to="/student/center">
-              <el-icon><location /></el-icon>
+              <el-icon><User /></el-icon>
               <span>学生信息</span>
             </router-link>
           </template>
@@ -26,7 +26,7 @@
         <el-menu-item index="3">
           <template #title>
             <router-link to="/notice/info">
-              <el-icon><location /></el-icon>
+              <el-icon><DataLine /></el-icon>
               <span>公告管理</span>
             </router-link>
           </template>
@@ -34,7 +34,7 @@
         <el-menu-item index="4">
           <template #title>
             <router-link to="/log/info">
-              <el-icon><location /></el-icon>
+              <el-icon><Memo /></el-icon>
               <span>系统日志</span>
             </router-link>
           </template>
@@ -42,7 +42,7 @@
         <el-menu-item index="5">
           <template #title>
             <router-link to="/edit/info">
-              <el-icon><location /></el-icon>
+              <el-icon><Bell /></el-icon>
               <span>通知编辑</span>
             </router-link>
           </template>

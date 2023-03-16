@@ -15,7 +15,7 @@
       ref="fileUpload"
     >
       <!-- 上传按钮 -->
-      <el-button type="primary">选取文件</el-button>
+      <el-button type="primary" color="#75F9FD" class="btn">一键导入</el-button>
     </el-upload>
     <!-- 上传提示 -->
     <div class="el-upload__tip" v-if="showTip">
@@ -187,6 +187,11 @@ function listToString(list, separator) {
 <style scoped lang="scss">
 .upload-file-uploader {
   margin-bottom: 5px;
+  width: 100px;
+  position: relative;
+  top: -40px;
+  left: 430px;
+  margin-left: 50px;
 }
 .upload-file-list .el-upload-list__item {
   border: 1px solid #e4e7ed;
@@ -202,5 +207,8 @@ function listToString(list, separator) {
 }
 .ele-upload-list__item-content-action .el-link {
   margin-right: 10px;
+}
+.btn{
+  color: rgba(255, 255, 255, 1);
 }
 </style>
