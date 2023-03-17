@@ -40,7 +40,6 @@
 
 <script setup>
 import { getToken } from "@/utils/auth";
-
 const props = defineProps({
   modelValue: [String, Object, Array],
   // 数量限制
@@ -64,7 +63,6 @@ const props = defineProps({
     default: true
   }
 });
-
 const { proxy } = getCurrentInstance();
 const emit = defineEmits();
 const number = ref(0);
@@ -76,7 +74,6 @@ const fileList = ref([]);
 const showTip = computed(
   () => props.isShowTip && (props.fileType || props.fileSize)
 );
-
 watch(() => props.modelValue, val => {
   if (val) {
     let temp = 1;
@@ -95,7 +92,6 @@ watch(() => props.modelValue, val => {
     return [];
   }
 },{ deep: true, immediate: true });
-
 // 上传前校检格式和大小
 function handleBeforeUpload(file) {
   // 校检文件类型
@@ -120,17 +116,14 @@ function handleBeforeUpload(file) {
   number.value++;
   return true;
 }
-
 // 文件个数超出
 function handleExceed() {
   proxy.$modal.msgError(`上传文件数量不能超过 ${props.limit} 个!`);
 }
-
 // 上传失败
 function handleUploadError(err) {
   proxy.$modal.msgError("上传文件失败");
 }
-
 // 上传成功回调
 function handleUploadSuccess(res, file) {
   if (res.code === 200) {
@@ -144,13 +137,11 @@ function handleUploadSuccess(res, file) {
     uploadedSuccessfully();
   }
 }
-
 // 删除文件
 function handleDelete(index) {
   fileList.value.splice(index, 1);
   emit("update:modelValue", listToString(fileList.value));
 }
-
 // 上传结束处理
 function uploadedSuccessfully() {
   if (number.value > 0 && uploadList.value.length === number.value) {
@@ -161,7 +152,6 @@ function uploadedSuccessfully() {
     proxy.$modal.closeLoading();
   }
 }
-
 // 获取文件名称
 function getFileName(name) {
   if (name.lastIndexOf("/") > -1) {
@@ -170,7 +160,6 @@ function getFileName(name) {
     return "";
   }
 }
-
 // 对象转成指定字符串分隔
 function listToString(list, separator) {
   let strs = "";
@@ -183,7 +172,6 @@ function listToString(list, separator) {
   return strs != '' ? strs.substr(0, strs.length - 1) : '';
 }
 </script>
-
 <style scoped lang="scss">
 .upload-file-uploader {
   margin-bottom: 5px;

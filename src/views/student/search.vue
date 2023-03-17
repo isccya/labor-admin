@@ -21,7 +21,31 @@
           :value="item.value"
         />
       </el-select>
-      <el-button color="#75F9FD" class="btn" >添加学员</el-button>
+      <el-button color="#75F9FD" class="btn" @click="dialogFormVisible = true">添加学员</el-button>
+      <!-- 添加学员 -->
+      <el-dialog v-model="dialogFormVisible" title="添加学员" width="400px">
+        <el-form :model="form" label-width="90px" >
+          <el-form-item label="姓名">
+            <el-input v-model="form.name" class="w-50 m-2" placeholder="请输入"/>
+          </el-form-item>
+          <el-form-item label="年级">
+            <el-input v-model="form.grade" class="w-50 m-2" placeholder="请输入"/>
+          </el-form-item>  
+          <el-form-item label="联系方式">
+            <el-input v-model="form.telephone" class="w-50 m-2" placeholder="请输入"/>
+          </el-form-item>  
+          <el-form-item label="院系">
+            <el-input v-model="form.department" class="w-50 m-2" placeholder="请输入"/>
+          </el-form-item>  
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button type="primary" @click="submit">提交</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <!-- 添加学员 -->
     </div>
 
     
@@ -30,7 +54,24 @@
 
 <script>
 export default {
-
+  data(){
+    return{
+      dialogFormVisible:false,
+      form:[
+        {
+          name: '',
+          grade: '',
+          telephone: '',
+          department: ''
+        }
+      ]
+    }
+  },
+  methods:{
+    submit(){
+      this.dialogFormVisible = false;
+    }
+  }
 }
 </script>
 

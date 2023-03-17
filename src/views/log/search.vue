@@ -1,37 +1,44 @@
 <template>
-  <div class="header">
-    <div class="select">
-      <span>学院</span>
-      <el-select v-model="value" class="m-2" placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </div>
-    <div class="select">
-      <span>学期</span>
-      <el-select v-model="value" class="m-2" placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-      <el-button color="#75F9FD" class="btn" >新建公告</el-button>
-      <el-button color="#75F9FD" class="btn" >一键导入</el-button>
-    </div>
-
-    
-  </div>
+  <el-form :model="form">
+    <div class="header">
+      <div class="select">
+        <span>时间</span>
+        <el-select v-model="form.time" class="m-2" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+      <div class="select">
+        <span>操作</span>
+        <el-select v-model="form.operation" class="m-2" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </div>
+    </div> 
+  </el-form>
 </template>
 
 <script>
 export default {
-
+  data(){
+    return{
+      form:[
+        {
+          time:'',
+          operation:''
+        }
+      ]
+    }
+  },
 }
 </script>
 

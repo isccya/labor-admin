@@ -1,11 +1,11 @@
 <template>
   <div class="list">
-    <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe class="table">
+        <el-table :data="tableData.slice((currentPage-1)*pageSize,currentPage*pageSize)" stripe class="table">
           <el-table-column type="index" label="序号" width="100" align="center" header-align="center"/>
           <el-table-column prop="name" label="姓名" width="180" align="center" header-align="center"/>
-          <el-table-column prop="grade" label="学期" width="260" align="center" header-align="center"/>
+          <el-table-column prop="term" label="学期" width="260" align="center" header-align="center"/>
           <el-table-column prop="tel" label="创建者" width="180" align="center" header-align="center"/>
-          <el-table-column prop="department" label="类型" width="180" align="center" header-align="center"/>
+          <el-table-column prop="type" label="类型" width="180" align="center" header-align="center"/>
           <el-table-column  label="操作" style="margin-left:90px" align="center" header-align="center">
             <template #default>
               <div>
@@ -41,14 +41,12 @@ import dates from '@/store/notice.json'
 export default {
     data () {
     const datas = dates.tableData
-    const status = dates.status
     const statusspace = dates.statusspace
     const selectdata = dates.selectdata
     const optiondata = dates.optiondata
     const tableData = dates.tableData
     return {
       datas,
-      status,
       statusspace,
       selectdata,
       optiondata,

@@ -43,6 +43,34 @@
         </div>
       </div>
       <write @ok="handleEdit"></write>
+      <el-button color="#75F9FD" class="btn" @click="dialogFormVisible = true">确定</el-button>
+      <!-- 弹窗 -->
+      <el-dialog v-model="dialogFormVisible" title="编辑信息" width="400px">
+        <el-form :model="form" label-width="90px" >
+          <el-form-item label="学期">
+            {{ form.semester }}
+          </el-form-item>
+          <el-form-item label="指导教师">
+            {{ form.teacher }}
+          </el-form-item>  
+          <el-form-item label="面向对象">
+            {{ form.object }}
+          </el-form-item>  
+          <el-form-item label="主题">
+            {{ form.theme }}
+          </el-form-item>
+          <el-form-item label="文本">
+            {{ form.valueHtml }}
+          </el-form-item>  
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button type="primary" @click="submit">提交</el-button>
+          </span>
+        </template>
+      </el-dialog>
+      <!-- 弹窗 -->
     </el-form>
   </div>
 </template>
@@ -54,8 +82,13 @@
     components:{Write},
     data(){
       return {
+        dialogFormVisible:false,
         form:[
           {
+            name: '',
+            grade: '',
+            telephone: '',
+            department: '',
             semester:'',
             teacher:'',
             object:'',
@@ -114,6 +147,9 @@
       handleEdit(message){
         this.form.valueHtml = message.valueHtml;
         this.form.theme = message.theme;
+      },
+      submit(){
+        this.dialogFormVisible = false;
       }
     }
   }
@@ -181,5 +217,20 @@
     display: flex;
     flex-direction: row;
     // border: 1px solid black;
+}
+.btn{
+  position: relative;
+  left: 500px;
+  top: 30px;
+  width: 109px;
+  height: 37px;
+  border-radius: 4px;
+  background-color: rgba(117, 249, 253, 1);
+  color: rgba(255, 255, 255, 1);
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.4);
+  font-family: Microsoft Yahei;
+  border: 1px solid rgba(187, 187, 187, 1);
 }
 </style>
