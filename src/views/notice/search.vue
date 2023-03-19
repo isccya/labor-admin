@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import FileUpload from '@/components/FileUpload';
+import FileUpload from './fileupload';
 export default {
   components:{FileUpload},
   data(){
