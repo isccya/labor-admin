@@ -36,39 +36,28 @@
   
 </template>
 
-<script>
+<script setup>
 import dates from '@/store/student.json'
-export default {
-    data () {
-    const datas = dates.tableData
-    const status = dates.status
-    const statusspace = dates.statusspace
-    const selectdata = dates.selectdata
-    const optiondata = dates.optiondata
-    const tableData = dates.tableData
-    return {
-      datas,
-      status,
-      statusspace,
-      selectdata,
-      optiondata,
-      currentPage: 1, // 当前页码
-      pageSize: 10, // 每页的数据条数
-      tableData
-    }
-  },
-  methods: {
+import pagination from '@/components/Pagination'
+    const datas = ref(dates.tableData);
+    const status = ref(dates.status);
+    const statusspace = ref(dates.statusspace);
+    const selectdata = ref(dates.selectdata);
+    const optiondata = ref(dates.optiondata);
+    const tableData = ref(dates.tableData);
+    const pageSize = 10 // 每页的数据条数
+    const currentPage = 1 // 当前页码
     // 每页条数改变时触发 选择一页显示多少行
-    handleSizeChange (val) {
+    function handleSizeChange (val) {
       this.currentPage = 1
       this.pageSize = val
-    },
+    }
     // 当前页改变时触发 跳转其他页
-    handleCurrentChange (val) {
+    function handleCurrentChange (val){
       console.log(`当前页: ${val}`)
       this.currentPage = val
-    },
-    remoteMethod () {
+    }
+    function remoteMethod () {
       let m = 0
       this.stu = this.statusspace
       this.dep = this.selectdata.com1
@@ -78,7 +67,7 @@ export default {
       const imajor = this.maj
       const igrade = this.selectdata.com3
       if (istatus && idepartment && imajor && igrade) {
-        this.tableData = []
+        tableData = []
         for (let i = 0; i < this.datas.length; i++) {
           if (this.datas[i].status === istatus && this.datas[i].department === idepartment && this.datas[i].major === imajor && this.datas[i].grade === igrade) {
             console.log('yes')
@@ -87,7 +76,7 @@ export default {
           }
         }
       } else if (istatus && idepartment && imajor) {
-        this.tableData = []
+        tableData = []
         for (let i = 0; i < this.datas.length; i++) {
           if (this.datas[i].status === istatus && this.datas[i].department === idepartment && this.datas[i].major === imajor) {
             console.log('yes')
@@ -96,7 +85,7 @@ export default {
           }
         }
       } else if (istatus && idepartment) {
-        this.tableData = []
+        tableData = []
         for (let i = 0; i < this.datas.length; i++) {
           if (this.datas[i].status === istatus && this.datas[i].department === idepartment) {
             console.log('yes')
@@ -105,7 +94,7 @@ export default {
           }
         }
       } else if (idepartment) {
-        this.tableData = []
+        tableData = []
         for (let i = 0; i < this.datas.length; i++) {
           if (this.datas[i].department === idepartment) {
             console.log('yes')
@@ -118,8 +107,7 @@ export default {
       this.stu = istatus
       this.maj = imajor
     }
-  }
-}
+
 </script>
 
 <style lang="scss" scoped>

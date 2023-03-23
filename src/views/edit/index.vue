@@ -42,7 +42,9 @@
           </el-select>
         </div>
       </div>
+      <!-- 富文本编辑器 -->
       <write @ok="handleEdit"></write>
+      <!-- 富文本编辑器 -->
       <el-button color="#75F9FD" class="btn" @click="dialogFormVisible = true">确定</el-button>
       <!-- 弹窗 -->
       <el-dialog v-model="dialogFormVisible" title="编辑信息" width="400px">
