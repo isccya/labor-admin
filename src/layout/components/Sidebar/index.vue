@@ -1,53 +1,82 @@
 <template>
-  <div :class="{ 'has-logo': showLogo }" :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
+  <div
+    :class="{ 'has-logo': showLogo }"
+    :style="{
+      backgroundColor:
+        sideTheme === 'theme-dark'
+          ? variables.menuBackground
+          : variables.menuLightBackground,
+    }"
+  >
     <logo v-if="showLogo" :collapse="isCollapse" />
-    <el-menu
-        default-active="1-1"
-        class="el-menu-vertical-demo"
-        @open="handleOpen"
-        @close="handleClose"
+    <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
+      <el-menu
+        :default-active="activeMenu"
+        :collapse="isCollapse"
+        :background-color="
+          sideTheme === 'theme-dark'
+            ? variables.menuBackground
+            : variables.menuLightBackground
+        "
+        :text-color="
+          sideTheme === 'theme-dark'
+            ? variables.menuColor
+            : variables.menuLightColor
+        "
+        :unique-opened="true"
+        :active-text-color="theme"
+        :collapse-transition="false"
+        mode="vertical"
       >
-        <el-menu-item index="1">
-          <template #title>
-            <router-link to="/student/center">
-              <el-icon><User /></el-icon>
+        <!-- 自己的侧边菜单 -->
+
+        <!-- 学生信息 -->
+        <el-menu-item index="/student">
+          <router-link to="/student/center">
+            <el-icon><User /></el-icon>
               <span>学生信息</span>
-            </router-link>
-          </template>
+          </router-link>
         </el-menu-item>
-        <el-menu-item index="2">
-          <template #title>
-            <router-link to="/manager/info">
-              <el-icon><location /></el-icon>
-              <span>管理员信息</span>
-            </router-link>
-          </template>
+
+        <!-- 管理员管理 -->
+        <el-menu-item index="/manager">
+          <router-link to="/manager/info">
+            <el-icon><location /></el-icon>
+              <span>管理员管理</span>
+          </router-link>
         </el-menu-item>
-        <el-menu-item index="3">
-          <template #title>
-            <router-link to="/notice/info">
-              <el-icon><DataLine /></el-icon>
+
+        <!-- 公告管理 -->
+        <el-menu-item index="/notice">
+          <router-link to="/notice/info">
+            <el-icon><DataLine /></el-icon>
               <span>公告管理</span>
-            </router-link>
-          </template>
+          </router-link>
         </el-menu-item>
-        <el-menu-item index="4">
-          <template #title>
-            <router-link to="/log/info">
-              <el-icon><Memo /></el-icon>
+        <!-- 系统日志 -->
+        <el-menu-item index="/log">
+          <router-link to="/log/info">
+            <el-icon><DataLine /></el-icon>
               <span>系统日志</span>
-            </router-link>
-          </template>
+          </router-link>
         </el-menu-item>
-        <el-menu-item index="5">
-          <template #title>
-            <router-link to="/edit/info">
-              <el-icon><Bell /></el-icon>
+        <!-- 知编辑 -->
+        <el-menu-item index="/edit">
+          <router-link to="/edit/info">
+            <el-icon><Bell /></el-icon>
               <span>通知编辑</span>
-            </router-link>
-          </template>
+          </router-link>
         </el-menu-item>
+
+        <!-- 自动生成的 -->
+        <sidebar-item
+          v-for="(route, index) in sidebarRouters"
+          :key="route.path + index"
+          :item="route"
+          :base-path="route.path"
+        />
       </el-menu>
+    </el-scrollbar>
   </div>
 </template>
 
