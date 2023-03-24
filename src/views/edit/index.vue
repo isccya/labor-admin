@@ -225,7 +225,6 @@ import Write from './write';
   width: 109px;
   height: 37px;
   border-radius: 4px;
-  background-color: rgba(117, 249, 253, 1);
   color: rgba(255, 255, 255, 1);
   font-size: 14px;
   text-align: center;
