@@ -6,35 +6,38 @@
     </div>
     <el-form :mode="form">
       <div class="select">
+        <!-- 学期 -->
         <div class="item">
           <div class="text">
             <el-icon><Calendar /></el-icon>
             <p>学期</p>
           </div>
-          <el-select v-model="form.semester" class="m-2" placeholder="请选择">
+          <el-select v-model="data.form.semester" class="m-2" placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in data.options"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             />
           </el-select>
         </div>
+        <!-- 指导教师 -->
         <div class="item">
           <div class="text">
             <el-icon><Avatar /></el-icon>
             <p>指导教师</p>
           </div>
-          <el-input v-model="form.teacher" class="w-50 m-2" placeholder="请输入" />
+          <el-input v-model="data.form.teacher" class="w-50 m-2" placeholder="请输入" />
         </div>
+        <!-- 面向对象 -->
         <div class="item">
           <div class="text">
             <el-icon><HomeFilled /></el-icon>
             <p>面向对象</p>
           </div>
-          <el-select v-model="form.object" class="m-2" placeholder="请选择">
+          <el-select v-model="data.form.object" class="m-2" placeholder="请选择">
             <el-option
-              v-for="item in Objectoriented"
+              v-for="item in data.Objector"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -44,30 +47,30 @@
       </div>
       <!-- 富文本编辑器 -->
       <write @ok="handleEdit"></write>
-      <!-- 富文本编辑器 -->
-      <el-button color="#75F9FD" class="btn" @click="dialogFormVisible = true">确定</el-button>
+      
+      <el-button type="primary" class="btn" @click="data.dialogFormVisible = true">确定</el-button>
       <!-- 弹窗 -->
-      <el-dialog v-model="dialogFormVisible" title="编辑信息" width="400px">
-        <el-form :model="form" label-width="90px" >
+      <el-dialog v-model="data.dialogFormVisible" title="编辑信息" width="400px">
+        <el-form :model="data.form" label-width="90px" >
           <el-form-item label="学期">
-            {{ form.semester }}
+            {{ data.form.semester }}
           </el-form-item>
           <el-form-item label="指导教师">
-            {{ form.teacher }}
+            {{ data.form.teacher }}
           </el-form-item>  
           <el-form-item label="面向对象">
-            {{ form.object }}
+            {{ data.form.object }}
           </el-form-item>  
           <el-form-item label="主题">
-            {{ form.theme }}
+            {{ data.form.theme }}
           </el-form-item>
           <el-form-item label="文本">
-            {{ form.valueHtml }}
+            {{ data.form.valueHtml }}
           </el-form-item>  
         </el-form>
         <template #footer>
           <span class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button @click="data.dialogFormVisible = false">取消</el-button>
             <el-button type="primary" @click="submit">提交</el-button>
           </span>
         </template>
@@ -77,84 +80,79 @@
   </div>
 </template>
 
-<script>
-  import Write from './write';
-  export default{
-    name:'Edit',
-    components:{Write},
-    data(){
-      return {
-        dialogFormVisible:false,
-        form:[
-          {
-            name: '',
-            grade: '',
-            telephone: '',
-            department: '',
-            semester:'',
-            teacher:'',
-            object:'',
-            valueHtml:"",
-            theme: "",
-          }
-        ],
-        options:[
-          {
-            value: '第一学期',
-            label: '第一学期',
-          },
-          {
-            value: '第二学期',
-            label: '第二学期',
-          },
-          {
-            value: '第三学期',
-            label: '第三学期',
-          },
-          {
-            value: '第四学期',
-            label: '第四学期',
-          },
-          {
-            value: '第五学期',
-            label: '第五学期',
-          },
-          {
-            value: '第六学期',
-            label: '第六学期',
-          },
-          {
-            value: '第七学期',
-            label: '第七学期',
-          },
-          {
-            value: '第八学期',
-            label: '第八学期',
-          },
-        ],
-        Objectoriented:[
-          {
-            value: '全校',
-            label: '全校',
-          },
-          {
-            value: '计算机科学与工程学院',
-            label: '计算机科学与工程学院',
-          }
-        ]
+<script setup name = "Edit">
+import { reactive } from 'vue';
+import Write from './write';
+    const data = reactive({
+    dialogFormVisible: false,
+    form:[
+      {
+        name: '',
+        grade: '',
+        telephone: '',
+        department: '',
+        semester:'',
+        teacher:'',
+        object:'',
+        valueHtml:"",
+        theme: "",
       }
-    },
-    methods:{
-      //接收子组件的数据
-      handleEdit(message){
-        this.form.valueHtml = message.valueHtml;
-        this.form.theme = message.theme;
+    ],
+    options:[
+      {
+        value: '第一学期',
+        label: '第一学期',
       },
-      submit(){
-        this.dialogFormVisible = false;
+      {
+        value: '第二学期',
+        abel: '第二学期',
+      },
+      {
+        value: '第三学期',
+        label: '第三学期',
+      },
+      {
+        value: '第四学期',
+        label: '第四学期',
+      },
+      {
+        value: '第五学期',
+        label: '第五学期',
+      },
+      {
+        value: '第六学期',
+        label: '第六学期',
+      },
+      {
+        value: '第七学期',
+        label: '第七学期',
+      },
+      {
+        value: '第八学期',
+        label: '第八学期',
+      },
+    ],
+    Objector:[
+      {
+        value: '全校',
+        label: '全校',
+      },
+      {
+        value: '计算机科学与工程学院',
+        label: '计算机科学与工程学院',
       }
-    }
+    ]
+  })
+  //接收子组件的数据
+  function handleEdit(message){
+    data.form.valueHtml = message.valueHtml;
+    data.form.theme = message.theme;
   }
+  //提交编辑数据
+  function submit(){
+      data.dialogFormVisible = false;
+  }
+
   
 </script>
 

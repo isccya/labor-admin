@@ -92,7 +92,7 @@ const data = reactive({
   dialogFormVisible: false, 
   //表格数据
   tableData: '',
-   //下拉框选择学院和年级
+   //下拉框选择数据
   select:[
     {
       department: '',

@@ -1,7 +1,7 @@
 <template>
     <div class="select">
-      <el-form :model="select">
-        <el-form-item label="学院">
+      <el-form :model="select" :inline="true">
+        <el-form-item label="学院" >
           <el-select v-model="data.select.department" placeholder="请选择">
               <el-option
                 v-for="item in options"
@@ -9,6 +9,9 @@
                 :label="item.label"
                 :value="item.value"/>
           </el-select>
+        </el-form-item>
+        <!-- 按钮 -->
+        <el-form-item>
           <el-button type="success" class="btn" @click="data.dialogFormVisible = true">添加管理员</el-button>
         </el-form-item>
       </el-form>
@@ -76,7 +79,7 @@ const data = reactive({
   dialogFormVisible: false, 
   //表格数据
   tableData: '',
-  //下拉框选择学院
+  //下拉框选择数据
   select:[
     {
       department: ''
