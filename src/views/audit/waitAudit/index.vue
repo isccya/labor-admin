@@ -72,7 +72,7 @@
     </el-form>
 
     <!-- 数据展示 -->
-    <el-table :data="auditList">
+    <el-table :data="auditList" stripe>
       <el-table-column type="selection"></el-table-column>
       <el-table-column type="index" label="序号"></el-table-column>
       <el-table-column label="姓名" prop="name"></el-table-column>
@@ -81,19 +81,19 @@
       <el-table-column label="班级" prop="class"></el-table-column>
       <el-table-column label="审核状态" prop="auditStatus">
         <template #default="scope">
-          <div v-if="scope.row.auditStatus === '已审核'" class="audit-status" style="background-color: #67c23a">
-            已审核
+          <div v-if="scope.row.auditStatus === '已审核'">
+            <el-button type="primary" plain>已审核</el-button>
           </div>
-          <div v-else class="audit-status" style="background-color: red">
-            待审核
+          <div v-else>
+            <el-button type="danger" plain>待审核</el-button>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="300">
         <template #default="scope">
-          <el-button text type="primary" @click="handleAuditDialog(scope.row)">审核</el-button>
-          <el-button text type="warning">修改</el-button>
-          <el-button text type="danger">删除</el-button>
+          <el-button type="primary" @click="handleAuditDialog(scope.row)">审核</el-button>
+          <el-button type="warning">修改</el-button>
+          <el-button type="danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -108,8 +108,7 @@
                 @pagination="getList"></Pagination>
 
     <!-- 审核弹出框 -->
-    <el-dialog v-model="data.auditDialogVisible" width="90%" draggable
-               :before-close="handleCloseAuditDialog">
+    <el-dialog v-model="data.auditDialogVisible" width="90%" draggable :before-close="handleCloseAuditDialog">
 
       <!-- 个人信息详细 -->
       <div class="selfInfo">
@@ -190,20 +189,15 @@
 
 
       <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="">评分</el-button>
-        </span>
+            <span class="dialog-footer">
+              <el-button @click="">评分</el-button>
+            </span>
       </template>
 
     </el-dialog>
 
     <!--    查看详细弹出款-->
-    <el-dialog
-        v-model="data.detailDialogVisible"
-        width="90%"
-        :before-close="handleCloseDetail"
-        draggable
-    >
+    <el-dialog v-model="data.detailDialogVisible" width="90%" :before-close="handleCloseDetail" draggable>
 
       <!--      个人信息-->
       <div class="selfInfo">
@@ -253,21 +247,23 @@
 
 
       <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false">
-          Confirm
-        </el-button>
-      </span>
+        <span class="dialog-footer">
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+          <el-button type="primary" @click="dialogVisible = false">
+            Confirm
+          </el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup name="waitAudit">
-import {toReactive} from "@vueuse/core";
 import {reactive, toRefs} from "vue";
 import Pagination from "@/components/Pagination";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const data = reactive({
   //总条数
@@ -305,6 +301,20 @@ const data = reactive({
   },
   //审核列表
   auditList: [
+    {
+      name: "张三",
+      subject: "软件工程",
+      grade: "20",
+      class: "软件工程二班",
+      auditStatus: "待审核",
+    },
+    {
+      name: "张三",
+      subject: "软件工程",
+      grade: "20",
+      class: "软件工程二班",
+      auditStatus: "已审核",
+    },
     {
       name: "张三",
       subject: "软件工程",
@@ -361,7 +371,9 @@ const handleMakeGrade = () => {
 //打开审核界面
 const handleAuditDialog = (item) => {
   console.log(item);
-  data.auditDialogVisible = true;
+  // data.auditDialogVisible = true;
+  router.push({path: "/audit/detail"})
+
 };
 
 //关闭审核页面
@@ -427,4 +439,39 @@ const lookEachModle = () => {
   }
 }
 
+//待审核按钮
+.el-button--danger.is-link,
+.el-button--danger.is-plain,
+.el-button--danger.is-text {
+  cursor: text;
+  --el-button-text-color: #f56c6c;
+  --el-button-bg-color: #fef0f0;
+  --el-button-border-color: #fab6b6;
+
+  --el-button-hover-text-color: #f56c6c;
+  --el-button-hover-bg-color: #fef0f0;
+  --el-button-hover-border-color: #fab6b6;
+
+  --el-button-active-text-color: #f56c6c;
+  --el-button-active-bg-color: #fef0f0;
+  --el-button-active-border-color: #fab6b6;
+}
+
+//已审核按钮
+.el-button--primary.is-link,
+.el-button--primary.is-plain,
+.el-button--primary.is-text {
+  cursor: text;
+  --el-button-text-color: #409eff;
+  --el-button-bg-color: #ebf5ff;
+  --el-button-border-color: #9fceff;
+
+  --el-button-hover-text-color: #409eff;
+  --el-button-hover-bg-color: #ebf5ff;
+  --el-button-hover-border-color: #9fceff;
+
+  --el-button-active-text-color: #409eff;
+  --el-button-active-bg-color: #ebf5ff;
+  --el-button-active-border-color: #9fceff;
+}
 </style>
