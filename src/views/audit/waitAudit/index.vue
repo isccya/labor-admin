@@ -107,154 +107,6 @@
     <Pagination :total="data.total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
                 @pagination="getList"></Pagination>
 
-    <!-- 审核弹出框 -->
-    <el-dialog v-model="data.auditDialogVisible" width="90%" draggable :before-close="handleCloseAuditDialog">
-
-      <!-- 个人信息详细 -->
-      <div class="selfInfo">
-        <div class="title-selfInfo" style="font-size: 20px">
-          <span class="svg">我是图标</span>
-          <span>个人信息</span>
-        </div>
-
-        <div class="main-selfInfo">
-          <el-row :gutter="0" class="row">
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">姓名</div>
-                <div class="value">张三</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">学院</div>
-                <div class="value">计算科学与工程学院</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">填写状态</div>
-                <div class="value" @click="lookEachModle">各模块已填写(点击产看各项数据)</div>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="row">
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">班级</div>
-                <div class="value">软件二班</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">学号</div>
-                <div class="value">200220020202</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">年级</div>
-                <div class="value">20</div>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </div>
-
-      <!-- 各模块详细 -->
-      <div class="modelDetails">
-        <div class="title-modelDetails" style="font-size: 20px">
-          <span class="svg">我是图标</span>
-          <span>各模块详细</span>
-        </div>
-        <el-table :data="itemModal">
-          <el-table-column label="模块" prop="modal"></el-table-column>
-          <el-table-column label="总字数" prop="totalWordNumber"></el-table-column>
-          <el-table-column label="填写条数" prop="filledNumber"></el-table-column>
-          <el-table-column label="填写情况" prop="filledStatus"></el-table-column>
-          <el-table-column label="操作">
-            <template #default="scope">
-              <el-button text type="primary" @click="handleDetailDialog">查看详细</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
-      <!-- 分页 -->
-      <Pagination :total="data.personalTotal" v-model:page="personalQueryParams.pageNum"
-                  v-model:limit="personalQueryParams.pageSize" @pagination="getList"
-                  :layout="'prev,pager,next,'"></Pagination>
-
-      <!--弹出框脚-->
-
-
-      <template #footer>
-            <span class="dialog-footer">
-              <el-button @click="">评分</el-button>
-            </span>
-      </template>
-
-    </el-dialog>
-
-    <!--    查看详细弹出款-->
-    <el-dialog v-model="data.detailDialogVisible" width="90%" :before-close="handleCloseDetail" draggable>
-
-      <!--      个人信息-->
-      <div class="selfInfo">
-        <div class="main-selfInfo">
-          <el-row :gutter="0" class="row">
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">姓名</div>
-                <div class="value">张三</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">学院</div>
-                <div class="value">计算科学与工程学院</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">填写状态</div>
-                <div class="value">各模块已填写(点击产看各项数据)</div>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="row">
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">班级</div>
-                <div class="value">软件二班</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">学号</div>
-                <div class="value">200220020202</div>
-              </div>
-            </el-col>
-            <el-col :span="8">
-              <div class="selfInfoItem">
-                <div class="label">年级</div>
-                <div class="value">20</div>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </div>
-
-
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="dialogVisible = false">
-            Confirm
-          </el-button>
-        </span>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
@@ -270,10 +122,6 @@ const data = reactive({
   total: 10000,
   //一键导出对话框状态
   exportDialogVisible: false,
-  //审核对话款状态
-  auditDialogVisible: false,
-  //查看详细对话框
-  detailDialogVisible: false,
   //查询参数
   queryParams: {
     department: "",
@@ -283,12 +131,7 @@ const data = reactive({
     pageNum: 1, //当前页码
     pageSize: 10, //页码显示数
   },
-  //个人审核查询参数
-  personalTotal: 100,
-  personalQueryParams: {
-    pageNum: 1, //当前页码
-    pageSize: 10, //页码显示数
-  },
+
   //选择框选项
   options: {
     department: [{label: "计算机科学与工程学院", value: "计算机科学与工程学院"}, {
@@ -323,7 +166,7 @@ const data = reactive({
       auditStatus: "待审核",
     },
   ],
-  //个人审核行信息
+  //个人审核信息
   auditItemInfo: {},
   //各模块详细
   itemModal: [
@@ -381,20 +224,6 @@ const handleCloseAuditDialog = () => {
   data.auditDialogVisible = false;
 };
 
-//查看详细
-const handleDetailDialog = () => {
-  data.detailDialogVisible = true;
-}
-
-//关闭查看详细
-const handleCloseDetail = () => {
-  data.detailDialogVisible = false;
-}
-
-// 点击查看各项数据
-const lookEachModle = () => {
-
-}
 
 </script>
 

@@ -4,50 +4,63 @@
       <div class="main-selfInfo">
         <el-row :gutter="0" class="row">
           <div
-              style="width: 30px;height: 30px;border-radius: 15px;border: 1px solid #d2cccc;margin-right: 30px;cursor: pointer">
+              style="width: 30px;height: 30px;border-radius: 15px;border: 1px solid #d2cccc;margin-right: 30px;cursor: pointer"
+              @click="router.push('/audit/waitAudit')"
+          >
             <el-icon style="margin-top: 6px;margin-left: 5px">
               <ArrowLeftBold/>
             </el-icon>
           </div>
-          <el-col :span="2">
+          <el-col  :md="8" :lg="5">
+            <div class="selfInfoItem">
+              <span style="margin-right: 10px">选择学期:</span>
+              <span>
+                <el-select style="width: 150px" v-model="personalQueryParams.term">
+                  <el-option v-for="item in data.option" :key="item.value" :label="item.label"
+                             :value="item.value"></el-option>
+                </el-select>
+              </span>
+            </div>
+          </el-col>
+          <el-col  :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">姓名:</span>
               <span class="value">张三</span>
             </div>
           </el-col>
-          <el-col :span="4">
+          <el-col  :md="8" :lg="4">
             <div class="selfInfoItem">
               <span class="label">学院:</span>
               <span class="value">计算科学与工程学院</span>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col  :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">班级:</span>
               <span class="value">软件二班</span>
             </div>
           </el-col>
-          <el-col :span="3">
+          <el-col  :md="8" :lg="3">
             <div class="selfInfoItem">
               <span class="label">学号:</span>
               <span class="value">200220020202</span>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col  :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">年级:</span>
               <span class="value">20</span>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col  :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">成绩:</span>
               <span class="value">无</span>
             </div>
           </el-col>
-          <el-col :span="2">
+          <el-col  :md="8" :lg="2">
             <div class="selfInfoItem">
-              <el-button type="primary">评分</el-button>
+              <el-button type="primary" @click="showMakeGrade">评分</el-button>
             </div>
           </el-col>
         </el-row>
@@ -55,26 +68,28 @@
     </div>
     <div class="aside-main">
       <el-row style="height: 100%">
+        <!--        侧边-->
         <el-col :span="5">
           <div class="aside">
             <div class="aside-header">类型</div>
-            <div class="aside-item">
+            <div class="aside-item" @click="toggleCategory(1)">
               全部
             </div>
-            <div class="aside-item">
+            <div class="aside-item" @click="toggleCategory(2)">
               日常劳动记录
             </div>
-            <div class="aside-item">
+            <div class="aside-item" @click="toggleCategory(3)">
               集中实践劳动记录
             </div>
-            <div class="aside-item">
+            <div class="aside-item" @click="toggleCategory(4)">
               其他劳动记录
             </div>
-            <div class="aside-item">
+            <div class="aside-item" @click="toggleCategory(5)">
               社会实践劳动记录
             </div>
           </div>
         </el-col>
+        <!--        main-->
         <el-col :span="19">
           <div class="main">
             <el-table :data="list" stripe>
@@ -86,7 +101,7 @@
               <el-table-column label="劳动时间" align="center" prop="laborTime"></el-table-column>
               <el-table-column label="操作" align="center">
                 <template #default="scope">
-                  <el-button type="primary" plain>详细</el-button>
+                  <el-button type="primary" plain @click="showLookDetail(scope)">详细</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -94,13 +109,53 @@
         </el-col>
       </el-row>
     </div>
+
+    <!--    评分弹出框-->
+    <el-dialog
+        draggable
+        v-model="data.makeGradeDialogVisible"
+        title="评分"
+        width="30%"
+        :before-close="closeMakeGrade"
+    >
+      <span>This is a message</span>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="closeMakeGrade">取消评分</el-button>
+        <el-button type="primary" @click="makeGrade">
+         确认评分
+        </el-button>
+      </span>
+      </template>
+    </el-dialog>
+
+    <!--    详细弹出框-->
+    <el-dialog
+        draggable
+        v-model="data.lookDetailDialogVisible"
+        title="详细"
+        width="30%"
+        :before-close="closeLookDetail"
+    >
+      <span>This is a message</span>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="closeLookDetail">关闭</el-button>
+      </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import {reactive, toRefs} from "vue";
+import {useRouter} from "vue-router";
+
+const router = useRouter();
 
 const data = reactive({
+  makeGradeDialogVisible: false,//评分弹出框
+  lookDetailDialogVisible: false,//详细弹出框
   list: [
     {
       id: 0,
@@ -124,9 +179,52 @@ const data = reactive({
       laborTime: "2022-10-1",
     },
   ],
+  option: [
+    {label: "第一学期", value: "第一学期"},
+    {label: "第二学期", value: "第二学期"},
+    {label: "第三学期", value: "第三学期"},
+    {label: "第四学期", value: "第四学期"},
+  ],
+  //个人审核查询参数
+  personalTotal: 100,
+  personalQueryParams: {
+    term: "",
+    pageNum: 1, //当前页码
+    pageSize: 10, //页码显示数
+  },
 })
 
-const {list} = toRefs(data);
+const {list, personalQueryParams} = toRefs(data);
+
+//show评分
+const showMakeGrade = () => {
+  data.makeGradeDialogVisible = true
+}
+
+//关闭评分
+const closeMakeGrade = () => {
+  data.makeGradeDialogVisible = false;
+}
+
+//评分
+const makeGrade = () => {
+
+}
+
+//show详细
+const showLookDetail = () => {
+  data.lookDetailDialogVisible = true
+}
+
+//关闭详细
+const closeLookDetail = () => {
+  data.lookDetailDialogVisible = false
+}
+
+//切换分类
+const toggleCategory = (category) => {
+  console.log(category);
+}
 
 </script>
 
