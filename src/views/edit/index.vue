@@ -83,7 +83,7 @@
 <script setup name = "Edit">
 import { reactive } from 'vue';
 import Write from './write';
-    const data = reactive({
+const data = reactive({
     dialogFormVisible: false,
     form:[
       {

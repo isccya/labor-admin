@@ -1,11 +1,11 @@
 <template>
     <div class="select">
-      <el-form :model="select" :inline="true">
+      <el-form :model="data.select" :inline="true">
         <!-- 时间 -->
         <el-form-item label="时间">
           <el-select v-model="data.select.time" placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in data.option"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -16,7 +16,7 @@
         <el-form-item label="操作">
           <el-select v-model="data.select.operation" placeholder="请选择">
             <el-option
-              v-for="item in options"
+              v-for="item in data.option"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -57,10 +57,12 @@
 
 <script setup name = "Log">
 import { reactive } from "vue";
-import dates from '@/store/student.json'
+// import {  };
 const data = reactive({
   //表格数据
   tableData: '',
+  //下拉框选项
+  option: '',
    //下拉框选择数据
   select:[
     {

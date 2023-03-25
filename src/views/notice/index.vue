@@ -5,20 +5,20 @@
         <el-form-item label="学院">
           <el-select v-model="data.select.department" placeholder="请选择">
               <el-option
-                v-for="item in options"
-                :key="item.value"
+                v-for="item in data.option"
+                :key="item.dept.deptName"
                 :label="item.label"
-                :value="item.value"/>
+                :value="item.dept.deptName"/>
           </el-select>
         </el-form-item>
         <!-- 学期 -->
         <el-form-item label="学期">
           <el-select v-model="data.select.semester" placeholder="请选择">
               <el-option
-                v-for="item in options"
-                :key="item.value"
+                v-for="item in data.option"
+                :key="item.dept.deptName"
                 :label="item.label"
-                :value="item.value"/>
+                :value="item.dept.deptName"/>
           </el-select>
         </el-form-item>
         <!-- 按钮 -->
@@ -59,10 +59,10 @@
     <div class="list">
       <el-table :data="data.tableData" class="table">
           <el-table-column type="index" label="序号" />
-          <el-table-column prop="name" label="姓名" />
-          <el-table-column prop="term" label="学期"/>
-          <el-table-column prop="founder" label="创建者" />
-          <el-table-column prop="type" label="类型" />
+          <el-table-column prop="userName" label="姓名" />
+          <el-table-column prop="grade" label="学期"/>
+          <el-table-column prop="nickName" label="创建者" />
+          <el-table-column prop="dept.type" label="类型" />
           <el-table-column  label="操作">
             <template #default>
               <div>
@@ -89,12 +89,17 @@
 <script setup name = "Notice" >
 import { reactive } from "vue";
 import FileUpload from "@/components/FileUpload";
+import { getNotice } from "@/api/list/notice";
+//最开始就调用的方法
+getList();
 
 const data = reactive({
   //添加管理员弹窗
   dialogFormVisible: false, 
   //表格数据
   tableData: '',
+  //下拉框选项
+  option: '',
   //下拉框选择数据
   select:[
     {
@@ -125,6 +130,11 @@ function submit(){
 }
 //获取公告数据
 function getList () {
+  getNotice().then(res =>{
+    data.tableData = res;
+    data.option = res;
+    console.log(res);
+  });
 }
 </script>
 

@@ -5,10 +5,10 @@
         <el-form-item label="学院">
           <el-select v-model="data.select.department" placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
+              v-for="item in data.option"
+              :key="item.dept.deptName"
               :label="item.label"
-              :value="item.value"
+              :value="item.dept.deptName"
             />
           </el-select>
         </el-form-item>
@@ -16,10 +16,10 @@
         <el-form-item label="年级">
           <el-select v-model="data.select.grade" placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
+              v-for="item in data.option"
+              :key="item.grade"
               :label="item.label"
-              :value="item.value"
+              :value="item.grade"
             />
           </el-select>
         </el-form-item>
@@ -57,10 +57,10 @@
     <div class="list">
       <el-table :data="data.tableData" stripe  class="table">
           <el-table-column type="index" label="序号"/>
-          <el-table-column prop="name" label="姓名"/>
+          <el-table-column prop="userName" label="姓名"/>
           <el-table-column prop="grade" label="年级"/>
-          <el-table-column prop="tel" label="联系方式"/>
-          <el-table-column prop="department" label="院系"/>
+          <el-table-column prop="dept.phone" label="联系方式"/>
+          <el-table-column prop="dept.deptName" label="院系"/>
           <el-table-column  label="操作">
             <template #default>
               <div>
@@ -85,13 +85,16 @@
 
 <script setup name = "Student">
 import { reactive } from "vue";
-import dates from '@/store/student.json'
+import { getStudent } from "@/api/list/student";
 import Pagination from "@/components/Pagination";
+
 const data = reactive({
   //添加学生弹窗
   dialogFormVisible: false, 
   //表格数据
   tableData: '',
+  //下拉框选项
+  option: '',
    //下拉框选择数据
   select:[
     {
@@ -123,7 +126,14 @@ function submit(){
     }
 //获取学生数据
 function getList () {
+  getStudent().then(res =>{
+    data.tableData = res;
+    data.option = res;
+    console.log(res);
+  });
 }
+//最开始就调用
+getList ()
 </script>
 
 <style lang="scss" scoped>
