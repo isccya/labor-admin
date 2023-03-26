@@ -51,8 +51,8 @@
           <el-table-column  label="操作">
             <template #default>
               <div>
-                <el-button>修改</el-button>
-                <el-button>删除</el-button>
+                <el-button type="warning">修改</el-button>
+                <el-button type="danger">删除</el-button>
               </div>
             </template>
           </el-table-column>
