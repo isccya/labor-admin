@@ -33,14 +33,7 @@
           <el-table-column prop="grade" label="年级"/>
           <el-table-column prop="tel" label="联系方式"/>
           <el-table-column prop="department" label="院系"/>
-          <el-table-column  label="操作">
-            <template #default>
-              <div>
-                <el-button type="warning">修改</el-button>
-                <el-button type="danger">删除</el-button>
-              </div>
-            </template>
-          </el-table-column>
+          <el-table-column prop="operation" label="操作"/>
       </el-table>
       <!-- 分页器 -->
       <div class="pagination">
