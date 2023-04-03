@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24" style="border-color: rgba(0,0,0,0);border-width: bpx;border-style: undefined" filter="none">
+    
+    <g>
+    <rect width="48" height="48" fill="rgba(16.065,16.065,16.065,1)" fill-opacity="0.01" stroke="none"></rect><path d="M44 44V20L24 4L4 20L4 44H16V26H32V44H44Z" fill="none" stroke="rgba(16.065,16.065,16.065,1)" stroke-width="4" stroke-linejoin="round"></path><path d="M24 44V34" stroke="rgba(16.065,16.065,16.065,1)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"></path>
+    </g>
+  </svg>
