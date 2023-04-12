@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElNotification, ElMessageBox, ElMessage, ElLoading } from 'element-plus'
+import { ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from '@/utils/ruoyi'
@@ -68,7 +68,8 @@ service.interceptors.request.use(config => {
 // 响应拦截器
 service.interceptors.response.use(res => {
   // 未设置状态码则默认成功状态
-  const code = res.data.code || 200;
+  // const code = res.data.code || 200;
+  const code = 200;
   // 获取错误信息
   const msg = errorCode[code] || res.data.msg || errorCode['default']
   // 二进制数据则直接返回

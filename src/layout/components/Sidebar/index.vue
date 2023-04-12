@@ -45,11 +45,19 @@
         </el-sub-menu>
 
         <!-- 劳动计划 -->
-        <el-menu-item index="/laborplane/index">
+        <el-menu-item index="/laborplan/index">
           <el-icon>
             <List />
           </el-icon>
-          <router-link to="/laborplane/index">劳动计划</router-link>
+          <router-link to="/laborplan/index">劳动计划</router-link>
+        </el-menu-item>
+
+        <!-- 劳动院级 -->
+        <el-menu-item index="/laborplan/colloge">
+          <el-icon>
+            <List />
+          </el-icon>
+          <router-link to="/laborplan/colloge">劳动院级</router-link>
         </el-menu-item>
 
         <!-- 自动生成的 -->

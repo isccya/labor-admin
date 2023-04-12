@@ -88,13 +88,21 @@ export const constantRoutes = [
   },
   //劳动计划
   {
-    path: '/laborplane', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+    path: '/laborplan', component: Layout, hidden: true, redirect: 'noredirect', children: [{
       path: 'index',
-      component: () => import('@/views/laborPlane'),
+      component: () => import('@/views/laborPlan'),
       name: '劳动计划',
-      meta: { title: '劳动计划', icon: 'laborPlane' },
+      meta: { title: '劳动计划', icon: 'laborPlan' },
     }],
   },
+  {
+    path: '/laborplan', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+      path: 'colloge',
+      component: () => import('@/views/laborPlan/leverColloge'),
+      name: '劳动计划院级',
+      meta: { title: '劳动计划院级', icon: 'laborPlan' },
+    }],
+  }
 ]
 
 // 动态路由，基于用户权限动态去加载
