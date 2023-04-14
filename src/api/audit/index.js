@@ -2,6 +2,7 @@ import request from '@/utils/myRequest'
 
 //查询审核列表
 export function getAuditList (query) {
+  console.log("query",query);
   return request({
     url: '/admins/labor/score/list',
     method: 'get',

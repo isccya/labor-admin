@@ -4,15 +4,17 @@
     <el-form inline>
       <!-- 院系 -->
       <el-form-item label="院系">
-        <el-select v-model="queryParams.department" class="" placeholder="请选择" size="default">
-          <el-option v-for="item in options.department" :key="item.value" :label="item.label" :value="item.value"/>
+        <el-select v-model="queryParams.collegeId" class="" placeholder="请选择" size="default"
+                   @change="getList(queryParams)">
+          <el-option v-for="item in options.department" :key="item.deptId" :label="item.deptName" :value="item.deptId"/>
         </el-select>
       </el-form-item>
 
       <!-- 状态 -->
       <el-form-item label="状态">
-        <el-select v-model="queryParams.status" class="audit-select" placeholder="请选择" size="default">
-          <el-option v-for="item in options.status" :key="item.value" :label="item.label" :value="item.value"/>
+        <el-select v-model="queryParams.isConfirm" class="audit-select" placeholder="请选择" size="default"
+                   @change="getList(queryParams)">
+          <el-option v-for="item in options.isConfirm" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
 
@@ -75,13 +77,12 @@
     <el-table :data="auditList" stripe>
       <el-table-column type="selection"></el-table-column>
       <el-table-column type="index" label="序号"></el-table-column>
-      <el-table-column label="姓名" prop="userName"></el-table-column>
-      <el-table-column label="专业" prop="subject"></el-table-column>
+      <el-table-column label="姓名" prop="nickName"></el-table-column>
       <el-table-column label="年级" prop="grade"></el-table-column>
       <el-table-column label="班级" prop="className"></el-table-column>
       <el-table-column label="审核状态" prop="isConfirm">
         <template #default="scope">
-          <div v-if="scope.row.auditStatus === 1">
+          <div v-if="scope.row.isConfirm === 1">
             <el-button type="primary" plain>已审核</el-button>
           </div>
           <div v-else>
@@ -115,6 +116,7 @@ import {reactive, toRefs} from "vue";
 import Pagination from "@/components/Pagination";
 import {useRouter} from "vue-router";
 import {getAuditList} from "@/api/audit";
+import {getDeptOption} from "@/api/selectOption";
 
 const router = useRouter();
 
@@ -125,8 +127,8 @@ const data = reactive({
   exportDialogVisible: false,
   //查询参数
   queryParams: {
-    department: "",
-    status: "",
+    collegeId: "",
+    isConfirm: "",
     subject: "",
     grade: "",
     pageNum: 1, //当前页码
@@ -135,11 +137,8 @@ const data = reactive({
 
   //选择框选项
   options: {
-    department: [{label: "计算机科学与工程学院", value: "计算机科学与工程学院"}, {
-      label: "计算机科学与工程学院",
-      value: "计算机科学与工程学院",
-    }],
-    status: [{label: "正常", value: "正常"}],
+    department: [{deptName: "计算机科学与工程学院", deptId: "105"}],
+    isConfirm: [{label: "待审核", value: 0}, {label: "已审核", value: 1}],
     subject: [{label: "软件工程", value: "软件工程"}],
     grade: [{label: "21级", value: "21级"}],
   },
@@ -186,25 +185,24 @@ const data = reactive({
 const {queryParams, personalQueryParams, options, auditList, exportParams, auditItemInfo, itemModal} =
     toRefs(data);
 
+// 获取下拉框
+getDeptOption().then(res => {
+      console.log(res)
+      data.options.department = res
+    },
+)
 //获取列表数据
 const getList = () => {
-  let realQueryParams = new Object({});
-  for (let elem in data.queryParams) {
-    if (data.queryParams[elem] !== "") {
-      // console.log(data.queryParams[elem]);
-      Object.defineProperty(realQueryParams, elem, {
-        value: data.queryParams[elem],
-      });
-    }
-  }
-  console.log(realQueryParams);
-  getAuditList(realQueryParams).then(res => {
-    // console.log(res)
+  getAuditList(data.queryParams).then(res => {
+    console.log(res)
     data.total = res.total;
     data.auditList = res.rows;
   })
 };
 getList();
+
+// 下拉框查询
+
 
 //一键导出
 const handleExport = () => {

@@ -13,5 +13,8 @@ export function getDeptOption () {
   return request({
     url: '/labor/test/dept',
     method: 'get',
+    headers: {
+      isToken: false,
+    },
   })
 }

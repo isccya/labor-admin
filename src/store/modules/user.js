@@ -1,5 +1,5 @@
-import { login, logout, getInfo } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import {login, logout, getInfo} from '@/api/login'
+import {getToken, setToken, removeToken} from '@/utils/auth'
 import defAva from '@/assets/images/profile.jpg'
 
 const useUserStore = defineStore(
@@ -10,19 +10,20 @@ const useUserStore = defineStore(
       name: '',
       avatar: '',
       roles: [],
-      permissions: []
+      permissions: [],
     }),
     actions: {
       // 登录
-      login(userInfo) {
+      login (userInfo) {
         const username = userInfo.username.trim()
         const password = userInfo.password
         const code = userInfo.code
         const uuid = userInfo.uuid
         return new Promise((resolve, reject) => {
           login(username, password, code, uuid).then(res => {
-            setToken(res.token)
-            this.token = res.token
+            console.log(res)
+            setToken(res.data.token)//修改
+            this.token = res.data.token//修改
             resolve()
           }).catch(error => {
             reject(error)
@@ -30,7 +31,7 @@ const useUserStore = defineStore(
         })
       },
       // 获取用户信息
-      getInfo() {
+      getInfo () {
         return new Promise((resolve, reject) => {
           getInfo().then(res => {
             const user = res.user
@@ -51,7 +52,7 @@ const useUserStore = defineStore(
         })
       },
       // 退出系统
-      logOut() {
+      logOut () {
         return new Promise((resolve, reject) => {
           logout(this.token).then(() => {
             this.token = ''
@@ -63,8 +64,8 @@ const useUserStore = defineStore(
             reject(error)
           })
         })
-      }
-    }
+      },
+    },
   })
 
 export default useUserStore
