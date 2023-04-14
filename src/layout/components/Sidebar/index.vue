@@ -47,55 +47,35 @@
           </el-icon>
           <router-link to="/laborplane/index">劳动计划</router-link>
         </el-menu-item>
-        <el-menu-item index="1">
-          <template #title>
-            <router-link to="/student/center">
+        <el-menu-item index="/student/center">
               <el-icon>
                 <User />
               </el-icon>
-              <span>学生信息</span>
-            </router-link>
-          </template>
+          <router-link to="/student/center">学生信息</router-link>
         </el-menu-item>
-        <el-menu-item index="2">
-          <template #title>
-            <router-link to="/manager/info">
+        <el-menu-item index="/manager/info">
               <el-icon>
                 <location />
               </el-icon>
-              <span>管理员信息</span>
-            </router-link>
-          </template>
+          <router-link to="/manager/info">管理员信息</router-link>
         </el-menu-item>
-        <el-menu-item index="3">
-          <template #title>
-            <router-link to="/notice/info">
+        <el-menu-item index="/notice/info">
               <el-icon>
                 <DataLine />
               </el-icon>
-              <span>公告管理</span>
-            </router-link>
-          </template>
+          <router-link to="/notice/info">公告管理</router-link>
         </el-menu-item>
-        <el-menu-item index="4">
-          <template #title>
-            <router-link to="/log/info">
+        <el-menu-item index="/log/info">
               <el-icon>
                 <Memo />
               </el-icon>
-              <span>系统日志</span>
-            </router-link>
-          </template>
+          <router-link to="/log/info">系统日志</router-link>
         </el-menu-item>
-        <el-menu-item index="5">
-          <template #title>
-            <router-link to="/edit/info">
+        <el-menu-item index="/edit/info">           
               <el-icon>
                 <Bell />
               </el-icon>
-              <span>通知编辑</span>
-            </router-link>
-          </template>
+          <router-link to="/edit/info">通知编辑</router-link>
         </el-menu-item>
         <!-- 自动生成的 -->
         <sidebar-item v-for="(route, index) in sidebarRouters" 
