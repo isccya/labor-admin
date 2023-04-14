@@ -89,20 +89,18 @@
             <template #default="scope">
               <div>
                 <el-button 
-                  text
                   type="warning" 
                   @click="handleEdit(scope.row)"
                   v-show="!scope.row.isEdit">
                   修改
                 </el-button>
                 <el-button 
-                  text
                   type="warning" 
                   @click="EditComplete(scope.row)"
                   v-show="scope.row.isEdit">
                   完成
                 </el-button>
-                <el-button text type="danger">删除</el-button>
+                <el-button  type="danger">删除</el-button>
               </div>
             </template>
           </el-table-column>
