@@ -25,27 +25,30 @@ import Layout from '@/layout'
  */
 
 // 公共路由
-export const constantRoutes = [{
-  path: '/redirect', component: Layout, hidden: true, children: [{
-    path: '/redirect/:path(.*)', component: () => import('@/views/redirect/index.vue'),
-  }],
-}, {
-  path: '/login', component: () => import('@/views/login'), hidden: true,
-}, {
-  path: '/register', component: () => import('@/views/register'), hidden: true,
-}, {
-  path: "/:pathMatch(.*)*", component: () => import('@/views/error/404'), hidden: true,
-}, {
-  path: '/401', component: () => import('@/views/error/401'), hidden: true,
-}, {
-  path: '/user', component: Layout, hidden: true, redirect: 'noredirect', children: [{
-    path: 'profile',
-    component: () => import('@/views/system/user/profile/index'),
-    name: 'Profile',
-    meta: {title: '个人中心', icon: 'user'},
-  }],
-},
+export const constantRoutes = [
+  //原生路由
+  {
+    path: '/redirect', component: Layout, hidden: true, children: [{
+      path: '/redirect/:path(.*)', component: () => import('@/views/redirect/index.vue'),
+    }],
+  }, {
+    path: '/login', component: () => import('@/views/login'), hidden: true,
+  }, {
+    path: '/register', component: () => import('@/views/register'), hidden: true,
+  }, {
+    path: "/:pathMatch(.*)*", component: () => import('@/views/error/404'), hidden: true,
+  }, {
+    path: '/401', component: () => import('@/views/error/401'), hidden: true,
+  }, {
+    path: '/user', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+      path: 'profile',
+      component: () => import('@/views/system/user/profile/index'),
+      name: 'Profile',
+      meta: {title: '个人中心', icon: 'user'},
+    }],
+  },
 
+  //自定义路由
   //主页
   {
     path: '', component: Layout, redirect: '/index', children: [{
@@ -54,31 +57,50 @@ export const constantRoutes = [{
       name: 'Index',
       meta: {title: '首页', icon: 'index', affix: true},
     }],
-  }, //审核功能
+  },
+  //审核功能
   {
     path: '/audit',
     component: Layout,
     hidden: true,
     redirect: 'noredirect',
     meta: {title: "审核功能", icon: 'audit'},
-    children: [{
-      path: 'waitAudit',
-      component: () => import('@/views/audit/waitAudit'),
-      name: 'waitAudit',
-      meta: {title: '待审核'},
-    }, {
-      path: 'audited',
-      component: () => import('@/views/audit/waitAudit'),
-      name: 'audited',
-      meta: {title: '已审核'},
-    }],
-  }, //劳动计划
+    children: [
+      {
+        path: 'waitAudit',
+        component: () => import('@/views/audit/waitAudit'),
+        name: 'waitAudit',
+        meta: {title: '待审核'},
+      },
+      {
+        path: 'audited',
+        component: () => import('@/views/audit/waitAudit'),
+        name: 'audited',
+        meta: {title: '已审核'},
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/audit/component/detail'),
+        name: 'detail',
+        meta: {title: '详细'},
+      },
+    ],
+  },
+  //劳动计划
   {
-    path: '/laborplane', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+    path: '/laborplan', component: Layout, hidden: true, redirect: 'noredirect', children: [{
       path: 'index',
-      component: () => import('@/views/laborPlane'),
+      component: () => import('@/views/laborPlan'),
       name: '劳动计划',
-      meta: {title: '劳动计划', icon: 'laborPlane'},
+      meta: {title: '劳动计划', icon: 'laborPlan'},
+    }],
+  },
+  {
+    path: '/laborplan', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+      path: 'colloge',
+      component: () => import('@/views/laborPlan/leverColloge'),
+      name: '劳动计划院级',
+      meta: {title: '劳动计划院级', icon: 'laborPlan'},
     }],
   },
   {

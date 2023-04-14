@@ -1,0 +1,327 @@
+<template>
+  <div class="detail">
+    <div class="header">
+      <div class="main-selfInfo">
+        <el-row :gutter="0" class="row">
+          <div
+            style="width: 30px;height: 30px;border-radius: 15px;border: 1px solid #d2cccc;margin-right: 30px;cursor: pointer"
+            @click="router.push('/audit/waitAudit')">
+            <el-icon style="margin-top: 6px;margin-left: 5px">
+              <ArrowLeftBold />
+            </el-icon>
+          </div>
+          <el-col :md="8" :lg="5">
+            <div class="selfInfoItem">
+              <span style="margin-right: 10px">选择学期:</span>
+              <span>
+                <el-select style="width: 150px" v-model="personalQueryParams.term">
+                  <el-option v-for="item in data.option" :key="item.value" :label="item.label"
+                    :value="item.value"></el-option>
+                </el-select>
+              </span>
+            </div>
+          </el-col>
+          <el-col :md="8" :lg="2">
+            <div class="selfInfoItem">
+              <span class="label">姓名:</span>
+              <span class="value">{{ peronalInfo.userName }}</span>
+            </div>
+          </el-col>
+          <el-col :md="8" :lg="4">
+            <div class="selfInfoItem">
+              <span class="label">学院:</span>
+              <span class="value">{{ peronalInfo.collegeName }}</span>
+            </div>
+          </el-col>
+          <el-col :md="8" :lg="2">
+            <div class="selfInfoItem">
+              <span class="label">班级:</span>
+              <span class="value">{{ peronalInfo.className }}</span>
+            </div>
+          </el-col>
+          <el-col :md="8" :lg="3">
+            <div class="selfInfoItem">
+              <span class="label">学号:</span>
+              <span class="value">{{ peronalInfo.userId }}</span>
+            </div>
+          </el-col>
+          <el-col :md="8" :lg="2">
+            <div class="selfInfoItem">
+              <span class="label">年级:</span>
+              <span class="value">{{ peronalInfo.grade }}</span>
+            </div>
+          </el-col>
+          <el-col :md="8" :lg="2">
+            <div class="selfInfoItem">
+              <span class="label">成绩:</span>
+              <span class="value">{{ peronalInfo.score }}</span>
+            </div>
+          </el-col>
+          <el-col :md="8" :lg="2">
+            <div class="selfInfoItem">
+              <el-button type="primary" @click="showMakeGrade">评分</el-button>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+    <div class="aside-main">
+      <el-row style="height: 100%">
+        <!--        侧边-->
+        <el-col :span="5">
+          <div class="aside">
+            <div class="aside-header">类型</div>
+            <div class="aside-item" @click="toggleCategory(1)">
+              全部
+            </div>
+            <div class="aside-item" @click="toggleCategory(2)">
+              日常劳动记录
+            </div>
+            <div class="aside-item" @click="toggleCategory(3)">
+              集中实践劳动记录
+            </div>
+            <div class="aside-item" @click="toggleCategory(4)">
+              其他劳动记录
+            </div>
+            <div class="aside-item" @click="toggleCategory(5)">
+              社会实践劳动记录
+            </div>
+          </div>
+        </el-col>
+        <!--        main-->
+        <el-col :span="19">
+          <div class="main">
+            <el-table :data="list" stripe>
+              <el-table-column type="selection" width="40"></el-table-column>
+              <el-table-column label="id" width="50" align="center" prop="id"></el-table-column>
+              <el-table-column label="类型" align="center" prop="category"></el-table-column>
+              <el-table-column label="学期" align="center" prop="term"></el-table-column>
+              <el-table-column label="检查人" align="center" prop="checkPerson"></el-table-column>
+              <el-table-column label="劳动时间" align="center" prop="laborTime"></el-table-column>
+              <el-table-column label="操作" align="center">
+                <template #default="scope">
+                  <el-button type="primary" plain @click="showLookDetail(scope)">详细</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
+
+    <!--    评分弹出框-->
+    <el-dialog draggable v-model="data.makeGradeDialogVisible" title="评分" width="30%" :before-close="closeMakeGrade">
+      <span>This is a message</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="closeMakeGrade">取消评分</el-button>
+          <el-button type="primary" @click="makeGrade">
+            确认评分
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!--    详细弹出框-->
+    <el-dialog draggable v-model="data.lookDetailDialogVisible" title="详细" width="30%" :before-close="closeLookDetail">
+      <span>This is a message</span>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="closeLookDetail">关闭</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script setup>
+//#region import
+import { reactive, toRefs } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { getPersonalAudioList, getAuditList } from "@/api/audit";
+const router = useRouter();
+//#endregion
+
+//#region data
+const data = reactive({
+  makeGradeDialogVisible: false,//评分弹出框
+  lookDetailDialogVisible: false,//详细弹出框
+  list: [
+    {
+      id: 0,
+      category: "集中实践劳动记录",
+      term: "第一学期",
+      checkPerson: "张三",
+      laborTime: "2022-10-1",
+    },
+    {
+      id: 0,
+      category: "集中实践劳动记录",
+      term: "第一学期",
+      checkPerson: "张三",
+      laborTime: "2022-10-1",
+    },
+    {
+      id: 0,
+      category: "集中实践劳动记录",
+      term: "第一学期",
+      checkPerson: "张三",
+      laborTime: "2022-10-1",
+    },
+  ],
+  option: [
+    { label: "第一学期", value: "第一学期" },
+    { label: "第二学期", value: "第二学期" },
+    { label: "第三学期", value: "第三学期" },
+    { label: "第四学期", value: "第四学期" },
+  ],
+  //个人审核查询参数
+  personalTotal: 100,
+  personalQueryParams: {
+    term: "",
+    pageNum: 1, //当前页码
+    pageSize: 10, //页码显示数
+  },
+  //个人信息
+  peronalInfo: {
+    "userId": 0,
+    "userName": "string",
+    "nickName": "string",
+    "classId": 0,
+    "className": "string",
+    "deptId": 0,
+    "collegeId": 0,
+    "collegeName": "string",
+    "sex": "string",
+    "grade": "string",
+    "score": 0,
+    "isConfirm": 0,
+    "level": "string",
+    "reason": "string",
+    "confirmUserId": 0,
+    "confirmUserName": "string",
+  },
+})
+//#endregion
+
+const { list, personalQueryParams, peronalInfo } = toRefs(data);
+
+//#region 页面流程
+const getList = () => {
+  const id = useRoute().query.id;
+  //获取个人信息
+  getPersonalAudioList(id).then(res => {
+    // console.log(res.data)
+    data.peronalInfo = res.data;
+    //获取列表
+    console.log(data.peronalInfo);
+    getAuditList({ userId: data.peronalInfo.userId }).then(res => {
+      console.log(res);
+    })
+  })
+}
+getList();
+
+//show评分
+const showMakeGrade = () => {
+  data.makeGradeDialogVisible = true
+}
+
+//关闭评分
+const closeMakeGrade = () => {
+  data.makeGradeDialogVisible = false;
+}
+
+//评分
+const makeGrade = () => {
+
+}
+
+//show详细
+const showLookDetail = () => {
+  data.lookDetailDialogVisible = true
+}
+
+//关闭详细
+const closeLookDetail = () => {
+  data.lookDetailDialogVisible = false
+}
+
+//切换分类
+const toggleCategory = (category) => {
+  console.log(category);
+}
+//#endregion
+</script>
+
+<style scoped lang="scss">
+.detail {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  position: absolute;
+  height: 100%;
+  right: 0;
+  left: 0;
+
+  .header {
+    //background-color: red;
+    margin-bottom: 10px;
+    padding: 20px;
+    border: 1px solid #d1d1d1;
+    border-radius: 4px;
+
+    .main-selfInfo {
+      .selfInfoItem {
+        line-height: 30px;
+      }
+    }
+  }
+
+  .aside-main {
+    flex: 1;
+    //background-color: red;
+    //height: 100%;
+
+    .aside {
+      //background-color: green;
+      margin-right: 10px;
+      padding: 10px;
+      border: 1px solid #d1d1d1;
+      border-radius: 5px;
+      height: 100%;
+
+      .aside-header {
+        height: 50px;
+        border: 1px dashed #d1d1d1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .aside-item {
+        height: 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border-bottom: 1px dashed #d2cccc;
+        padding-left: 10px;
+        cursor: pointer;
+
+        &:hover {
+          color: #409eff;
+        }
+      }
+    }
+
+    .main {
+      //background-color: orange;
+      border-radius: 4px;
+      border: 1px solid #d1d1d1;
+      height: 100%;
+    }
+
+  }
+}
+</style>

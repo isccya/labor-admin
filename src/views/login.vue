@@ -75,7 +75,7 @@ const router = useRouter();
 const { proxy } = getCurrentInstance();
 
 const loginForm = ref({
-  username: "admin",
+  username: "2005010607",
   password: "admin123",
   rememberMe: false,
   code: "",
@@ -85,7 +85,7 @@ const loginForm = ref({
 const loginRules = {
   username: [{ required: true, trigger: "blur", message: "请输入您的账号" }],
   password: [{ required: true, trigger: "blur", message: "请输入您的密码" }],
-  code: [{ required: true, trigger: "change", message: "请输入验证码" }]
+  // code: [{ required: true, trigger: "change", message: "请输入验证码" }] //取消验证码
 };
 
 const codeUrl = ref("");
@@ -116,9 +116,9 @@ function handleLogin() {
         router.push({ path: redirect.value || "/" });
       }).catch(() => {
         loading.value = false;
-        // 重新获取验证码
+        // 重新获取验证码 取消验证码获取 修改
         if (captchaEnabled.value) {
-          getCode();
+          // getCode();
         }
       });
     }
@@ -146,7 +146,7 @@ function getCookie() {
   };
 }
 
-getCode();
+// getCode();//取消验证码获取 修改
 getCookie();
 </script>
 
