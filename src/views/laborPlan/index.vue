@@ -13,7 +13,7 @@
     <el-table :data="laborList" stripe>
       <el-table-column label="序号" type="index"></el-table-column>
       <el-table-column label="院系" prop="deptName"></el-table-column>
-      <el-table-column label="主管老师" prop="mentor"></el-table-column>
+      <el-table-column label="主管老师" prop="mentorName"></el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button text type="primary" @click="handleLaborPlaneDetails(scope)">查看详细
@@ -23,28 +23,37 @@
     </el-table>
 
     <!-- 查看详细弹出框 -->
-    <el-dialog v-model="data.laborPlaneDetailsDialogVisibale" title="Tips" width="90%" draggable
-               :before-close="handleCloseLaborPlaneDetails">
+    <el-dialog v-model="data.laborPlaneDetailsDialogVisibale" title="劳动计划" width="90%" draggable
+      :before-close="handleCloseLaborPlaneDetails">
+      <template #header="{ close, titleId, titleClass }">
+        <div class="my-header">
+          <h2>劳动计划</h2>
+          <span>(点击任意空白处关闭)</span>
+        </div>
+      </template>
       <!--      基本信息-->
       <div class="baseInfo">
         <div class="title-details" style="font-size: 20px;margin-bottom: 20px">
-          <span class="svg">我是图标</span>
+          <span class="svg"><el-icon>
+              <Avatar />
+            </el-icon></span>
           <span>基本信息</span>
         </div>
         <el-container>
           <el-form inline>
             <el-form-item label="学期" label-width="70">
-              <el-select v-model="detailParams.termName" class="" placeholder="请选择" size="default">
-                <el-option v-for="item in detailOption.term" :key="item.value" :label="item.label" :value="item.value"/>
+              <el-select v-model="detailParams.termName" class="" placeholder="请选择" size="default" @change="changeTerm">
+                <el-option v-for="item in detailOption.term" :key="item.termID" :label="item.termName"
+                  :value="item.termName" />
               </el-select>
             </el-form-item>
             <el-form-item label="指导老师" label-width="70">
               <el-input v-model="detailParams.mentorName" placeholder="请输入"></el-input>
             </el-form-item>
             <el-form-item label="院系" label-width="70">
-              <el-select v-model="detailParams.deptName" class="" placeholder="请输入" size="default">
-                <el-option v-for="item in detailOption.department" :key="item.value" :label="item.label"
-                           :value="item.value"/>
+              <el-select v-model="detailParams.deptName" class="" placeholder="请输入" size="default" disabled>
+                <el-option v-for="item in detailOption.department" :key="item.deptId" :label="item.deptName"
+                  :value="item.deptName" />
               </el-select>
             </el-form-item>
           </el-form>
@@ -54,14 +63,16 @@
       <!--      劳动内容-->
       <div class="labor-context">
         <div class="labor-context" style="font-size: 20px;margin-bottom: 20px">
-          <span class="svg">我是图标</span>
+          <span class="svg"><el-icon>
+              <List />
+            </el-icon></span>
           <span>劳动内容</span>
         </div>
         <el-form label-position="left" label-width="150px">
           <el-form-item label="(1)日常劳动记录">
             <el-row :gutter="100">
               <el-col :span="8">
-                <el-input v-model="detailParams.dailyLabor" placeholder="请输入"/>
+                <el-input v-model="detailParams.dailyLabor" placeholder="请输入" />
               </el-col>
               <el-col :span="8">
                 <div>
@@ -73,18 +84,18 @@
                 </div>
               </el-col>
               <el-col :span="8">
-                是否添加图片
-                <el-radio-group v-model="detailParams.dailyLaborModify">
-                  <el-radio :label="1" size="large">是</el-radio>
-                  <el-radio :label="0" size="large">否</el-radio>
-                </el-radio-group>
+                <!--                是否添加图片-->
+                <!--                <el-radio-group v-model="detailParams.dailyLaborModify">-->
+                <!--                  <el-radio :label="1" size="large">是</el-radio>-->
+                <!--                  <el-radio :label="0" size="large">否</el-radio>-->
+                <!--                </el-radio-group>-->
               </el-col>
             </el-row>
           </el-form-item>
           <el-form-item label="(2)集中实践劳动记录">
             <el-row :gutter="100">
               <el-col :span="8">
-                <el-input v-model="detailParams.collectiveLabor" placeholder="请输入"/>
+                <el-input v-model="detailParams.collectiveLabor" placeholder="请输入" />
               </el-col>
               <el-col :span="8">
                 <div>
@@ -96,18 +107,18 @@
                 </div>
               </el-col>
               <el-col :span="8">
-                是否添加图片
-                <el-radio-group v-model="detailParams.collectiveLaborModify">
-                  <el-radio :label="1" size="large">是</el-radio>
-                  <el-radio :label="0" size="large">否</el-radio>
-                </el-radio-group>
+                <!--                是否添加图片-->
+                <!--                <el-radio-group v-model="detailParams.collectiveLaborModify">-->
+                <!--                  <el-radio :label="1" size="large">是</el-radio>-->
+                <!--                  <el-radio :label="0" size="large">否</el-radio>-->
+                <!--                </el-radio-group>-->
               </el-col>
             </el-row>
           </el-form-item>
           <el-form-item label="(3)其他劳动记录">
             <el-row :gutter="100">
               <el-col :span="8">
-                <el-input v-model="detailParams.otherLabor" placeholder="请输入"/>
+                <el-input v-model="detailParams.otherLabor" placeholder="请输入" />
               </el-col>
               <el-col :span="8">
                 <div>
@@ -119,11 +130,11 @@
                 </div>
               </el-col>
               <el-col :span="8">
-                是否添加图片
-                <el-radio-group v-model="detailParams.otherLaborModify">
-                  <el-radio :label="1" size="large">是</el-radio>
-                  <el-radio :label="0" size="large">否</el-radio>
-                </el-radio-group>
+                <!--                是否添加图片-->
+                <!--                <el-radio-group v-model="detailParams.otherLaborModify">-->
+                <!--                  <el-radio :label="1" size="large">是</el-radio>-->
+                <!--                  <el-radio :label="0" size="large">否</el-radio>-->
+                <!--                </el-radio-group>-->
               </el-col>
             </el-row>
           </el-form-item>
@@ -139,16 +150,18 @@
 
     <!-- 分页组件 -->
     <Pagination :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-                @pagination="getList"></Pagination>
+      @pagination="getList"></Pagination>
   </div>
 </template>
 
 <script setup name="laborPlane">
 
 //#region import
-import {reactive, toRefs} from "vue";
+import { reactive, toRefs } from "vue";
 import Pagination from "@/components/Pagination";
-import {getLaborListWithPage, getLaborDetail} from "@/api/laborPlane"
+import { getLaborListWithPage, getLaborDetail, schoolChangeLaborPlane } from "@/api/laborPlane"
+import { getDeptOption, getTermListOption } from "@/api/selectOption";
+import { ElMessage } from "element-plus";
 //#endregion
 
 //#region data
@@ -163,12 +176,12 @@ const data = reactive({
   },
   //管理等级选项
   options: {
-    ranks: [{value: 0, label: "校级"}, {value: 1, label: "院级"}],
+    ranks: [{ value: 0, label: "校级" }, { value: 1, label: "院级" }],
   },
   //查看详细的选项
   detailOption: {
-    term: [{value: "第一学期", label: "第一学期"}],//学期
-    department: [{value: "计算与工程学院", label: "计算与工程学院"}],//院系
+    term: [{ termName: "一", termID: 1 }, { termName: "二", termID: 2 }, { termName: "三", termID: 3 }],//学期
+    department: [{ deptId: 0, deptName: "计算与工程学院" }],//院系
   },
   //查看详细的参数
   detailParams: {
@@ -262,6 +275,7 @@ const data = reactive({
       deptName: "",//学院名
       grade: "21级",//年级
       mentor: 0,//指导老师id
+      mentorName: "",
       term: 0,//学期
     },
   ],
@@ -269,14 +283,14 @@ const data = reactive({
 //#endregion
 
 //#region toRefs
-const {queryParams, options, laborList, total, detailOption, detailParams} = toRefs(data);
+const { queryParams, options, laborList, total, detailOption, detailParams } = toRefs(data);
 //#endregion
 
 //#region API
 //获取列表 laborList
 const getList = () => {
   getLaborListWithPage(queryParams.value).then(res => {
-    console.log(res);
+    // console.log(res);
     laborList.value = res.rows;
   }).catch(err => {
     console.log(err);
@@ -293,12 +307,21 @@ const handleLaborPlaneDetails = (scope) => {
   data.laborPlaneDetailsDialogVisibale = true;
   // console.log(scope);
   let planID = scope.row.planId;
+
+  //获取下拉框选项
+  getTermListOption().then(res => {
+    // console.log(res)
+    data.detailOption.term = res;
+  })
+  getDeptOption().then(res => {
+    // console.log(res);
+    data.detailOption.department = res;
+  })
   //获取详细详细信息
   getLaborDetail(planID).then(res => {
     data.detailParams = res.data
-    console.log(res);
+    // console.log(res);
   }).catch(err => {
-    console.log(err);
   })
 };
 
@@ -307,12 +330,39 @@ const handleCloseLaborPlaneDetails = () => {
   data.laborPlaneDetailsDialogVisibale = false;
 };
 
+//改变学期
+const changeTerm = (val) => {
+  let term;
+  term = data.detailOption.term.find(elem => elem.termName === val)
+  data.detailParams.term = term.termId;
+}
+
 //确认发布
 const handleSubmit = () => {
   console.log(detailParams.value);
+  schoolChangeLaborPlane(data.detailParams).then(res => {
+    console.log(res);
+    ElMessage({
+      message: "修改计划成功!",
+      type: "success",
+    })
+    handleCloseLaborPlaneDetails();
+  });
 }
 //#endregion
 
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.my-header {
+  font-size: 30px;
+  font-weight: 700;
+  color: #606266;
+
+  span {
+    font-weight: 400;
+    margin-top: 10px;
+    font-size: 15px;
+  }
+}
+</style>

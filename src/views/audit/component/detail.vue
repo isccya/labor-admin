@@ -4,61 +4,60 @@
       <div class="main-selfInfo">
         <el-row :gutter="0" class="row">
           <div
-              style="width: 30px;height: 30px;border-radius: 15px;border: 1px solid #d2cccc;margin-right: 30px;cursor: pointer"
-              @click="router.push('/audit/waitAudit')"
-          >
+            style="width: 30px;height: 30px;border-radius: 15px;border: 1px solid #d2cccc;margin-right: 30px;cursor: pointer"
+            @click="router.push('/audit/waitAudit')">
             <el-icon style="margin-top: 6px;margin-left: 5px">
-              <ArrowLeftBold/>
+              <ArrowLeftBold />
             </el-icon>
           </div>
-          <el-col  :md="8" :lg="5">
+          <el-col :md="8" :lg="5">
             <div class="selfInfoItem">
               <span style="margin-right: 10px">选择学期:</span>
               <span>
                 <el-select style="width: 150px" v-model="personalQueryParams.term">
                   <el-option v-for="item in data.option" :key="item.value" :label="item.label"
-                             :value="item.value"></el-option>
+                    :value="item.value"></el-option>
                 </el-select>
               </span>
             </div>
           </el-col>
-          <el-col  :md="8" :lg="2">
+          <el-col :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">姓名:</span>
-              <span class="value">张三</span>
+              <span class="value">{{ peronalInfo.userName }}</span>
             </div>
           </el-col>
-          <el-col  :md="8" :lg="4">
+          <el-col :md="8" :lg="4">
             <div class="selfInfoItem">
               <span class="label">学院:</span>
-              <span class="value">计算科学与工程学院</span>
+              <span class="value">{{ peronalInfo.collegeName }}</span>
             </div>
           </el-col>
-          <el-col  :md="8" :lg="2">
+          <el-col :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">班级:</span>
-              <span class="value">软件二班</span>
+              <span class="value">{{ peronalInfo.className }}</span>
             </div>
           </el-col>
-          <el-col  :md="8" :lg="3">
+          <el-col :md="8" :lg="3">
             <div class="selfInfoItem">
               <span class="label">学号:</span>
-              <span class="value">200220020202</span>
+              <span class="value">{{ peronalInfo.userId }}</span>
             </div>
           </el-col>
-          <el-col  :md="8" :lg="2">
+          <el-col :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">年级:</span>
-              <span class="value">20</span>
+              <span class="value">{{ peronalInfo.grade }}</span>
             </div>
           </el-col>
-          <el-col  :md="8" :lg="2">
+          <el-col :md="8" :lg="2">
             <div class="selfInfoItem">
               <span class="label">成绩:</span>
-              <span class="value">无</span>
+              <span class="value">{{ peronalInfo.score }}</span>
             </div>
           </el-col>
-          <el-col  :md="8" :lg="2">
+          <el-col :md="8" :lg="2">
             <div class="selfInfoItem">
               <el-button type="primary" @click="showMakeGrade">评分</el-button>
             </div>
@@ -111,48 +110,39 @@
     </div>
 
     <!--    评分弹出框-->
-    <el-dialog
-        draggable
-        v-model="data.makeGradeDialogVisible"
-        title="评分"
-        width="30%"
-        :before-close="closeMakeGrade"
-    >
+    <el-dialog draggable v-model="data.makeGradeDialogVisible" title="评分" width="30%" :before-close="closeMakeGrade">
       <span>This is a message</span>
       <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="closeMakeGrade">取消评分</el-button>
-        <el-button type="primary" @click="makeGrade">
-         确认评分
-        </el-button>
-      </span>
+        <span class="dialog-footer">
+          <el-button @click="closeMakeGrade">取消评分</el-button>
+          <el-button type="primary" @click="makeGrade">
+            确认评分
+          </el-button>
+        </span>
       </template>
     </el-dialog>
 
     <!--    详细弹出框-->
-    <el-dialog
-        draggable
-        v-model="data.lookDetailDialogVisible"
-        title="详细"
-        width="30%"
-        :before-close="closeLookDetail"
-    >
+    <el-dialog draggable v-model="data.lookDetailDialogVisible" title="详细" width="30%" :before-close="closeLookDetail">
       <span>This is a message</span>
       <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="closeLookDetail">关闭</el-button>
-      </span>
+        <span class="dialog-footer">
+          <el-button @click="closeLookDetail">关闭</el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
 </template>
 
 <script setup>
-import {reactive, toRefs} from "vue";
-import {useRouter} from "vue-router";
-
+//#region import
+import { reactive, toRefs } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { getPersonalAudioList, getAuditList } from "@/api/audit";
 const router = useRouter();
+//#endregion
 
+//#region data
 const data = reactive({
   makeGradeDialogVisible: false,//评分弹出框
   lookDetailDialogVisible: false,//详细弹出框
@@ -180,10 +170,10 @@ const data = reactive({
     },
   ],
   option: [
-    {label: "第一学期", value: "第一学期"},
-    {label: "第二学期", value: "第二学期"},
-    {label: "第三学期", value: "第三学期"},
-    {label: "第四学期", value: "第四学期"},
+    { label: "第一学期", value: "第一学期" },
+    { label: "第二学期", value: "第二学期" },
+    { label: "第三学期", value: "第三学期" },
+    { label: "第四学期", value: "第四学期" },
   ],
   //个人审核查询参数
   personalTotal: 100,
@@ -192,9 +182,45 @@ const data = reactive({
     pageNum: 1, //当前页码
     pageSize: 10, //页码显示数
   },
+  //个人信息
+  peronalInfo: {
+    "userId": 0,
+    "userName": "string",
+    "nickName": "string",
+    "classId": 0,
+    "className": "string",
+    "deptId": 0,
+    "collegeId": 0,
+    "collegeName": "string",
+    "sex": "string",
+    "grade": "string",
+    "score": 0,
+    "isConfirm": 0,
+    "level": "string",
+    "reason": "string",
+    "confirmUserId": 0,
+    "confirmUserName": "string",
+  },
 })
+//#endregion
 
-const {list, personalQueryParams} = toRefs(data);
+const { list, personalQueryParams, peronalInfo } = toRefs(data);
+
+//#region 页面流程
+const getList = () => {
+  const id = useRoute().query.id;
+  //获取个人信息
+  getPersonalAudioList(id).then(res => {
+    // console.log(res.data)
+    data.peronalInfo = res.data;
+    //获取列表
+    console.log(data.peronalInfo);
+    getAuditList({ userId: data.peronalInfo.userId }).then(res => {
+      console.log(res);
+    })
+  })
+}
+getList();
 
 //show评分
 const showMakeGrade = () => {
@@ -225,7 +251,7 @@ const closeLookDetail = () => {
 const toggleCategory = (category) => {
   console.log(category);
 }
-
+//#endregion
 </script>
 
 <style scoped lang="scss">
@@ -298,5 +324,4 @@ const toggleCategory = (category) => {
 
   }
 }
-
 </style>

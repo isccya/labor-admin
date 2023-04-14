@@ -75,13 +75,13 @@
     <el-table :data="auditList" stripe>
       <el-table-column type="selection"></el-table-column>
       <el-table-column type="index" label="序号"></el-table-column>
-      <el-table-column label="姓名" prop="name"></el-table-column>
+      <el-table-column label="姓名" prop="userName"></el-table-column>
       <el-table-column label="专业" prop="subject"></el-table-column>
       <el-table-column label="年级" prop="grade"></el-table-column>
-      <el-table-column label="班级" prop="class"></el-table-column>
-      <el-table-column label="审核状态" prop="auditStatus">
+      <el-table-column label="班级" prop="className"></el-table-column>
+      <el-table-column label="审核状态" prop="isConfirm">
         <template #default="scope">
-          <div v-if="scope.row.auditStatus === '已审核'">
+          <div v-if="scope.row.auditStatus === 1">
             <el-button type="primary" plain>已审核</el-button>
           </div>
           <div v-else>
@@ -114,6 +114,7 @@
 import {reactive, toRefs} from "vue";
 import Pagination from "@/components/Pagination";
 import {useRouter} from "vue-router";
+import {getAuditList} from "@/api/audit";
 
 const router = useRouter();
 
@@ -145,25 +146,22 @@ const data = reactive({
   //审核列表
   auditList: [
     {
-      name: "张三",
-      subject: "软件工程",
-      grade: "20",
-      class: "软件工程二班",
-      auditStatus: "待审核",
-    },
-    {
-      name: "张三",
-      subject: "软件工程",
-      grade: "20",
-      class: "软件工程二班",
-      auditStatus: "已审核",
-    },
-    {
-      name: "张三",
-      subject: "软件工程",
-      grade: "20",
-      class: "软件工程二班",
-      auditStatus: "待审核",
+      classId: 57,
+      className: "南转且头化向",
+      collegeId: 97,
+      collegeName: "委往地面",
+      confirmUserId: 23,
+      confirmUserName: "吕丽",
+      deptId: 90,
+      grade: "in",
+      isConfirm: 33,
+      level: "Excepteur minim ex",
+      nickName: "石明",
+      reason: null,
+      score: 88,
+      sex: "女",
+      userId: 52,
+      userName: "夏娟",
     },
   ],
   //个人审核信息
@@ -190,7 +188,23 @@ const {queryParams, personalQueryParams, options, auditList, exportParams, audit
 
 //获取列表数据
 const getList = () => {
+  let realQueryParams = new Object({});
+  for (let elem in data.queryParams) {
+    if (data.queryParams[elem] !== "") {
+      // console.log(data.queryParams[elem]);
+      Object.defineProperty(realQueryParams, elem, {
+        value: data.queryParams[elem],
+      });
+    }
+  }
+  console.log(realQueryParams);
+  getAuditList(realQueryParams).then(res => {
+    // console.log(res)
+    data.total = res.total;
+    data.auditList = res.rows;
+  })
 };
+getList();
 
 //一键导出
 const handleExport = () => {
@@ -213,10 +227,9 @@ const handleMakeGrade = () => {
 
 //打开审核界面
 const handleAuditDialog = (item) => {
-  console.log(item);
+  // console.log(item);
   // data.auditDialogVisible = true;
-  router.push({path: "/audit/detail"})
-
+  router.push({path: '/audit/detail', query: {id: item.userId}});
 };
 
 //关闭审核页面

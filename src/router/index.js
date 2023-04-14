@@ -1,4 +1,4 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import {createWebHistory, createRouter} from 'vue-router'
 /* Layout */
 import Layout from '@/layout'
 
@@ -44,7 +44,7 @@ export const constantRoutes = [
       path: 'profile',
       component: () => import('@/views/system/user/profile/index'),
       name: 'Profile',
-      meta: { title: '个人中心', icon: 'user' },
+      meta: {title: '个人中心', icon: 'user'},
     }],
   },
 
@@ -55,7 +55,7 @@ export const constantRoutes = [
       path: '/index',
       component: () => import('@/views/index'),
       name: 'Index',
-      meta: { title: '首页', icon: 'index', affix: true },
+      meta: {title: '首页', icon: 'index', affix: true},
     }],
   },
   //审核功能
@@ -64,26 +64,26 @@ export const constantRoutes = [
     component: Layout,
     hidden: true,
     redirect: 'noredirect',
-    meta: { title: "审核功能", icon: 'audit' },
+    meta: {title: "审核功能", icon: 'audit'},
     children: [
       {
         path: 'waitAudit',
         component: () => import('@/views/audit/waitAudit'),
         name: 'waitAudit',
-        meta: { title: '待审核' },
+        meta: {title: '待审核'},
       },
       {
         path: 'audited',
         component: () => import('@/views/audit/waitAudit'),
         name: 'audited',
-        meta: { title: '已审核' },
+        meta: {title: '已审核'},
       },
       {
         path: 'detail',
         component: () => import('@/views/audit/component/detail'),
         name: 'detail',
-        meta: { title: '详细' },
-      }
+        meta: {title: '详细'},
+      },
     ],
   },
   //劳动计划
@@ -92,7 +92,7 @@ export const constantRoutes = [
       path: 'index',
       component: () => import('@/views/laborPlan'),
       name: '劳动计划',
-      meta: { title: '劳动计划', icon: 'laborPlan' },
+      meta: {title: '劳动计划', icon: 'laborPlan'},
     }],
   },
   {
@@ -100,9 +100,9 @@ export const constantRoutes = [
       path: 'colloge',
       component: () => import('@/views/laborPlan/leverColloge'),
       name: '劳动计划院级',
-      meta: { title: '劳动计划院级', icon: 'laborPlan' },
+      meta: {title: '劳动计划院级', icon: 'laborPlan'},
     }],
-  }
+  },
 ]
 
 // 动态路由，基于用户权限动态去加载
@@ -111,44 +111,44 @@ export const dynamicRoutes = [{
     path: 'role/:userId(\\d+)',
     component: () => import('@/views/system/user/authRole'),
     name: 'AuthRole',
-    meta: { title: '分配角色', activeMenu: '/system/user' },
+    meta: {title: '分配角色', activeMenu: '/system/user'},
   }],
 }, {
   path: '/system/role-auth', component: Layout, hidden: true, permissions: ['system:role:edit'], children: [{
     path: 'user/:roleId(\\d+)',
     component: () => import('@/views/system/role/authUser'),
     name: 'AuthUser',
-    meta: { title: '分配用户', activeMenu: '/system/role' },
+    meta: {title: '分配用户', activeMenu: '/system/role'},
   }],
 }, {
   path: '/system/dict-data', component: Layout, hidden: true, permissions: ['system:dict:list'], children: [{
     path: 'index/:dictId(\\d+)',
     component: () => import('@/views/system/dict/data'),
     name: 'Data',
-    meta: { title: '字典数据', activeMenu: '/system/dict' },
+    meta: {title: '字典数据', activeMenu: '/system/dict'},
   }],
 }, {
   path: '/monitor/job-log', component: Layout, hidden: true, permissions: ['monitor:job:list'], children: [{
     path: 'index/:jobId(\\d+)',
     component: () => import('@/views/monitor/job/log'),
     name: 'JobLog',
-    meta: { title: '调度日志', activeMenu: '/monitor/job' },
+    meta: {title: '调度日志', activeMenu: '/monitor/job'},
   }],
 }, {
   path: '/tool/gen-edit', component: Layout, hidden: true, permissions: ['tool:gen:edit'], children: [{
     path: 'index/:tableId(\\d+)',
     component: () => import('@/views/tool/gen/editTable'),
     name: 'GenEdit',
-    meta: { title: '修改生成配置', activeMenu: '/tool/gen' },
+    meta: {title: '修改生成配置', activeMenu: '/tool/gen'},
   }],
 }]
 
 const router = createRouter({
-  history: createWebHistory(), routes: constantRoutes, scrollBehavior(to, from, savedPosition) {
+  history: createWebHistory(), routes: constantRoutes, scrollBehavior (to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
     } else {
-      return { top: 0 }
+      return {top: 0}
     }
   },
 });

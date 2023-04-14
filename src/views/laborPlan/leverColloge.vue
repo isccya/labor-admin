@@ -1,49 +1,27 @@
 <template>
-  <div class="app-container" style="width: 800px;padding-left: 200px">
-    <h1 style="font-size: xx-large;margin: 10px 0 10px 0;color: #606266;">xxx学院劳动计划</h1>
-    <el-form style="border: 1px solid #d1d1d1;padding: 10px;border-radius: 10px;position: relative;">
-      <el-form-item label="学期">
-        <el-select v-model="queryParams.termName" placeholder="请选择">
-          <el-option v-for="item in data.option" :key="item.value" :label="item.label" :value="item.value"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="指导老师">
-        <el-input v-model="queryParams.mentor" placeholder="" style="width: 200px;"></el-input>
-      </el-form-item>
-      <el-form-item label="劳动内容">
-        <el-form label-width="170" label-position="left">
-          <el-form-item label="(1)日常劳动记录">
-            <el-input v-model="queryParams.dailyLabor" placeholder="请输入"></el-input>
-          </el-form-item>
-          <br>
-          <el-form-item label="(2)集中实践劳动记录">
-            <el-input v-model="queryParams.collectiveLabor" placeholder="请输入"></el-input>
-          </el-form-item>
-          <br>
-          <el-form-item label="(3)其他劳动记录">
-            <el-input v-model="queryParams.otherLabor" placeholder="请输入"></el-input>
-          </el-form-item>
-          <br>
-          <el-form-item label="(4)添加图片">
-            <el-upload class="avatar-uploader" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
-                       :show-file-list="false" style="border: 1px dashed #dcdfe6;">
-              <img v-if="imageUrl" :src="imageUrl" class="avatar"/>
-              <el-icon v-else class="avatar-uploader-icon">
-                <Plus/>
-              </el-icon>
-            </el-upload>
-          </el-form-item>
-        </el-form>
-      </el-form-item>
+  <div class="app-container">
+    <div class="header">
+      <h1>xxx学院劳动计划</h1>
       <el-button class="buttonConform" style="margin-left: 50px;" type="primary">确认发布</el-button>
+    </div>
+    <el-form>
+      <el-table :data="list" stripe>
+        <el-table-column type="index" label="序号"></el-table-column>
+        <el-table-column label="学期" prop="termName"></el-table-column>
+        <el-table-column label="指导老师" prop="mentorName"></el-table-column>
+        <el-table-column label="日常劳动记录" prop="dailyLabor"></el-table-column>
+        <el-table-column label="集中劳动记录" prop="collectiveLabor"></el-table-column>
+        <el-table-column label="其他劳动记录" prop="otherLabor"></el-table-column>
+      </el-table>
     </el-form>
   </div>
 </template>
 
 <script setup lang='ts'>
 //#region import
-import {ref, reactive, toRefs} from 'vue';
-import {getLaborListWithPage, getLaborDetail} from '@/api/laborPlane'
+import { ref, reactive, toRefs } from 'vue';
+import { getLaborDetail, getLaborListWithPage } from '@/api/laborPlane'
+import { getTermListOption } from "@/api/selectOption"
 //#endregion
 
 const imageUrl = ref("");
@@ -51,7 +29,7 @@ const planID = ref(0);
 
 //#region data
 const data = reactive({
-  option: [{value: "第一学期", label: "第一学期"}],
+  option: [{ termName: "第一学期", termId: "第一学期" }],
   queryParams: {
     /**
      * 集体劳动需要完成次数
@@ -130,11 +108,88 @@ const data = reactive({
      */
     termName: "",
   },
+  list: [{/**
+     * 集体劳动需要完成次数
+     */
+    collectiveLabor: 0,
+    /**
+     * 集体劳动记录是否可以修改
+     */
+    collectiveLaborModify: 0,
+    /**
+     * 日常劳动需要完成次数
+     */
+    dailyLabor: 0,
+    /**
+     * 日常劳动记录是否可以修改
+     */
+    dailyLaborModify: 0,
+    /**
+     * 截止时间
+     */
+    deadline: Date,
+    /**
+     * 学院id
+     */
+    deptId: 0,
+    /**
+     * 学院名
+     */
+    deptName: "",
+    /**
+     * 年级
+     */
+    grade: "",
+    /**
+     * 指导老师id
+     */
+    mentor: 0,
+    /**
+     * 指导老师姓名
+     */
+    mentorName: "dsad",
+    /**
+     * 其他劳动需要完成次数
+     */
+    otherLabor: 0,
+    /**
+     * 其他劳动记录是否可以修改
+     */
+    otherLaborModify: 0,
+    /**
+     * 计划id
+     */
+    planId: 0,
+    /**
+     * 级别
+     */
+    ranks: 0,
+    /**
+     * 社会实践劳动需要完成的次数
+     */
+    societyLabor: 0,
+    /**
+     * 社会劳动记录是否可以修改
+     */
+    societyLaborModify: 0,
+    /**
+     * 是否启动
+     */
+    status: 0,
+    /**
+     * 学期
+     */
+    term: 0,
+    /**
+     * 学期名
+     */
+    termName: "dwawdda",
+  }]
 })
 //#endregion
 
 //region toRefs
-const {queryParams} = toRefs(data);
+const { queryParams, list } = toRefs(data);
 //endregion
 
 //#region  页面流程
@@ -144,19 +199,56 @@ const getPlanID = () => {
 }
 //初始化
 const init = () => {
-  getLaborDetail(planID).then(res => {
-    console.log(res)
-    data.queryParams = res.data;
-  }).catch(err => {
-    console.log(err)
+  getTermListOption().then(res => {
+    data.option = res;
+    // console.log(res);
+  })
+  // getLaborDetail(planID).then(res => {
+  //   // console.log(res)
+  //   data.queryParams = res.data;
+  // }).catch(err => {
+  //   console.log(err)
+  // })
+  getLaborListWithPage({ deptId: Math.random() * 10 }).then(res => {
+    console.log(res);
+
   })
 }
 init();
+
+//改变学期
+const changeTerm = (val) => {
+  let term;
+  term = data.option.find(elem => elem.termName === val)
+  data.queryParams.term = term.termId;
+}
 //#endregion
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.header {
+  padding: 10px;
+  border-bottom: 1px solid #f3f3f3;
+  color: #606266;
+
+  h1 {
+    font-size: 30px;
+  }
+
+}
+
+.form {
+  padding-left: 100px;
+  margin-top: 10px;
+
+  h3 {
+    font-weight: 700;
+    color: #606266;
+    margin-bottom: 10px;
+  }
+}
+
 .avatar-uploader .avatar {
   width: 178px;
   height: 178px;
