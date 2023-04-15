@@ -1,8 +1,8 @@
-import request from '@/utils/myRequest'
+import request from '@/utils/request'
 
 //查询劳动计划列表
 export function getLaborListWithPage (query) {
-  console.log("query1",query);
+  // console.log("query1",query);
   return request({
     url: '/admins/labor/laborPlan/page',
     method: 'get',

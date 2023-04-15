@@ -19,15 +19,16 @@
       </el-form-item>
 
       <!-- 专业选择 -->
-      <el-form-item label="专业选择">
-        <el-select v-model="queryParams.subject" class="audit-select" placeholder="请选择" size="default">
-          <el-option v-for="item in options.subject" :key="item.value" :label="item.label" :value="item.value"/>
-        </el-select>
-      </el-form-item>
+      <!--      <el-form-item label="专业选择">-->
+      <!--        <el-select v-model="queryParams.subject" class="audit-select" placeholder="请选择" size="default">-->
+      <!--          <el-option v-for="item in options.subject" :key="item.value" :label="item.label" :value="item.value"/>-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
 
       <!-- 年级选择 -->
       <el-form-item label="年级选择">
-        <el-select v-model="queryParams.grade" class="audit-select" placeholder="请选择" size="default">
+        <el-select v-model="queryParams.grade" class="audit-select" placeholder="请选择" size="default"
+                   @change="getList(queryParams)">
           <el-option v-for="item in options.grade" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
@@ -42,16 +43,18 @@
       <el-dialog v-model="data.exportDialogVisible" title="一键导出" width="30%" :before-close="handleCloseExportDialog"
                  draggable class="export-dialog" :width="690">
         <el-form label-position="left">
+          <span style="color: #1c84c6">(点击任意空白处关闭)</span>
           <el-form-item label="院系" label-width="70">
-            <el-select v-model="exportParams.department" class="" placeholder="请选择" size="default">
-              <el-option v-for="item in options.department" :key="item.value" :label="item.label" :value="item.value"/>
+            <el-select v-model="exportParams.collegeId" class="" placeholder="请选择" size="default">
+              <el-option v-for="item in options.department" :key="item.deptId" :label="item.deptName"
+                         :value="item.deptId"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="专业选择">
-            <el-select v-model="exportParams.subject" class="" placeholder="请选择" size="default">
-              <el-option v-for="item in options.subject" :key="item.value" :label="item.label" :value="item.value"/>
-            </el-select>
-          </el-form-item>
+          <!--          <el-form-item label="专业选择">-->
+          <!--            <el-select v-model="exportParams.subject" class="" placeholder="请选择" size="default">-->
+          <!--              <el-option v-for="item in options.subject" :key="item.value" :label="item.label" :value="item.value"/>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
           <el-form-item label="年级选择">
             <el-select v-model="exportParams.grade" class="" placeholder="请选择" size="default">
               <el-option v-for="item in options.grade" :key="item.value" :label="item.label" :value="item.value"/>
@@ -69,12 +72,35 @@
 
       <!-- 一键评分 -->
       <el-form-item label="">
-        <el-button type="success">一键评分</el-button>
+        <el-button type="success" @click="openMakeOneKeyGrade">一键评分</el-button>
       </el-form-item>
+
+      <!--一键评分对话框-->
+      <el-dialog v-model="data.makeGradeOneDialogVisible" title="一键评分" width="30%"
+                 :before-close="closeMakeOneKeyGrade"
+                 draggable class="export-dialog" :width="690">
+        评分前请勾选要评分的学生 <span style="color: #1c84c6">(点击任意空白处关闭)</span>
+        <el-form label-position="left">
+          <el-form-item label="分数">
+            <el-select v-model="data.makeOneKeyGradeParams.score" class="audit-select" placeholder="请选择等级"
+                       size="default"
+            >
+              <el-option v-for="item in options.score" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button type="primary" @click="handleMakeOneKeyGrade">
+              一键评分
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
     </el-form>
 
     <!-- 数据展示 -->
-    <el-table :data="auditList" stripe>
+    <el-table ref="elTableRef" :data="auditList" stripe style="overflow: scroll" height="500">
       <el-table-column type="selection"></el-table-column>
       <el-table-column type="index" label="序号"></el-table-column>
       <el-table-column label="姓名" prop="nickName"></el-table-column>
@@ -93,7 +119,7 @@
       <el-table-column label="操作" align="center" width="300">
         <template #default="scope">
           <el-button type="primary" @click="handleAuditDialog(scope.row)">审核</el-button>
-          <el-button type="warning">修改</el-button>
+          <!--          <el-button type="warning">修改</el-button>-->
           <el-button type="danger">删除</el-button>
         </template>
       </el-table-column>
@@ -112,19 +138,25 @@
 </template>
 
 <script setup name="waitAudit">
-import {reactive, toRefs} from "vue";
+//#region import
+import {reactive, ref, toRefs} from "vue";
 import Pagination from "@/components/Pagination";
 import {useRouter} from "vue-router";
-import {getAuditList} from "@/api/audit";
+import {getAuditList, getExportAuditList, makeOneKeyGrade} from "@/api/audit";
 import {getDeptOption} from "@/api/selectOption";
-
+import {ElMessage} from "element-plus";
+//#endregion
 const router = useRouter();
 
+//#region data
+const elTableRef = ref(null);
 const data = reactive({
   //总条数
   total: 10000,
   //一键导出对话框状态
   exportDialogVisible: false,
+  //一键评分
+  makeGradeOneDialogVisible: false,
   //查询参数
   queryParams: {
     collegeId: "",
@@ -140,7 +172,20 @@ const data = reactive({
     department: [{deptName: "计算机科学与工程学院", deptId: "105"}],
     isConfirm: [{label: "待审核", value: 0}, {label: "已审核", value: 1}],
     subject: [{label: "软件工程", value: "软件工程"}],
-    grade: [{label: "21级", value: "21级"}],
+    grade: [
+      {label: "2020级", value: "2020"},
+      {label: "2021级", value: "2021"},
+      {label: "2022级", value: "2022"},
+      {label: "2023级", value: "2023"},
+      {label: "2024级", value: "2024"},
+      {label: "2025级", value: "2025"},
+    ],
+    score: [
+      {label: "优秀", value: 100},
+      {label: "良好", value: 80},
+      {label: "及格", value: 60},
+      {label: "不及格", value: 30},
+    ],
   },
   //审核列表
   auditList: [
@@ -176,21 +221,28 @@ const data = reactive({
   ],
   //导出参数
   exportParams: {
-    department: "",
-    subject: "",
-    grade: "",
+    collegeId: "",//学院
+    grade: "",//年级
+  },
+  //一键评分参数
+  makeOneKeyGradeParams: {
+    ids: "",
+    score: null,
   },
 });
+//#endregion
 
 const {queryParams, personalQueryParams, options, auditList, exportParams, auditItemInfo, itemModal} =
     toRefs(data);
 
+//#region
 // 获取下拉框
 getDeptOption().then(res => {
-      console.log(res)
+      // console.log(res)
       data.options.department = res
     },
 )
+
 //获取列表数据
 const getList = () => {
   getAuditList(data.queryParams).then(res => {
@@ -201,12 +253,12 @@ const getList = () => {
 };
 getList();
 
-// 下拉框查询
-
-
 //一键导出
 const handleExport = () => {
   console.log(exportParams.value);
+  getExportAuditList(data.exportParams).then(res => {
+    console.log(res)
+  })
 };
 
 //打开一键导出对话款
@@ -217,28 +269,66 @@ const handleExportDialog = () => {
 //关闭一键导出
 const handleCloseExportDialog = () => {
   data.exportDialogVisible = false;
+  data.exportParams.collegeId = null;
+  data.exportParams.grade = "";
 };
 
 //一键评分
-const handleMakeGrade = () => {
+const handleMakeOneKeyGrade = () => {
+  const selection = elTableRef.value.getSelectionRows();
+  let tempArr = [];
+  selection.forEach(item => {
+    tempArr.push(item.userId);
+  })
+  data.makeOneKeyGradeParams.ids = tempArr.join(",");
+  console.log("@@", data.makeOneKeyGradeParams);
+  if (data.makeOneKeyGradeParams.ids === "") {
+    // console.log(444 )
+    ElMessage.error("请勾选学生后再打分!!!")
+    return;
+  }
+  if (data.makeOneKeyGradeParams.score === null) {
+    ElMessage.error("请为学生选择分数!!!")
+    return;
+  }
+  makeOneKeyGrade(data.makeOneKeyGradeParams).then(res => {
+    console.log("res", res);
+    ElMessage.success("评分成功");
+    data.makeOneKeyGradeParams.ids = "";
+    data.makeOneKeyGradeParams.score = null;
+    data.makeGradeOneDialogVisible = false;
+  }).catch(res => {
+  });
 };
 
-//打开审核界面
+//打开一键评分对话款
+const openMakeOneKeyGrade = () => {
+  console.log(1231)
+  data.makeGradeOneDialogVisible = true;
+}
+
+//关闭一键评分对话框
+const closeMakeOneKeyGrade = () => {
+  data.makeGradeOneDialogVisible = false;
+  data.makeOneKeyGradeParams.score = null;
+}
+
+
+//进入审核界面
 const handleAuditDialog = (item) => {
   // console.log(item);
   // data.auditDialogVisible = true;
   router.push({path: '/audit/detail', query: {id: item.userId}});
 };
-
-//关闭审核页面
-const handleCloseAuditDialog = () => {
-  data.auditDialogVisible = false;
-};
-
+//#endregion
 
 </script>
 
 <style scoped lang="scss">
+::-webkit-scrollbar {
+  display: none;
+}
+
 .audit-select {
   width: 120px;
 }

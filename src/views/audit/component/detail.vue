@@ -1,68 +1,50 @@
 <template>
   <div class="detail">
     <div class="header">
+      <div
+          style="width: 30px;height: 30px;border-radius: 15px;border: 1px solid #d2cccc;margin-right: 30px;cursor: pointer"
+          @click="router.push('/audit/waitAudit')">
+        <el-icon style="margin-top: 6px;margin-left: 5px">
+          <ArrowLeftBold/>
+        </el-icon>
+      </div>
       <div class="main-selfInfo">
-        <el-row :gutter="0" class="row">
-          <div
-            style="width: 30px;height: 30px;border-radius: 15px;border: 1px solid #d2cccc;margin-right: 30px;cursor: pointer"
-            @click="router.push('/audit/waitAudit')">
-            <el-icon style="margin-top: 6px;margin-left: 5px">
-              <ArrowLeftBold />
-            </el-icon>
-          </div>
-          <el-col :md="8" :lg="5">
-            <div class="selfInfoItem">
-              <span style="margin-right: 10px">选择学期:</span>
-              <span>
+        <div class="selfInfoItem">
+          <span style="margin-right: 10px">选择学期:</span>
+          <span>
                 <el-select style="width: 150px" v-model="personalQueryParams.term">
                   <el-option v-for="item in data.option" :key="item.value" :label="item.label"
-                    :value="item.value"></el-option>
+                             :value="item.value"></el-option>
                 </el-select>
               </span>
-            </div>
-          </el-col>
-          <el-col :md="8" :lg="2">
-            <div class="selfInfoItem">
-              <span class="label">姓名:</span>
-              <span class="value">{{ peronalInfo.userName }}</span>
-            </div>
-          </el-col>
-          <el-col :md="8" :lg="4">
-            <div class="selfInfoItem">
-              <span class="label">学院:</span>
-              <span class="value">{{ peronalInfo.collegeName }}</span>
-            </div>
-          </el-col>
-          <el-col :md="8" :lg="2">
-            <div class="selfInfoItem">
-              <span class="label">班级:</span>
-              <span class="value">{{ peronalInfo.className }}</span>
-            </div>
-          </el-col>
-          <el-col :md="8" :lg="3">
-            <div class="selfInfoItem">
-              <span class="label">学号:</span>
-              <span class="value">{{ peronalInfo.userId }}</span>
-            </div>
-          </el-col>
-          <el-col :md="8" :lg="2">
-            <div class="selfInfoItem">
-              <span class="label">年级:</span>
-              <span class="value">{{ peronalInfo.grade }}</span>
-            </div>
-          </el-col>
-          <el-col :md="8" :lg="2">
-            <div class="selfInfoItem">
-              <span class="label">成绩:</span>
-              <span class="value">{{ peronalInfo.score }}</span>
-            </div>
-          </el-col>
-          <el-col :md="8" :lg="2">
-            <div class="selfInfoItem">
-              <el-button type="primary" @click="showMakeGrade">评分</el-button>
-            </div>
-          </el-col>
-        </el-row>
+        </div>
+        <div class="selfInfoItem">
+          <span class="label">姓名:</span>
+          <span class="value">{{ peronalInfo.nickName }}</span>
+        </div>
+        <div class="selfInfoItem">
+          <span class="label">学院:</span>
+          <span class="value">{{ peronalInfo.collegeName }}</span>
+        </div>
+        <div class="selfInfoItem">
+          <span class="label">班级:</span>
+          <span class="value">{{ peronalInfo.className }}</span>
+        </div>
+        <div class="selfInfoItem">
+          <span class="label">学号:</span>
+          <span class="value">{{ peronalInfo.userId }}</span>
+        </div>
+        <div class="selfInfoItem">
+          <span class="label">年级:</span>
+          <span class="value">{{ peronalInfo.grade }}</span>
+        </div>
+        <div class="selfInfoItem">
+          <span class="label">成绩:</span>
+          <span class="value">{{ peronalInfo.level }}</span>
+        </div>
+        <div class="selfInfoItem">
+          <el-button type="primary" @click="showMakeGrade">评分</el-button>
+        </div>
       </div>
     </div>
     <div class="aside-main">
@@ -123,7 +105,8 @@
     </el-dialog>
 
     <!--    详细弹出框-->
-    <el-dialog draggable v-model="data.lookDetailDialogVisible" title="详细" width="30%" :before-close="closeLookDetail">
+    <el-dialog draggable v-model="data.lookDetailDialogVisible" title="详细" width="30%"
+               :before-close="closeLookDetail">
       <span>This is a message</span>
       <template #footer>
         <span class="dialog-footer">
@@ -136,9 +119,10 @@
 
 <script setup>
 //#region import
-import { reactive, toRefs } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { getPersonalAudioList, getAuditList } from "@/api/audit";
+import {reactive, toRefs} from "vue";
+import {useRouter, useRoute} from "vue-router";
+import {getPersonalAuditList, getAuditList} from "@/api/audit";
+
 const router = useRouter();
 //#endregion
 
@@ -170,10 +154,10 @@ const data = reactive({
     },
   ],
   option: [
-    { label: "第一学期", value: "第一学期" },
-    { label: "第二学期", value: "第二学期" },
-    { label: "第三学期", value: "第三学期" },
-    { label: "第四学期", value: "第四学期" },
+    {label: "第一学期", value: "第一学期"},
+    {label: "第二学期", value: "第二学期"},
+    {label: "第三学期", value: "第三学期"},
+    {label: "第四学期", value: "第四学期"},
   ],
   //个人审核查询参数
   personalTotal: 100,
@@ -204,19 +188,19 @@ const data = reactive({
 })
 //#endregion
 
-const { list, personalQueryParams, peronalInfo } = toRefs(data);
+const {list, personalQueryParams, peronalInfo} = toRefs(data);
 
 //#region 页面流程
 const getList = () => {
   const id = useRoute().query.id;
-  //获取个人信息
-  getPersonalAudioList(id).then(res => {
-    // console.log(res.data)
+  //TODO: 写死的id因为别人的id没有信息 获取个人信息
+  getPersonalAuditList(90658).then(res => {
+    console.log(res.data)
     data.peronalInfo = res.data;
     //获取列表
-    console.log(data.peronalInfo);
-    getAuditList({ userId: data.peronalInfo.userId }).then(res => {
-      console.log(res);
+    // console.log(data.peronalInfo);
+    getAuditList({userId: data.peronalInfo.userId}).then(res => {
+      // console.log(res);
     })
   })
 }
@@ -255,6 +239,24 @@ const toggleCategory = (category) => {
 </script>
 
 <style scoped lang="scss">
+.header {
+  display: flex;
+
+  .main-selfInfo {
+    display: flex;
+    flex-wrap: wrap;
+
+    .selfInfoItem {
+      padding-left: 10px;
+      padding-right: 10px;
+      border-right: 2px solid #d1d1d1;
+      .value {
+          font-weight: 700;
+      }
+    }
+  }
+}
+
 .detail {
   display: flex;
   flex-direction: column;
