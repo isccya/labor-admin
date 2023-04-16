@@ -123,7 +123,7 @@ const data = reactive({
   //添加角色弹窗
   dialogFormVisible: false, 
   //表格数据
-  tableData: '',
+  tableData: [],
   //下拉框选项
   option: '',
   //接收下拉框选择数据
@@ -156,7 +156,6 @@ const data = reactive({
     pageNum: 1, //当前页码
     pageSize: 10, //页码显示数
     currentPage: '',
-    pageSize:''
   },
 })
 //提交新增管理员

@@ -4,7 +4,7 @@
       <el-icon><Setting /></el-icon>
       <span>基本信息</span>
     </div>
-    <el-form :mode="form">
+    <el-form :mode="data.form">
       <div class="select">
         <!-- 学期 -->
         <div class="item">
