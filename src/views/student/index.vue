@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="select">
       <el-form :model="data.select" :inline="true">
         <!-- 学院 -->
@@ -115,7 +116,7 @@
         </Pagination>
       </div>
     </div>
-  
+  </div>
 </template>
 
 <script setup name = "Student">

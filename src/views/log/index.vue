@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="select">
       <el-form :model="data.select" :inline="true">
         <!-- 时间 -->
@@ -45,7 +46,7 @@
         </Pagination>
       </div>
     </div>
-  
+  </div>
 </template>
 
 <script setup name = "Log">

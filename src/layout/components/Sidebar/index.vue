@@ -59,6 +59,12 @@
               </el-icon>
           <router-link to="/manager/info">管理员信息</router-link>
         </el-menu-item>
+        <el-menu-item index="/role/index">
+                <el-icon>
+                  <Connection />
+                </el-icon>
+          <router-link to="/role/index">角色管理</router-link>
+        </el-menu-item>
         <el-menu-item index="/notice/info">
               <el-icon>
                 <DataLine />

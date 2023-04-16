@@ -10,7 +10,7 @@ const useUserStore = defineStore(
       name: '',
       avatar: '',
       roles: [],
-      permissions: []
+      permissions: [],
     }),
     actions: {
       // 登录
@@ -21,8 +21,9 @@ const useUserStore = defineStore(
         const uuid = userInfo.uuid
         return new Promise((resolve, reject) => {
           login(username, password, code, uuid).then(res => {
-            setToken(res.token)
-            this.token = res.token
+            // console.log(res)
+            setToken(res.data.token)//修改
+            this.token = res.data.token//修改
             resolve()
           }).catch(error => {
             reject(error)
@@ -63,8 +64,8 @@ const useUserStore = defineStore(
             reject(error)
           })
         })
-      }
-    }
+      },
+    },
   })
 
 export default useUserStore

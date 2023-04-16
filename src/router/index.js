@@ -150,7 +150,16 @@ export const constantRoutes = [{
         meta: { title: '通知编辑', icon: 'edit' }
       }
     ]
-  }]
+  },
+  {
+    path: '/role', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+      path: 'index',
+      component: () => import('@/views/role'),
+      name: '角色管理',
+      meta: { title: '角色管理', icon: 'Role' },
+    }],
+  }
+]
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [{

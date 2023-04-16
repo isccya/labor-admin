@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="select">
       <el-form :model="data.select" :inline="true">
         <el-form-item label="学院" >
@@ -100,7 +101,7 @@
           </Pagination>
         </div>
     </div>
-    
+  </div>  
 </template>
 
 <script setup name = "Manager" >

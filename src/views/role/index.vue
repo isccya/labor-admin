@@ -2,24 +2,10 @@
   <div>
     <div class="select">
       <el-form :model="data.select" :inline="true">
-        <!-- 学院 -->
-        <el-form-item label="学院">
+        <el-form-item label="角色等级" >
           <el-select 
-            v-model="data.select.department" 
-            placeholder="请选择"
-            @change="dataFilter()">
-              <el-option
-                v-for="item in data.option"
-                :key="item.dept.deptName"
-                :label="item.label"
-                :value="item.dept.deptName"/>
-          </el-select>
-        </el-form-item>
-        <!-- 学期 -->
-        <el-form-item label="学期">
-          <el-select 
-            v-model="data.select.semester" 
-            placeholder="请选择"
+            v-model="data.select.grade" 
+            placeholder="请选择" 
             @change="dataFilter()">
               <el-option
                 v-for="item in data.option"
@@ -30,64 +16,66 @@
         </el-form-item>
         <!-- 按钮 -->
         <el-form-item>
-          <el-button type="success" class="btn" @click="data.dialogFormVisible = true">新建公告</el-button>
-        </el-form-item>
-        <!-- 一键导入 -->
-        <el-form-item class="Upload">
-          <FileUpload></FileUpload>
+          <el-button type="success" class="btn" @click="data.dialogFormVisible = true">添加角色</el-button>
         </el-form-item>
       </el-form>
-    </div>
-      <!-- 新建公告弹窗 -->
-      <el-dialog v-model="data.dialogFormVisible" title="新建公告" width="400px">
+    </div>  
+    <!-- 添加角色弹窗 -->
+      <el-dialog v-model="data.dialogFormVisible" title="添加角色" width="400px">
         <el-form :model="form" label-width="90px" >
           <el-form-item label="姓名">
-            <el-input v-model="data.form.name" class="w-50 m-2" placeholder="请输入"/>
+            <el-input v-model="data.form.name" class="w-55 m-2" placeholder="请输入"/>
           </el-form-item>
-          <el-form-item label="学期">
-            <el-input v-model="data.form.semester" class="w-50 m-2" placeholder="请输入"/>
+          <el-form-item label="等级">
+            <el-select v-model="data.form.grade" class="m-2" placeholder="请选择">
+              <el-option
+                v-for="item in data.RoleOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>  
-          <el-form-item label="创建者">
-            <el-input v-model="data.form.founder" class="w-50 m-2" placeholder="请输入"/>
+          <el-form-item label="联系方式">
+            <el-input v-model="data.form.telephone" class="w-55 m-2" placeholder="请输入"/>
           </el-form-item>  
-          <el-form-item label="类型">
-            <el-input v-model="data.form.type" class="w-50 m-2" placeholder="请输入"/>
+          <el-form-item label="院系">
+            <el-input v-model="data.form.department" class="w-55 m-2" placeholder="请输入"/>
           </el-form-item>  
         </el-form>
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="data.dialogFormVisible = false">取消</el-button>
-            <el-button type="primary" @click="submit">提交</el-button>
+            <el-button type="primary" @click="submit()">提交</el-button>
           </span>
         </template>
       </el-dialog>
-      
     <!-- 数据展示 -->
     <div class="list">
       <el-table :data="data.tableData" class="table">
-          <el-table-column type="index" label="序号"/>
+          <el-table-column type="index" label="序号" />
           <el-table-column prop="userName" label="姓名">
             <template #default="scope">
               <el-input v-model="scope.row.userName" v-show="scope.row.isEdit" placeholder="scope.row.userName" class="w-50" autofocus/>
               <span v-show="!scope.row.isEdit">{{scope.row.userName}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="grade" label="学期">
+          <el-table-column prop="grade" label="角色等级">
             <template #default="scope">
               <el-input v-model="scope.row.grade" v-show="scope.row.isEdit" placeholder="scope.row.grade" class="w-50"/>
               <span v-show="!scope.row.isEdit">{{scope.row.grade}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="nickName" label="创建者">
+          <el-table-column prop="dept.phone" label="联系方式">
             <template #default="scope">
-              <el-input v-model="scope.row.nickName" v-show="scope.row.isEdit" placeholder="scope.row.nickName" class="w-50"/>
-              <span v-show="!scope.row.isEdit">{{scope.row.nickName}}</span>
+              <el-input v-model="scope.row.dept.phone" v-show="scope.row.isEdit" placeholder="scope.row.dept.phone" class="w-50"/>
+              <span v-show="!scope.row.isEdit">{{scope.row.dept.phone}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="dept.type" label="类型">
+          <el-table-column prop="dept.deptName" label="院系">
             <template #default="scope">
-              <el-input v-model="scope.row.dept.type" v-show="scope.row.isEdit" placeholder="scope.row.dept.type" class="w-50"/>
-              <span v-show="!scope.row.isEdit">{{scope.row.dept.type}}</span>
+              <el-input v-model="scope.row.dept.deptName" v-show="scope.row.isEdit" placeholder="scope.row.dept.deptName" class="w-50"/>
+              <span v-show="!scope.row.isEdit">{{scope.row.dept.deptName}}</span>
             </template>
           </el-table-column>
           <el-table-column  label="操作">
@@ -122,38 +110,46 @@
   </div>  
 </template>
 
-<script setup name = "Notice" >
+<script setup name = "Role" >
 import { reactive } from "vue";
-import FileUpload from "@/components/FileUpload";
-import { getNotice } from "@/api/list/notice";
+import { getManager } from "@/api/list/manager";
 import { ElMessage } from 'element-plus'
 //最开始就调用的方法
 getList();
 
 const data = reactive({
   //源数据  
-  NoticeList: '',
-  //添加管理员弹窗
+  ManagerList: '',
+  //添加角色弹窗
   dialogFormVisible: false, 
   //表格数据
   tableData: '',
   //下拉框选项
   option: '',
-  //下拉框选择数据
+  //接收下拉框选择数据
   select:[
     {
-      department: '',
-      semester:''
+      grade: ''
     }
   ],
-  //新增管理员数据
+  //新增角色数据
   form:[
     {
       name: '',
-      semester: '',
-      founder: '',
-      type: ''
+      grade: '',
+      telephone: '',
+      department: ''
     }
+  ],
+  RoleOption:[
+    {
+      label:'普通管理员',
+      value:'普通管理员'
+    },
+    {
+      label:'超级通管理员',
+      value:'超级通管理员'
+    }  
   ],
   //分页参数
   pageParams: {
@@ -163,7 +159,7 @@ const data = reactive({
     pageSize:''
   },
 })
-//提交新增公告
+//提交新增管理员
 function submit(){
   console.log(data.form);
   // ElMessage({
@@ -172,12 +168,12 @@ function submit(){
   // })
   data.dialogFormVisible = false;
 }
-//获取公告数据
-function getList () {
-  getNotice().then(res =>{
+//获取管理员数据和下拉框数据
+function getList(){
+  getManager().then(res =>{
     data.tableData = res;
     data.option = res;
-    data.NoticeList = res;
+    data.ManagerList = res
     console.log(res);
   });
 }
@@ -201,23 +197,15 @@ function EditComplete(row){
 }
 //筛选数据
 function dataFilter(){
-  let result;
-  if(data.select.department && data.select.semester){
-    console.log(111);
-    result = data.NoticeList.filter(ele => (ele.dept.deptName == data.select.department && ele.grade == data.select.semester))
-  }
-  else if(data.select.department){
-    result = data.NoticeList.filter(ele => ele.dept.deptName == data.select.department)
-  }
-  else if(data.select.semester){
-    result = data.NoticeList.filter(ele => ele.grade == data.select.semester)
-  }
+  console.log(data.select.department);
+  let result = data.ManagerList.filter(ele => ele.grade == data.select.grade)
   console.log(result);
   this.data.tableData = result;
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped>  
+
 .btn{
   color: rgba(255, 255, 255, 1);
   margin-left: 58px;
@@ -238,9 +226,5 @@ function dataFilter(){
   position:relative;
   left:115px;
   width: 773px;
-}
-.Upload{
-  position: relative;
-  top:2px;
 }
 </style>
