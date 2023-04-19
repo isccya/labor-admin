@@ -13,8 +13,8 @@
           <span style="margin-right: 10px">选择学期:</span>
           <span>
                 <el-select style="width: 150px" v-model="personalQueryParams.term">
-                  <el-option v-for="item in data.option" :key="item.value" :label="item.label"
-                             :value="item.value"></el-option>
+                  <el-option v-for="item in option.term" :key="item.termId" :label="item.termName"
+                             :value="item.termId"></el-option>
                 </el-select>
               </span>
         </div>
@@ -93,7 +93,18 @@
 
     <!--    评分弹出框-->
     <el-dialog draggable v-model="data.makeGradeDialogVisible" title="评分" width="30%" :before-close="closeMakeGrade">
-      <span>This is a message</span>
+      <el-form label-position="left">
+        <el-form-item label="分数">
+          <el-select v-model="data.peronalInfo.score" class="audit-select" placeholder="请选择等级"
+                     size="default"
+          >
+            <el-option v-for="item in option.score" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="评语">
+          <el-input v-model="data.peronalInfo.reason" type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeMakeGrade">取消评分</el-button>
@@ -105,9 +116,11 @@
     </el-dialog>
 
     <!--    详细弹出框-->
-    <el-dialog draggable v-model="data.lookDetailDialogVisible" title="详细" width="30%"
+    <el-dialog draggable v-model="data.lookDetailDialogVisible" title="劳动记录详细" width="30%"
                :before-close="closeLookDetail">
-      <span>This is a message</span>
+      <span>
+        <el-input type="textarea"></el-input>
+      </span>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="closeLookDetail">关闭</el-button>
@@ -121,7 +134,9 @@
 //#region import
 import {reactive, toRefs} from "vue";
 import {useRouter, useRoute} from "vue-router";
-import {getPersonalAuditList, getAuditList} from "@/api/audit";
+import {getPersonalAuditList, getAuditList, makePersonalGrade} from "@/api/audit";
+import {getTermListOption} from "@/api/selectOption";
+import {ElMessage} from "element-plus";
 
 const router = useRouter();
 //#endregion
@@ -153,12 +168,23 @@ const data = reactive({
       laborTime: "2022-10-1",
     },
   ],
-  option: [
-    {label: "第一学期", value: "第一学期"},
-    {label: "第二学期", value: "第二学期"},
-    {label: "第三学期", value: "第三学期"},
-    {label: "第四学期", value: "第四学期"},
-  ],
+  option: {
+    term: [
+      {
+        endTime: "2019-01-31 00:00:00",
+        startTime: "2018-07-01 00:00:00",
+        termId: 18191,
+        termName: "2018-2019-1",
+      },
+    ],
+    score: [
+      {label: "优秀", value: 90},
+      {label: "良好", value: 80},
+      {label: "中等", value: 70},
+      {label: "及格", value: 60},
+      {label: "不及格", value: 30},
+    ],
+  },
   //个人审核查询参数
   personalTotal: 100,
   personalQueryParams: {
@@ -188,11 +214,16 @@ const data = reactive({
 })
 //#endregion
 
-const {list, personalQueryParams, peronalInfo} = toRefs(data);
+const {list, personalQueryParams, peronalInfo, option} = toRefs(data);
 
 //#region 页面流程
 const getList = () => {
-  const id = useRoute().query.id;
+  // const id = useRoute().query.id;
+  // console.log(useRoute().query.id);
+  getTermListOption().then(res => {
+    // console.log(res)
+    data.option.term = res;
+  })
   //TODO: 写死的id因为别人的id没有信息 获取个人信息
   getPersonalAuditList(90658).then(res => {
     console.log(res.data)
@@ -208,7 +239,8 @@ getList();
 
 //show评分
 const showMakeGrade = () => {
-  data.makeGradeDialogVisible = true
+  data.makeGradeDialogVisible = true;
+
 }
 
 //关闭评分
@@ -218,7 +250,42 @@ const closeMakeGrade = () => {
 
 //评分
 const makeGrade = () => {
-
+  let getlever = () => {
+    if (data.peronalInfo.score >= 90) {
+      return "优秀"
+    } else if (data.peronalInfo.score >= 80) {
+      return "良好"
+    } else if (data.peronalInfo.score >= 70) {
+      return "一般"
+    } else if (data.peronalInfo.score >= 60) {
+      return "及格"
+    } else if (data.peronalInfo.score) {
+      return "不及格"
+    }
+  }
+  let temp = {
+    "userId": data.peronalInfo.userId,
+    "userName": data.peronalInfo.userName,
+    "nickName": data.peronalInfo.nickName,
+    "classId": data.peronalInfo.classId,
+    "className": data.peronalInfo.className,
+    "deptId": data.peronalInfo.deptId,
+    "collegeId": data.peronalInfo.collegeId,
+    "collegeName": data.peronalInfo.collegeName,
+    "sex": data.peronalInfo.sex,
+    "grade": data.peronalInfo.grade,
+    "score": data.peronalInfo.score,
+    "isConfirm": data.peronalInfo.isConfirm,
+    "level": getlever(),
+    "reason": data.peronalInfo.reason,
+  };
+  console.log(temp)
+  makePersonalGrade(temp).then(res => {
+    console.log(res);
+    ElMessage.success("评分成功!");
+    closeMakeGrade();
+    getList();
+  })
 }
 
 //show详细
@@ -250,8 +317,9 @@ const toggleCategory = (category) => {
       padding-left: 10px;
       padding-right: 10px;
       border-right: 2px solid #d1d1d1;
+
       .value {
-          font-weight: 700;
+        font-weight: 700;
       }
     }
   }

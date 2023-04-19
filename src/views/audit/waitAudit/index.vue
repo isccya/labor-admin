@@ -5,7 +5,7 @@
       <!-- 院系 -->
       <el-form-item label="院系">
         <el-select v-model="queryParams.collegeId" class="" placeholder="请选择" size="default"
-                   @change="getList(queryParams)">
+                   @change="getList()">
           <el-option v-for="item in options.department" :key="item.deptId" :label="item.deptName" :value="item.deptId"/>
         </el-select>
       </el-form-item>
@@ -13,7 +13,7 @@
       <!-- 状态 -->
       <el-form-item label="状态">
         <el-select v-model="queryParams.isConfirm" class="audit-select" placeholder="请选择" size="default"
-                   @change="getList(queryParams)">
+                   @change="getList()">
           <el-option v-for="item in options.isConfirm" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
@@ -28,7 +28,7 @@
       <!-- 年级选择 -->
       <el-form-item label="年级选择">
         <el-select v-model="queryParams.grade" class="audit-select" placeholder="请选择" size="default"
-                   @change="getList(queryParams)">
+                   @change="getList()">
           <el-option v-for="item in options.grade" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </el-form-item>
@@ -43,7 +43,7 @@
       <el-dialog v-model="data.exportDialogVisible" title="一键导出" width="30%" :before-close="handleCloseExportDialog"
                  draggable class="export-dialog" :width="690">
         <el-form label-position="left">
-          <span style="color: #1c84c6">(点击任意空白处关闭)</span>
+          <span style="color: #1c84c6">(点击任意空白处或按ESC关闭)</span>
           <el-form-item label="院系" label-width="70">
             <el-select v-model="exportParams.collegeId" class="" placeholder="请选择" size="default">
               <el-option v-for="item in options.department" :key="item.deptId" :label="item.deptName"
@@ -79,7 +79,7 @@
       <el-dialog v-model="data.makeGradeOneDialogVisible" title="一键评分" width="30%"
                  :before-close="closeMakeOneKeyGrade"
                  draggable class="export-dialog" :width="690">
-        评分前请勾选要评分的学生 <span style="color: #1c84c6">(点击任意空白处关闭)</span>
+        评分前请勾选要评分的学生 <span style="color: #1c84c6">(点击任意空白处或按ESC关闭)</span>
         <el-form label-position="left">
           <el-form-item label="分数">
             <el-select v-model="data.makeOneKeyGradeParams.score" class="audit-select" placeholder="请选择等级"
@@ -181,8 +181,9 @@ const data = reactive({
       {label: "2025级", value: "2025"},
     ],
     score: [
-      {label: "优秀", value: 100},
+      {label: "优秀", value: 90},
       {label: "良好", value: 80},
+      {label: "中等", value: 70},
       {label: "及格", value: 60},
       {label: "不及格", value: 30},
     ],

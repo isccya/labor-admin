@@ -26,3 +26,12 @@ export function schoolChangeLaborPlane (query) {
     data: query,
   })
 }
+
+//添加劳动计划
+export function addLaborPlan (query) {
+  return request({
+    url: '/admins/labor/laborPlan',
+    method: 'post',
+    data: query,
+  })
+}

@@ -1,4 +1,4 @@
-import {login, logout, getInfo} from '@/api/login'
+import {login, logout, getInfo, loginTicknet} from '@/api/login'
 import {getToken, setToken, removeToken} from '@/utils/auth'
 import defAva from '@/assets/images/profile.jpg'
 
@@ -20,7 +20,7 @@ const useUserStore = defineStore(
         const code = userInfo.code
         const uuid = userInfo.uuid
         return new Promise((resolve, reject) => {
-          login(username, password, code, uuid).then(res => {
+          loginTicknet(username, password, code, uuid).then(res => {
             // console.log(res)
             setToken(res.data.token)//修改
             this.token = res.data.token//修改
