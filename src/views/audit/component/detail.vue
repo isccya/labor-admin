@@ -47,6 +47,7 @@
         </div>
       </div>
     </div>
+
     <div class="aside-main">
       <el-row style="height: 100%">
         <!--        侧边-->
@@ -75,11 +76,11 @@
           <div class="main">
             <el-table :data="list" stripe>
               <el-table-column type="selection" width="40"></el-table-column>
-              <el-table-column label="id" width="50" align="center" prop="id"></el-table-column>
-              <el-table-column label="类型" align="center" prop="category"></el-table-column>
+              <el-table-column label="id" width="50" align="center" prop="userId"></el-table-column>
+              <el-table-column label="类型" align="center" prop="laborKind"></el-table-column>
               <el-table-column label="学期" align="center" prop="term"></el-table-column>
               <el-table-column label="检查人" align="center" prop="checkPerson"></el-table-column>
-              <el-table-column label="劳动时间" align="center" prop="laborTime"></el-table-column>
+              <el-table-column label="劳动时间" align="center" prop="data"></el-table-column>
               <el-table-column label="操作" align="center">
                 <template #default="scope">
                   <el-button type="primary" plain @click="showLookDetail(scope)">详细</el-button>
@@ -119,7 +120,7 @@
     <el-dialog draggable v-model="data.lookDetailDialogVisible" title="劳动记录详细" width="30%"
                :before-close="closeLookDetail">
       <span>
-        <el-input type="textarea"></el-input>
+        <el-input type="textarea" v-model="data.detail" disabled></el-input>
       </span>
       <template #footer>
         <span class="dialog-footer">
@@ -134,7 +135,13 @@
 //#region import
 import {reactive, toRefs} from "vue";
 import {useRouter, useRoute} from "vue-router";
-import {getPersonalAuditList, getAuditList, makePersonalGrade} from "@/api/audit";
+import {
+  getPersonalAuditList,
+  getAuditList,
+  makePersonalGrade,
+  getLaborRecordList,
+  getLaborRecordDetail,
+} from "@/api/audit";
 import {getTermListOption} from "@/api/selectOption";
 import {ElMessage} from "element-plus";
 
@@ -147,25 +154,15 @@ const data = reactive({
   lookDetailDialogVisible: false,//详细弹出框
   list: [
     {
-      id: 0,
-      category: "集中实践劳动记录",
-      term: "第一学期",
       checkPerson: "张三",
-      laborTime: "2022-10-1",
-    },
-    {
-      id: 0,
-      category: "集中实践劳动记录",
-      term: "第一学期",
-      checkPerson: "张三",
-      laborTime: "2022-10-1",
-    },
-    {
-      id: 0,
-      category: "集中实践劳动记录",
-      term: "第一学期",
-      checkPerson: "张三",
-      laborTime: "2022-10-1",
+      data: "2023-01-01 00:00:00",
+      laborContent: null,
+      laborKind: 1,
+      photo: null,
+      planId: null,
+      recordId: 1,
+      term: "19201",
+      userId: null,
     },
   ],
   option: {
@@ -211,27 +208,48 @@ const data = reactive({
     "confirmUserId": 0,
     "confirmUserName": "string",
   },
+  // 详细信息
+  detail: "",
 })
 //#endregion
 
 const {list, personalQueryParams, peronalInfo, option} = toRefs(data);
 
 //#region 页面流程
+//
 const getList = () => {
   // const id = useRoute().query.id;
   // console.log(useRoute().query.id);
+  // 获取学期下拉框
   getTermListOption().then(res => {
     // console.log(res)
     data.option.term = res;
+    data.option.term.forEach(item => {
+      // console.log(item)
+      var tempArr = item.termName.split("-");
+      item.termName = `${tempArr[0]}-${tempArr[1]}学年-第${tempArr[2]}学期`;
+    })
   })
   //TODO: 写死的id因为别人的id没有信息 获取个人信息
   getPersonalAuditList(90658).then(res => {
-    console.log(res.data)
+    // console.log(res.data)
     data.peronalInfo = res.data;
     //获取列表
-    // console.log(data.peronalInfo);
-    getAuditList({userId: data.peronalInfo.userId}).then(res => {
-      // console.log(res);
+    //TODO: 同理没有其他ID
+    getLaborRecordList(101).then(res => {
+      console.log(res);
+      data.list = res.data;
+      data.list.forEach((ele) => {
+        data.option.term.forEach((item) => {
+          // console.log("item.termId",item.termId.toString())
+          // console.log("ele.term",ele.term)
+          if (item.termId.toString() === ele.term) {
+            // console.log("@@@@")
+            ele.term = item.termName;
+            console.log(item.termName)
+          }
+        })
+      })
     })
   })
 }
@@ -289,10 +307,13 @@ const makeGrade = () => {
 }
 
 //show详细
-const showLookDetail = () => {
-  data.lookDetailDialogVisible = true
+const showLookDetail = (scope) => {
+  data.lookDetailDialogVisible = true;
+  console.log(scope);
+  getLaborRecordDetail(scope.row.recordId).then(res => {
+    data.detail = res.data.laborContent;
+  })
 }
-
 //关闭详细
 const closeLookDetail = () => {
   data.lookDetailDialogVisible = false
@@ -302,6 +323,7 @@ const closeLookDetail = () => {
 const toggleCategory = (category) => {
   console.log(category);
 }
+
 //#endregion
 </script>
 

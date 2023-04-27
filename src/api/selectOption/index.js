@@ -11,10 +11,7 @@ export function getTermListOption () {
 //查询dept列表
 export function getDeptOption () {
   return request({
-    url: '/labor/test/dept',
+    url: '/dept/util/listCollege',
     method: 'get',
-    headers: {
-      isToken: false,
-    },
   })
 }

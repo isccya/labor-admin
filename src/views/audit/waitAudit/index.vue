@@ -35,7 +35,7 @@
 
       <!-- 一键导出 -->
       <el-form-item label="">
-        <el-button type="primary" @click="handleExportDialog">一键导出
+        <el-button type="primary" @click="handleExport">一键导出
         </el-button>
       </el-form-item>
 
@@ -44,22 +44,22 @@
                  draggable class="export-dialog" :width="690">
         <el-form label-position="left">
           <span style="color: #1c84c6">(点击任意空白处或按ESC关闭)</span>
-          <el-form-item label="院系" label-width="70">
-            <el-select v-model="exportParams.collegeId" class="" placeholder="请选择" size="default">
-              <el-option v-for="item in options.department" :key="item.deptId" :label="item.deptName"
-                         :value="item.deptId"/>
-            </el-select>
-          </el-form-item>
+          <!--          <el-form-item label="院系" label-width="70">-->
+          <!--            <el-select v-model="exportParams.collegeId" class="" placeholder="请选择" size="default">-->
+          <!--              <el-option v-for="item in options.department" :key="item.deptId" :label="item.deptName"-->
+          <!--                         :value="item.deptId"/>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
           <!--          <el-form-item label="专业选择">-->
           <!--            <el-select v-model="exportParams.subject" class="" placeholder="请选择" size="default">-->
           <!--              <el-option v-for="item in options.subject" :key="item.value" :label="item.label" :value="item.value"/>-->
           <!--            </el-select>-->
           <!--          </el-form-item>-->
-          <el-form-item label="年级选择">
-            <el-select v-model="exportParams.grade" class="" placeholder="请选择" size="default">
-              <el-option v-for="item in options.grade" :key="item.value" :label="item.label" :value="item.value"/>
-            </el-select>
-          </el-form-item>
+          <!--          <el-form-item label="年级选择">-->
+          <!--            <el-select v-model="exportParams.grade" class="" placeholder="请选择" size="default">-->
+          <!--              <el-option v-for="item in options.grade" :key="item.value" :label="item.label" :value="item.value"/>-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
         </el-form>
         <template #footer>
           <span class="dialog-footer">
@@ -144,7 +144,10 @@ import Pagination from "@/components/Pagination";
 import {useRouter} from "vue-router";
 import {getAuditList, getExportAuditList, makeOneKeyGrade} from "@/api/audit";
 import {getDeptOption} from "@/api/selectOption";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
+import service, {download} from "@/utils/request";
+import {blobValidate, tansParams} from "@/utils/ruoyi";
+import errorCode from "@/utils/errorCode";
 //#endregion
 const router = useRouter();
 
@@ -169,7 +172,7 @@ const data = reactive({
 
   //选择框选项
   options: {
-    department: [{deptName: "计算机科学与工程学院", deptId: "105"}],
+    department: [{deptId: 100, parentId: 0, deptName: '湖南科技大学'}],
     isConfirm: [{label: "待审核", value: 0}, {label: "已审核", value: 1}],
     subject: [{label: "软件工程", value: "软件工程"}],
     grade: [
@@ -233,14 +236,14 @@ const data = reactive({
 });
 //#endregion
 
-const {queryParams, personalQueryParams, options, auditList, exportParams, auditItemInfo, itemModal} =
+const {queryParams, options, auditList, exportParams} =
     toRefs(data);
 
-//#region
+//#region  页面流程
 // 获取下拉框
 getDeptOption().then(res => {
-      // console.log(res)
-      data.options.department = res
+      console.log(res)
+      data.options.department = res.data
     },
 )
 
@@ -256,10 +259,47 @@ getList();
 
 //一键导出
 const handleExport = () => {
+  if (queryParams.value.collegeId === "") {
+    ElMessage.error("请选择院系后再导出！！！");
+    return;
+  }
   console.log(exportParams.value);
-  getExportAuditList(data.exportParams).then(res => {
-    console.log(res)
+  let downloadLoadingInstance = ElLoading.service({text: "正在下载数据，请稍候", background: "rgba(0, 0, 0, 0.7)"})
+  getExportAuditList(
+      {...data.queryParams},
+      {
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        responseType: 'blob',
+      },
+  ).then(async (data) => {
+    // console.log(data);
+    const isLogin = await blobValidate(data);
+    if (isLogin) {
+      const blob = new Blob([data])
+      //保存 下载方法
+      let collegeName = "";
+      options.value.department.forEach(ele => {
+        if (ele.deptId == queryParams.value.collegeId) {
+          collegeName = ele.deptName;
+        }
+      })
+      console.log("sd", options.value)
+      saveAs(blob, `${queryParams.value.grade}${collegeName}.xlsx`)
+    } else {
+      const resText = await data.text();
+      const rspObj = JSON.parse(resText);
+      const errMsg = errorCode[rspObj.code] || rspObj.msg || errorCode['default']
+      ElMessage.error(errMsg);
+    }
+    setTimeout(() => {
+      downloadLoadingInstance.close();
+    }, 4000)
+  }).catch((r) => {
+    console.error(r)
+    ElMessage.error('下载文件出现错误，请联系管理员！')
+    downloadLoadingInstance.close();
   })
+
 };
 
 //打开一键导出对话款

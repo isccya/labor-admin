@@ -3,7 +3,7 @@
     <!-- 查询 -->
     <el-form inline>
       <el-form-item label="您当前的管理等级">
-        <el-select v-model="data.queryParams.ranks" placeholder="" @change="getList()">
+        <el-select v-model="data.queryParams.ranks" placeholder="" @change="changeRank()">
           <el-option v-for="item in options.ranks" :key="item" :label="item.label" :value="item.value"></el-option>
         </el-select>
       </el-form-item>
@@ -39,6 +39,11 @@
         <div class="my-header">
           <h2>劳动计划</h2>
           <span style="color: #1c84c6">(点击任意空白处或按ESC关闭)</span>
+          <span class="dialog-footer">
+           <el-button v-if="!data.isAdding" @click="handleSubmit" type="primary"
+                      style="margin-left: 300px">确认发布</el-button>
+           <el-button v-else @click="addPlan" type="primary" style="margin-left: 300px">添加劳动计划</el-button>
+          </span>
         </div>
       </template>
       <!--      基本信息-->
@@ -48,18 +53,36 @@
               <Avatar/>
             </el-icon></span>
           <span>基本信息</span>
+
         </div>
         <el-container>
           <el-form inline>
+            <el-form-item label="劳动计划等级" label-width="100">
+              <el-select v-model="detailParams.ranks" placeholder="请选择"
+                         :disabled="!data.isAdding">
+                <el-option v-for="item in options.ranks" :key="item" :label="item.label"
+                           :value="item.value"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="学期" label-width="70">
               <el-select v-model="detailParams.termName" class="" placeholder="请选择" size="default"
                          @change="changeTerm" :disabled="!data.isAdding">
-                <el-option v-for="item in detailOption.term" :key="item.termID" :label="item.termName"
+                <el-option v-for="item in detailOption.term" :key="item.termID" :label="item.termLabel"
                            :value="item.termName"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="年级" label-width="70">
+              <el-select v-model="detailParams.grade" class="" placeholder="请选择" size="default"
+                         :disabled="!data.isAdding">
+                <el-option v-for="item in options.grade" :key="item.value" :label="item.label"
+                           :value="item.value"/>
               </el-select>
             </el-form-item>
             <el-form-item label="指导老师" label-width="70">
               <el-input v-model="detailParams.mentorName" placeholder="请输入" :disabled="!data.isAdding"></el-input>
+            </el-form-item>
+            <el-form-item label="指导老师工号" label-width="100">
+              <el-input v-model="detailParams.mentor" placeholder="请输入" :disabled="!data.isAdding"></el-input>
             </el-form-item>
             <el-form-item label="院系" label-width="70">
               <el-select v-model="detailParams.deptName" class="" placeholder="请输入" size="default"
@@ -69,7 +92,24 @@
               </el-select>
             </el-form-item>
             <el-form-item label="期限" label-width="70">
-              <el-input v-model="detailParams.deadline" placeholder="请输入" :disabled="!data.isAdding"></el-input>
+              <el-input v-if="!data.isAdding" v-model="detailParams.deadline" placeholder="请输入"
+                        :disabled="!data.isAdding"></el-input>
+              <div v-else>
+                <el-date-picker
+                    v-model="detailParams.deadline"
+                    type="datetime"
+                    placeholder="选择日期"
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                >
+                </el-date-picker>
+              </div>
+            </el-form-item>
+            <el-form-item label="是否启用">
+              <el-radio-group v-model="detailParams.status">
+                <el-radio :label="1" size="large">是</el-radio>
+                <el-radio :label="0" size="large">否</el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-form>
         </el-container>
@@ -179,11 +219,7 @@
         </el-form>
       </div>
 
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="handleSubmit">确认发布</el-button>
-        </span>
-      </template>
+      <template #footer></template>
     </el-dialog>
 
     <!-- 分页组件 -->
@@ -227,30 +263,29 @@ const data = reactive({
   },
   //查看详细的选项
   detailOption: {
-    term: [{termName: "一", termID: 1}, {termName: "二", termID: 2}, {termName: "三", termID: 3}],//学期
+    term: [{termLabel: "", termName: "一", termID: 1}],//学期
     department: [{deptId: 0, deptName: "计算与工程学院"}],//院系
   },
   //查看详细的参数
   detailParams: {
-    collectiveLabor: 0,//集体劳动需要完成次数
-    collectiveLaborModify: 0,//集体劳动记录是否可以修改
-    dailyLabor: 0,//日常劳动需要完成次数
-    dailyLaborModify: 0,//日常劳动记录是否可以修改
-    deadline: "",//截止时间
-    deptId: 0,//学院id
-    deptName: "",//学院名
-    grade: "",//年级
-    mentor: 0,//指导老师id
-    mentorName: "",//指导老师姓名
-    otherLabor: 0,//其他劳动需要完成次数
-    otherLaborModify: 0,//其他劳动记录是否可以修改
-    planId: 0,//计划id
-    ranks: 0,//级别
-    societyLabor: 0,//社会实践劳动需要完成的次数
-    societyLaborModify: 0,//社会劳动记录是否可以修改
-    status: 0,//是否启动
-    term: 0,//学期
-    termName: "",//学期名
+    "deptId": 101,
+    "deptName": "资源环境与安全工程学院（矿业工程研究院）",
+    "grade": "",
+    "term": 23242,
+    "termName": "2023-2024-2",
+    "mentor": 1051002552,
+    "mentorName": "张三",
+    "dailyLabor": 10,
+    "collectiveLabor": 20,
+    "societyLabor": 40,
+    "otherLabor": 50,
+    "dailyLaborModify": 0,
+    "collectiveLaborModify": 0,
+    "societyLaborModify": 0,
+    "otherLaborModify": 0,
+    "ranks": 0,
+    "status": 1,
+    "deadline": "2025-03-02 15:58:23",
   },
   //劳动计划列表
   laborList: [
@@ -281,14 +316,12 @@ const {queryParams, options, laborList, total, detailOption, detailParams} = toR
 //#region API
 //获取列表 laborList
 const getList = () => {
-  // data.queryParams.ranks = data.ranks;
   getLaborListWithPage(data.queryParams).then(res => {
     // console.log(res);
     data.laborList = res.rows;
     data.laborList.forEach(item => {
       // console.log(item);
       var tempArr = item.termName.split("-");
-      // console.log(tempArr);
       item.termName = `${tempArr[0]}-${tempArr[1]}学年-第${tempArr[2]}学期`;
     })
     data.total = res.total;
@@ -305,10 +338,15 @@ getList();
 getTermListOption().then(res => {
   // console.log(res)
   data.detailOption.term = res;
+  data.detailOption.term.forEach(item => {
+    // console.log(item)
+    var tempArr = item.termName.split("-");
+    item.termLabel = `${tempArr[0]}-${tempArr[1]}学年-第${tempArr[2]}学期`;
+  })
 })
 getDeptOption().then(res => {
   // console.log(res);
-  data.detailOption.department = res;
+  data.detailOption.department = res.data;
 })
 
 //查看详细打开
@@ -329,13 +367,21 @@ const handleLaborPlaneDetails = (scope) => {
 //查看详细关闭
 const handleCloseLaborPlaneDetails = () => {
   data.laborPlaneDetailsDialogVisibale = false;
+  for (let item in data.detailParams) {
+    data.detailParams[item] = "";
+  }
+  // console.log(data.detailParams)
 };
 
 //确认发布
 const handleSubmit = () => {
-  // console.log(detailParams.value);
+  data.detailParams.dailyLabor = Number(data.detailParams.dailyLabor);
+  data.detailParams.otherLabor = Number(data.detailParams.otherLabor);
+  data.detailParams.societyLabor = Number(data.detailParams.societyLabor);
+  data.detailParams.collectiveLabor = Number(data.detailParams.collectiveLabor);
+  console.log(detailParams.value);
   schoolChangeLaborPlane(data.detailParams).then(res => {
-    // console.log(res);
+    console.log(res);
     ElMessage({
       message: "修改计划成功!",
       type: "success",
@@ -350,11 +396,17 @@ const changeTerm = (val) => {
   term = data.detailOption.term.find(elem => elem.termName === val)
   data.detailParams.term = term.termId;
 }
+
 //改变学院
 const changeCollege = (val) => {
   let term;
   term = data.detailOption.department.find(elem => elem.deptName === val)
   data.detailParams.deptId = term.deptId;
+}
+
+//改变等级
+const changeRank = () => {
+  getList();
 }
 
 //打开添加劳动计划
@@ -364,12 +416,16 @@ const openAddLabor = () => {
   for (let item in data.detailParams) {
     data.detailParams[item] = ""
   }
-  data.detailParams.ranks = data.queryParams.ranks;
 }
+
 //添加劳动计划
 const addPlan = () => {
   addLaborPlan(data.detailParams).then(res => {
     console.log(res)
+    ElMessage.success("添加成功！！！");
+    handleCloseLaborPlaneDetails();
+  }).catch(err => {
+    console.log(err)
   })
 }
 //#endregion

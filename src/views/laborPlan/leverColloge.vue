@@ -19,9 +19,9 @@
 
 <script setup lang='ts'>
 //#region import
-import { ref, reactive, toRefs } from 'vue';
-import { getLaborDetail, getLaborListWithPage } from '@/api/laborPlane'
-import { getTermListOption } from "@/api/selectOption"
+import {ref, reactive, toRefs} from 'vue';
+import {getLaborDetail, getLaborListWithPage} from '@/api/laborPlane'
+import {getTermListOption} from "@/api/selectOption"
 //#endregion
 
 const imageUrl = ref("");
@@ -29,7 +29,7 @@ const planID = ref(0);
 
 //#region data
 const data = reactive({
-  option: [{ termName: "第一学期", termId: "第一学期" }],
+  option: [{termName: "第一学期", termId: "第一学期"}],
   queryParams: {
     /**
      * 集体劳动需要完成次数
@@ -108,7 +108,8 @@ const data = reactive({
      */
     termName: "",
   },
-  list: [{/**
+  list: [{
+    /**
      * 集体劳动需要完成次数
      */
     collectiveLabor: 0,
@@ -189,7 +190,7 @@ const data = reactive({
 //#endregion
 
 //region toRefs
-const { queryParams, list } = toRefs(data);
+const {queryParams, list} = toRefs(data);
 //endregion
 
 //#region  页面流程
@@ -209,7 +210,7 @@ const init = () => {
   // }).catch(err => {
   //   console.log(err)
   // })
-  getLaborListWithPage({ deptId: Math.random() * 10 }).then(res => {
+  getLaborListWithPage({deptId: Math.random() * 10}).then(res => {
     console.log(res);
 
   })

@@ -5,7 +5,7 @@
         ? variables.menuBackground
         : variables.menuLightBackground,
   }">
-    <logo v-if="showLogo" :collapse="isCollapse" />
+    <logo v-if="showLogo" :collapse="isCollapse"/>
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
       <el-menu :default-active="activeMenu" :collapse="isCollapse" :background-color="
         sideTheme === 'theme-dark'
@@ -20,7 +20,7 @@
         <!-- 首页 -->
         <el-menu-item index="/index">
           <el-icon>
-            <HomeFilled />
+            <HomeFilled/>
           </el-icon>
           <router-link to="/index">首页</router-link>
         </el-menu-item>
@@ -30,7 +30,7 @@
 
           <template #title>
             <el-icon>
-              <BellFilled />
+              <BellFilled/>
             </el-icon>
             <span>审核功能</span>
           </template>
@@ -46,23 +46,16 @@
         <!-- 劳动计划 -->
         <el-menu-item index="/laborplan/index">
           <el-icon>
-            <List />
+            <List/>
           </el-icon>
           <router-link to="/laborplan/index">劳动计划</router-link>
         </el-menu-item>
 
-        <!-- 劳动院级 -->
-        <el-menu-item index="/laborplan/colloge">
-          <el-icon>
-            <List />
-          </el-icon>
-          <router-link to="/laborplan/colloge">劳动院级</router-link>
-        </el-menu-item>
         <el-menu-item index="1">
           <template #title>
             <router-link to="/student/center">
               <el-icon>
-                <User />
+                <User/>
               </el-icon>
               <span>学生信息</span>
             </router-link>
@@ -72,7 +65,7 @@
           <template #title>
             <router-link to="/manager/info">
               <el-icon>
-                <location />
+                <location/>
               </el-icon>
               <span>管理员信息</span>
             </router-link>
@@ -82,7 +75,7 @@
           <template #title>
             <router-link to="/notice/info">
               <el-icon>
-                <DataLine />
+                <DataLine/>
               </el-icon>
               <span>公告管理</span>
             </router-link>
@@ -92,7 +85,7 @@
           <template #title>
             <router-link to="/log/info">
               <el-icon>
-                <Memo />
+                <Memo/>
               </el-icon>
               <span>系统日志</span>
             </router-link>
@@ -102,7 +95,7 @@
           <template #title>
             <router-link to="/edit/info">
               <el-icon>
-                <Bell />
+                <Bell/>
               </el-icon>
               <span>通知编辑</span>
             </router-link>
@@ -110,7 +103,7 @@
         </el-menu-item>
         <!-- 自动生成的 -->
         <sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route"
-          :base-path="route.path" />
+                      :base-path="route.path"/>
       </el-menu>
     </el-scrollbar>
   </div>
@@ -136,7 +129,7 @@ const theme = computed(() => settingsStore.theme);
 const isCollapse = computed(() => !appStore.sidebar.opened);
 
 const activeMenu = computed(() => {
-  const { meta, path } = route;
+  const {meta, path} = route;
   // if set path, the sidebar will highlight the path you set
   if (meta.activeMenu) {
     return meta.activeMenu;
