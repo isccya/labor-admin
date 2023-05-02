@@ -36,11 +36,11 @@
           </template>
 
           <el-menu-item index="/audit/waitAudit">
-            <router-link to="/audit/waitAudit">待审核</router-link>
+            <router-link to="/audit/waitAudit">审核</router-link>
           </el-menu-item>
-          <el-menu-item index="/audit/audited">
-            <router-link to="/audit/audited">已审核</router-link>
-          </el-menu-item>
+<!--          <el-menu-item index="/audit/audited">-->
+          <!--            <router-link to="/audit/audited">已审核</router-link>-->
+          <!--          </el-menu-item>-->
         </el-sub-menu>
 
         <!-- 劳动计划 -->
