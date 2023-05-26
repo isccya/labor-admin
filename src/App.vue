@@ -1,5 +1,6 @@
 <template>
-  <router-view />
+  <router-view :key="$route.fullPath"/>
+  <!--  TODO:加上了:key-->
 </template>
 
 <script setup>

@@ -53,6 +53,15 @@ export function getLaborRecordList (query) {
   })
 }
 
+//劳动记录列表
+export function getLaborRecordList2 (query) {
+  return request({
+    url: `/admins/labor/record`,
+    method: 'get',
+    params: query,
+  })
+}
+
 // 劳动记录详细
 export function getLaborRecordDetail (query) {
   return request({

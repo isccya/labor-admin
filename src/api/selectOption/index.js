@@ -15,3 +15,12 @@ export function getDeptOption () {
     method: 'get',
   })
 }
+
+//查询班级列表
+export function getClassOption (query) {
+  return request({
+    url: '/dept/util/class',
+    method: 'get',
+    params: query,
+  })
+}
