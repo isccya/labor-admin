@@ -160,6 +160,13 @@ function getList(){
     console.log(res);
   });
 }
+//获取下拉框学院数据
+function getDeptSelectList () {
+  getDeptSelect().then(res =>{
+    data.option = res;
+    console.log(res);
+  });
+}
 //修改数据,当用户点击修改时，变成输入框  
 function handleEdit(row){
   if(row.hasOwnProperty('isEdit')){

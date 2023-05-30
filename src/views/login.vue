@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">劳务系统台管理系统</h3>
+      <h3 class="title">劳务系统后台管理系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -52,14 +52,14 @@
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
-        <div style="float: right;" v-if="register">
-          <router-link class="link-type" :to="'/register'">立即注册</router-link>
+        <div style="float: right;" v-if="codelogin">
+          <router-link class="link-type" :to="'/code'">扫码登录</router-link>
         </div>
       </el-form-item>
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>
+      <span>Hunan University of Science & Technology</span>
     </div>
   </div>
 </template>
@@ -91,10 +91,12 @@ const loginRules = {
 const codeUrl = ref("");
 const loading = ref(false);
 // 验证码开关
-const captchaEnabled = ref(true);
+const captchaEnabled = ref(false);
 // 注册开关
-const register = ref(false);
+const register = ref(true);
 const redirect = ref(undefined);
+// 扫码登录开关  
+const codelogin = ref(true);
 
 function handleLogin() {
   proxy.$refs.loginRef.validate(valid => {

@@ -10,9 +10,9 @@
             @change="dataFilter()">
             <el-option
               v-for="item in data.option"
-              :key="item.dept.deptName"
+              :key="item.deptName"
               :label="item.label"
-              :value="item.dept.deptName"/>
+              :value="item.deptName"/>
           </el-select>
         </el-form-item>
         <!-- 年级 -->
@@ -122,10 +122,12 @@
 <script setup name = "Student">
 import { reactive } from "vue";
 import { getStudent } from "@/api/list/student";
+import { getDeptSelect } from "@/api/list/select";
 import Pagination from "@/components/Pagination";
 import { ElMessage } from 'element-plus'
 //最开始就调用
-getList ()
+getList ();
+getDeptSelectList ();
 const data = reactive({
   //源数据  
   StudentList: '',
@@ -174,6 +176,13 @@ function getList () {
     data.tableData = res;
     data.option = res;
     data.StudentList = res
+    console.log(res);
+  });
+}
+//获取下拉框学院数据
+function getDeptSelectList () {
+  getDeptSelect().then(res =>{
+    data.option = res;
     console.log(res);
   });
 }

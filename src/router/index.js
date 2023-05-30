@@ -45,7 +45,10 @@ export const constantRoutes = [{
     meta: {title: '个人中心', icon: 'user'},
   }],
 },
-
+  //扫码登录
+  {
+    path: '/code', component: () => import('@/views/codelogin'), hidden: true,
+  },
   //主页
   {
     path: '', component: Layout, redirect: '/index', children: [{
