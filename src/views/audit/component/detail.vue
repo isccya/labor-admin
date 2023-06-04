@@ -250,9 +250,9 @@ const getList = () => {
 }
 getList();
 
+//记录列表 全部查询
 const getRecordList = (query) => {
   getLaborRecordList(query).then(res => {
-    // console.log(res);
     data.list = res.data;
     data.list.forEach((ele) => {
       data.option.term.forEach((item) => {
@@ -265,9 +265,9 @@ const getRecordList = (query) => {
   })
 }
 
+//记录列表 条件查询
 const getRecordList2 = (query) => {
   getLaborRecordList2(query).then(res => {
-    // console.log(res);
     data.list = res.data;
     data.list.forEach((ele) => {
       data.option.term.forEach((item) => {

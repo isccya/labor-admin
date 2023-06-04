@@ -320,7 +320,7 @@ const handleMakeOneKeyGrade = () => {
   const selection = elTableRef.value.getSelectionRows();
   let tempArr = [];
   selection.forEach(item => {
-    tempArr.push(item.userId);
+    tempArr.push(item.id);
   })
   data.makeOneKeyGradeParams.ids = tempArr.join(",");
   // console.log("@@", data.makeOneKeyGradeParams);
@@ -339,6 +339,7 @@ const handleMakeOneKeyGrade = () => {
     data.makeOneKeyGradeParams.ids = "";
     data.makeOneKeyGradeParams.score = null;
     data.makeGradeOneDialogVisible = false;
+    getList();
   }).catch(res => {
   });
 };
