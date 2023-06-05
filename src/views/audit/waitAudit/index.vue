@@ -4,7 +4,7 @@
     <el-form inline>
       <!-- 院系 -->
       <el-form-item label="院系">
-        <el-select clearable v-model="queryParams.collegeId" class="" placeholder="请选择" size="default"
+        <el-select clear-icon="CircleCloseFilled" clearable v-model="queryParams.collegeId" class="" placeholder="请选择" size="default"
                    @change="getList()">
           <el-option v-for="item in options.department" :key="item.deptId" :label="item.deptName"
                      :value="item.deptId"/>
@@ -13,23 +13,16 @@
 
       <!-- 状态 -->
       <el-form-item label="状态">
-        <el-select clearable v-model="queryParams.isConfirm" class="audit-select" placeholder="请选择" size="default"
+        <el-select clear-icon="CircleCloseFilled" clearable v-model="queryParams.isConfirm" class="audit-select" placeholder="请选择" size="default"
                    @change="getList()">
           <el-option v-for="item in options.isConfirm" :key="item.value" :label="item.label"
                      :value="item.value"/>
         </el-select>
       </el-form-item>
 
-      <!-- 专业选择 -->
-      <!--      <el-form-item label="专业选择">-->
-      <!--        <el-select v-model="queryParams.subject" class="audit-select" placeholder="请选择" size="default">-->
-      <!--          <el-option v-for="item in options.subject" :key="item.value" :label="item.label" :value="item.value"/>-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
-
       <!-- 年级选择 -->
       <el-form-item label="年级选择">
-        <el-select clearable v-model="queryParams.grade" class="audit-select" placeholder="请选择" size="default"
+        <el-select clear-icon="CircleCloseFilled" clearable v-model="queryParams.grade" class="audit-select" placeholder="请选择" size="default"
                    @change="getList()">
           <el-option v-for="item in options.grade" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
@@ -37,7 +30,7 @@
 
       <!-- 一键导出 -->
       <el-form-item label="">
-        <el-button type="primary" @click="handleExportDialog">一键导出
+        <el-button  type="primary" @click="handleExportDialog">一键导出
         </el-button>
       </el-form-item>
 

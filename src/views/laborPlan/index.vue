@@ -3,13 +3,13 @@
     <!-- 查询 -->
     <el-form inline>
       <el-form-item label="您当前的管理等级">
-        <el-select v-model="data.queryParams.ranks" placeholder="" @change="changeRank()">
+        <el-select clear-icon="CircleCloseFilled" clearable v-model="data.queryParams.ranks" placeholder="" @change="changeRank()">
           <el-option v-for="item in options.ranks" :key="item" :label="item.label"
                      :value="item.value"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="年级">
-        <el-select v-model="data.queryParams.grade" placeholder="" @change="getList()">
+        <el-select clear-icon="CircleCloseFilled" clearable v-model="data.queryParams.grade" placeholder="" @change="getList()">
           <el-option v-for="item in options.grade" :key="item" :label="item.label"
                      :value="item.value"></el-option>
         </el-select>
@@ -116,6 +116,7 @@
                         </el-icon></span>
           <span>劳动内容</span>
         </div>
+        <span style="color: red">注意:</span> <span> 院级劳动记录条数不得少于校级</span>
         <el-form :model="detailParams" :rules="rule2" ref="form2" label-position="left" label-width="170px">
           <el-form-item label="(1)日常劳动记录" prop="dailyLabor">
             <el-row :gutter="100">
@@ -465,6 +466,12 @@ const addPlan = async (f1, f2) => {
     font-weight: 400;
     margin-top: 10px;
     font-size: 15px;
+  }
+
+  i {
+    font-weight: 200;
+    margin-top: 10px;
+    font-size: 10px;
   }
 }
 </style>
