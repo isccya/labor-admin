@@ -2,17 +2,17 @@
   <div>
     <div class="select">
       <el-form :model="data.select" :inline="true">
-        <el-form-item label="学院">
+        <el-form-item label="角色等级">
           <el-select
-            v-model="data.select.department"
+            v-model="data.select.grade"
             placeholder="请选择"
             @change="dataFilter"
           >
             <el-option
               v-for="item in data.option"
-              :key="item.deptId"
+              :key="item"
               :label="item.label"
-              :value="item.deptName"
+              :value="item"
             />
           </el-select>
         </el-form-item>
@@ -22,43 +22,42 @@
             type="success"
             class="btn"
             @click="data.dialogFormVisible = true"
-            >添加管理员</el-button
+            >添加角色</el-button
           >
         </el-form-item>
       </el-form>
     </div>
-    <!-- 添加管理员弹窗 -->
-    <el-dialog
-      v-model="data.dialogFormVisible"
-      title="添加管理员"
-      width="400px"
-    >
-      <el-form :model="form" label-width="90px">
+    <!-- 添加角色弹窗 -->
+    <el-dialog v-model="data.dialogFormVisible" title="添加角色" width="400px">
+      <el-form :model="data.form" label-width="90px">
         <el-form-item label="姓名">
           <el-input
             v-model="data.form.name"
-            class="w-50 m-2"
+            class="w-55 m-2"
             placeholder="请输入"
           />
         </el-form-item>
         <el-form-item label="等级">
-          <el-input
-            v-model="data.form.grade"
-            class="w-50 m-2"
-            placeholder="请输入"
-          />
+          <el-select v-model="data.form.grade" class="m-2" placeholder="请选择">
+            <el-option
+              v-for="item in data.RoleOption"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="联系方式">
           <el-input
             v-model="data.form.telephone"
-            class="w-50 m-2"
+            class="w-55 m-2"
             placeholder="请输入"
           />
         </el-form-item>
         <el-form-item label="院系">
           <el-input
             v-model="data.form.department"
-            class="w-50 m-2"
+            class="w-55 m-2"
             placeholder="请输入"
           />
         </el-form-item>
@@ -70,7 +69,6 @@
         </span>
       </template>
     </el-dialog>
-
     <!-- 数据展示 -->
     <div class="list">
       <el-table :data="data.tableData">
@@ -87,7 +85,7 @@
             <span v-show="!scope.row.isEdit">{{ scope.row.nickName }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="roleName" label="等级">
+        <el-table-column prop="roleName" label="角色等级">
           <template #default="scope">
             <el-input
               v-model="scope.row.roleName"
@@ -155,16 +153,15 @@
   </div>
 </template>
 
-<script setup name = "Manager" >
+<script setup name = "Role" >
 import { reactive } from "vue"
-import { getManager } from "@/api/list/manager.js"
-import { getDeptSelect } from "@/api/list/select.js"
+import { getManager } from "@/api/list/manager"
 import { ElMessage } from 'element-plus'
 
 const data = reactive({
   //源数据  
   ManagerList: '',
-  //添加管理员弹窗
+  //添加角色弹窗
   dialogFormVisible: false,
   //表格数据
   tableData: [{
@@ -176,16 +173,26 @@ const data = reactive({
   //下拉框选项
   option: '',
   //接收下拉框选择数据
-  select: {
+  select: [
+    {
+      grade: ''
+    }
+  ],
+  //新增角色数据
+  form: {
+    name: '',
+    grade: '',
+    telephone: '',
     department: ''
   },
-  //新增管理员数据
-  form: [
+  RoleOption: [
     {
-      name: '',
-      grade: '',
-      telephone: '',
-      department: ''
+      label: '普通管理员',
+      value: '普通管理员'
+    },
+    {
+      label: '超级通管理员',
+      value: '超级通管理员'
     }
   ],
   //分页参数
@@ -209,16 +216,13 @@ const getList = () => {
   getManager(data.queryParams).then(res => {
     data.tableData = res.rows
     data.total = res.total
+    // 获取下拉框数据
+    data.option = res.rows.map(item => {
+      return item.roleName
+    })
   })
 }
 getList()
-//获取下拉框学院数据
-const getDeptSelectList = () => {
-  getDeptSelect().then(res => {
-    data.option = res.data
-  })
-}
-getDeptSelectList()
 //修改数据,当用户点击修改时，变成输入框  
 function handleEdit (row) {
   if (row.hasOwnProperty('isEdit')) {
@@ -240,6 +244,9 @@ function EditComplete (row) {
 //筛选数据
 const dataFilter = (val) => {
   // console.log(val)
+  // let result = data.ManagerList.filter(ele => ele.grade == data.select.grade)
+  // console.log(result)
+  // this.data.tableData = result
 }
 </script>
 

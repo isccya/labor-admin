@@ -1,11 +1,8 @@
 <template>
-  <div :class="{ 'has-logo': showLogo }" :style="{
-    backgroundColor:
-      sideTheme === 'theme-dark'
-        ? variables.menuBackground
-        : variables.menuLightBackground,
-  }">
-    <logo v-if="showLogo" :collapse="isCollapse"/>
+  <div
+    :class="{ 'has-logo': showLogo }"
+    :style="{ backgroundColor:sideTheme === 'theme-dark'? variables.menuBackground : variables.menuLightBackground,}">
+    <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
       <el-menu :default-active="activeMenu" :collapse="isCollapse" :background-color="
         sideTheme === 'theme-dark'
@@ -25,8 +22,8 @@
           <router-link to="/index">首页</router-link>
         </el-menu-item>
 
-        <!-- 审核功能 -->
-        <el-sub-menu index="/audit">
+                <!-- 审核功能 -->
+                <el-sub-menu index="/audit">
 
           <template #title>
             <el-icon>
@@ -36,7 +33,7 @@
           </template>
 
           <el-menu-item index="/audit/waitAudit">
-            <router-link to="/audit/waitAudit">审核</router-link>
+            <router-link to="/audit/waitAudit">待审核</router-link>
           </el-menu-item>
 <!--          <el-menu-item index="/audit/audited">-->
           <!--            <router-link to="/audit/audited">已审核</router-link>-->
@@ -44,66 +41,53 @@
         </el-sub-menu>
 
         <!-- 劳动计划 -->
-        <el-menu-item index="/laborplan/index">
+        <el-menu-item index="/laborplane/index">
           <el-icon>
             <List/>
           </el-icon>
           <router-link to="/laborplan/index">劳动计划</router-link>
         </el-menu-item>
-
-        <el-menu-item index="1">
-          <template #title>
-            <router-link to="/student/center">
+        <el-menu-item index="/student/center">
               <el-icon>
                 <User/>
               </el-icon>
-              <span>学生信息</span>
-            </router-link>
-          </template>
+          <router-link to="/student/center">学生信息</router-link>
         </el-menu-item>
-        <el-menu-item index="2">
-          <template #title>
-            <router-link to="/manager/info">
+        <el-menu-item index="/manager/info">
               <el-icon>
                 <location/>
               </el-icon>
-              <span>管理员信息</span>
-            </router-link>
-          </template>
+          <router-link to="/manager/info">管理员信息</router-link>
         </el-menu-item>
-        <el-menu-item index="3">
-          <template #title>
-            <router-link to="/notice/info">
+        <el-menu-item index="/role/index">
+                <el-icon>
+                  <Connection />
+                </el-icon>
+          <router-link to="/role/index">角色管理</router-link>
+        </el-menu-item>
+        <el-menu-item index="/notice/info">
               <el-icon>
-                <DataLine/>
+                <DataLine />
               </el-icon>
-              <span>公告管理</span>
-            </router-link>
-          </template>
+          <router-link to="/notice/info">公告管理</router-link>
         </el-menu-item>
-        <el-menu-item index="4">
-          <template #title>
-            <router-link to="/log/info">
+        <el-menu-item index="/log/info">
               <el-icon>
                 <Memo/>
               </el-icon>
-              <span>系统日志</span>
-            </router-link>
-          </template>
+          <router-link to="/log/info">系统日志</router-link>
         </el-menu-item>
-        <el-menu-item index="5">
-          <template #title>
-            <router-link to="/edit/info">
+        <el-menu-item index="/edit/info">           
               <el-icon>
                 <Bell/>
               </el-icon>
-              <span>通知编辑</span>
-            </router-link>
-          </template>
+          <router-link to="/edit/info">通知编辑</router-link>
         </el-menu-item>
         <!-- 自动生成的 -->
-        <sidebar-item v-for="(route, index) in sidebarRouters" :key="route.path + index" :item="route"
-                      :base-path="route.path"/>
+        <sidebar-item v-for="(route, index) in sidebarRouters" 
+          :key="route.path + index" 
+          :item="route"
+          :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -129,7 +113,7 @@ const theme = computed(() => settingsStore.theme);
 const isCollapse = computed(() => !appStore.sidebar.opened);
 
 const activeMenu = computed(() => {
-  const {meta, path} = route;
+  const { meta, path } = route;
   // if set path, the sidebar will highlight the path you set
   if (meta.activeMenu) {
     return meta.activeMenu;

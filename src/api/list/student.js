@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
 //获取学生数据
-export function getStudent(){
+export function getStudent (query) {
     return request({
-        url: 'http://127.0.0.1:4523/m1/2398039-0-default/labor/test/user',
-        method: 'get'
-    });
+        method: 'get',
+        url: '/admins/labor/score/list',
+        params: query
+    })
 }

@@ -1,4 +1,5 @@
 <template>
+  <div>
     <div class="select">
       <el-form :model="data.select" :inline="true">
         <!-- 时间 -->
@@ -6,9 +7,9 @@
           <el-select v-model="data.select.time" placeholder="请选择">
             <el-option
               v-for="item in data.option"
-              :key="item.value"
+              :key="item.userName"
               :label="item.label"
-              :value="item.value"
+              :value="item.userName"
             />
           </el-select>
         </el-form-item>
@@ -17,9 +18,9 @@
           <el-select v-model="data.select.operation" placeholder="请选择">
             <el-option
               v-for="item in data.option"
-              :key="item.value"
+              :key="item.userName"
               :label="item.label"
-              :value="item.value"
+              :value="item.userName"
             />
           </el-select>
         </el-form-item>
@@ -27,16 +28,16 @@
     </div>
     <!-- 数据展示 -->
     <div class="list">
-      <el-table :data="data.tableData" stripe  class="table">
+      <el-table :data="data.tableData" stripe>
           <el-table-column type="index" label="序号"/>
-          <el-table-column prop="name" label="姓名"/>
+          <el-table-column prop="userName" label="姓名"/>
           <el-table-column prop="grade" label="年级"/>
-          <el-table-column prop="tel" label="联系方式"/>
-          <el-table-column prop="department" label="院系"/>
+          <el-table-column prop="dept.phone" label="联系方式"/>
+          <el-table-column prop="dept.deptName" label="院系"/>
           <el-table-column prop="operation" label="操作"/>
       </el-table>
       <!-- 分页器 -->
-      <div class="pagination">
+      <div>
         <Pagination 
           :total="data.tableData.length" 
           v-model:page="data.pageParams.pageNum" 
@@ -45,15 +46,15 @@
         </Pagination>
       </div>
     </div>
-  
+  </div>
 </template>
 
 <script setup name = "Log">
 import { reactive } from "vue";
-// import {  };
+import { getLog } from "@/api/list/log";
 const data = reactive({
   //表格数据
-  tableData: '',
+  tableData: [],
   //下拉框选项
   option: '',
    //下拉框选择数据
@@ -68,13 +69,17 @@ const data = reactive({
     pageNum: 1, //当前页码
     pageSize: 10, //页码显示数
     currentPage: '',
-    pageSize:''
   },
 });
 
 //获取日志数据
 function getList () {
+  getLog().then(res => {
+    data.tableData = res;
+    data.option = res;
+  });
 }
+getList();
 </script>
 
 <style lang="scss" scoped>
@@ -90,14 +95,5 @@ function getList () {
 }
 .list{
     padding: 20px;
-}
-.table{
-  width: 100%;
-  height: 711px;
-}
-.pagination {
-  position:relative;
-  left:115px;
-  width: 773px;
 }
 </style>
