@@ -151,6 +151,7 @@ function submit () {
   setTimeout(() => {
     // 清空输入
     data.form = {}
+    data.form.noticeType = 1
     isComplete.value = !isComplete.value
   }, 1500)
 }
