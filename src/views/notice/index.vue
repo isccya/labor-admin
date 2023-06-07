@@ -7,13 +7,13 @@
           <el-select
             v-model="data.select.department"
             placeholder="请选择"
-            @change="dataFilter()"
+            @change="dataFilter"
           >
             <el-option
-              v-for="item in data.option"
-              :key="item.dept.deptName"
+              v-for="item in data.DeptOption"
+              :key="item.deptName"
               :label="item.label"
-              :value="item.dept.deptName"
+              :value="item.deptName"
             />
           </el-select>
         </el-form-item>
@@ -22,13 +22,13 @@
           <el-select
             v-model="data.select.semester"
             placeholder="请选择"
-            @change="dataFilter()"
+            @change="dataFilter"
           >
             <el-option
-              v-for="item in data.option"
-              :key="item.grade"
+              v-for="item in data.TermOption"
+              :key="item.termId"
               :label="item.label"
-              :value="item.grade"
+              :value="item.termName"
             />
           </el-select>
         </el-form-item>
@@ -49,7 +49,7 @@
     </div>
     <!-- 新建公告弹窗 -->
     <el-dialog v-model="data.dialogFormVisible" title="新建公告" width="400px">
-      <el-form :model="form" label-width="90px">
+      <el-form :model="data.form" label-width="90px">
         <el-form-item label="姓名">
           <el-input
             v-model="data.form.name"
@@ -175,6 +175,7 @@
 import { reactive } from "vue"
 import FileUpload from "@/components/FileUpload"
 import { getNotice } from "@/api/list/notice"
+import { getDeptSelect, getTermList } from "@/api/list/select.js"
 import { ElMessage } from 'element-plus'
 //最开始就调用的方法
 const data = reactive({
@@ -185,21 +186,26 @@ const data = reactive({
   //表格数据
   tableData: '',
   //下拉框选项
-  option: '',
+  DeptOption: '', // 学院
+  TermOption:'', // 学期
+  optionsParams: {
+    startTime: '', // startTime
+    endTime: '', // 结束时间
+    termId: '', // 学期id
+    termName: '' // 学期
+  },
   //下拉框选择数据
-  select:{
-      department: '',
-      semester: ''
-    },
+  select: {
+    department: '',
+    semester: ''
+  },
   //新增管理员数据
-  form: [
-    {
+  form: {
       name: '',
       semester: '',
       founder: '',
       type: ''
-    }
-  ],
+    },
   //请求参数
   queryParams: {
     // id: 1,
@@ -234,6 +240,20 @@ const getList = () => {
   })
 }
 getList()
+// 查询学期
+const getTerm = () => {
+  getTermList(data.optionsParams).then(res => {
+    data.TermOption = res
+  })
+}
+getTerm()
+// 查询院系
+const getDept = () => {
+  getDeptSelect().then(res => {
+    data.DeptOption = res.data
+  })
+}
+getDept()
 //修改数据,当用户点击修改时，变成输入框  
 function handleEdit (row) {
   if (row.hasOwnProperty('isEdit')) {
@@ -254,19 +274,19 @@ function EditComplete (row) {
 }
 //筛选数据
 function dataFilter () {
-  let result
-  if (data.select.department && data.select.semester) {
-    console.log(111)
-    result = data.NoticeList.filter(ele => (ele.dept.deptName == data.select.department && ele.grade == data.select.semester))
-  }
-  else if (data.select.department) {
-    result = data.NoticeList.filter(ele => ele.dept.deptName == data.select.department)
-  }
-  else if (data.select.semester) {
-    result = data.NoticeList.filter(ele => ele.grade == data.select.semester)
-  }
-  console.log(result)
-  this.data.tableData = result
+  // let result
+  // if (data.select.department && data.select.semester) {
+  //   console.log(111)
+  //   result = data.NoticeList.filter(ele => (ele.dept.deptName == data.select.department && ele.grade == data.select.semester))
+  // }
+  // else if (data.select.department) {
+  //   result = data.NoticeList.filter(ele => ele.dept.deptName == data.select.department)
+  // }
+  // else if (data.select.semester) {
+  //   result = data.NoticeList.filter(ele => ele.grade == data.select.semester)
+  // }
+  // console.log(result)
+  // this.data.tableData = result
 }
 </script>
 

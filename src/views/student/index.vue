@@ -47,7 +47,7 @@
         title="添加学员"
         width="400px"
       >
-        <el-form :model="form" label-width="90px">
+        <el-form :model="data.form" label-width="90px">
           <el-form-item label="姓名">
             <el-input
               v-model="data.form.name"
@@ -193,14 +193,12 @@ const data = reactive({
   //添加学生弹窗
   dialogFormVisible: false,
   //表格数据
-  tableData: [
-    {
+  tableData:[{
       nickName: '',
       grade: '',
       userName: '',
       collegeName: ''
-    }
-  ],
+    }],
   //下拉框选项
   option: '',
   //下拉框选择数据
@@ -209,14 +207,12 @@ const data = reactive({
     grade: ''
   },
   //添加学生选框数据
-  form: [
-    {
+  form: {
       name: '',
       grade: '',
       telephone: '',
       department: ''
-    }
-  ],
+    },
   //分页参数
   queryParams: {
     collegeName: "",
@@ -242,7 +238,6 @@ function submit () {
 //获取学生数据
 const getList = () => {
   getStudent(data.queryParams).then(res => {
-    console.log(res)
     data.StudentList = res.rows
     data.tableData = res.rows
     data.total = res.total
@@ -276,8 +271,6 @@ function EditComplete (row) {
 //筛选数据
 const dataFilter = (val) => {
   data.queryParams.collegeName = val
-  console.log(typeof (val))
-  console.log(data.queryParams)
   getList()
 
 }

@@ -122,7 +122,8 @@ const data = reactive({
     noticeContent: "", // 通知内容
     noticeTheme: "",  // 通知主题
     deptId: '', // 院系id
-    noticeType: 1 // 通知类型（0 - 公告 1 - 通知）
+    noticeType: 1, // 通知类型（0 - 公告 1 - 通知）
+    object:'' //面向对象
   },
   options: '',
   optionsParams: {

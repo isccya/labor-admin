@@ -75,8 +75,8 @@ const router = useRouter();
 const { proxy } = getCurrentInstance();
 
 const loginForm = ref({
-  username: "2005010607",
-  password: "admin123",
+  username: "admin",
+  password: "ticknet666",
   rememberMe: false,
   code: "",
   uuid: ""

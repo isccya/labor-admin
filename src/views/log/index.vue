@@ -77,7 +77,6 @@ function getList () {
   getLog().then(res => {
     data.tableData = res;
     data.option = res;
-    console.log(res);
   });
 }
 getList();
