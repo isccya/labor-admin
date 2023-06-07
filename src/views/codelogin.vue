@@ -23,7 +23,7 @@
           "id": "qr_login" ,
           "appid": "wwaefefd6969bc87ee", 
           "agentid" :"1000002",
-          "redirect_uri" : encodeURI("https://jwc.hnust.edu.cn/"),
+          "redirect_uri" : encodeURI("https://jwc.hnust.edu./"),
           "state": "hellowesom",
           "href": "data:text/css;base64,LmltcG93ZXJCb3ggLnFyY29kZSB7d2lkdGg6IDIwMHB4OyBiYWNrZ3JvdW5kOmJsYWNrfQ0KLmltcG93ZXJCb3ggLnRpdGxlIHtkaXNwbGF5OiBub25lO30NCi5pbXBvd2VyQm94IC5pbmZvIHt3aWR0aDogMjAwcHg7fQ0KLnN0YXR1c19pY29uIHtkaXNwbGF5OiBub25lfQ0KLmltcG93ZXJCb3ggLnN0YXR1cyB7dGV4dC1hbGlnbjogY2VudGVyO30=",
           "lang":"zh",

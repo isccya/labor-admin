@@ -6,154 +6,89 @@
     </div>
     <div class="item">
       <el-icon class="icon"><EditPen /></el-icon>&nbsp;
-      <el-input v-model="formData.theme" class="w-50 m-2" placeholder="通知主题" />
+      <el-input
+        v-model="formData.noticeTheme"
+        class="w-50 m-2"
+        placeholder="通知主题"
+      />
     </div>
     <div class="write">
-        <div style="border: 1px solid #ccc;">
-          <Toolbar
-            :editor="editorRef"
-            :defaultConfig="toolbarConfig"
-            :mode="mode"
-            style="border-bottom: 1px solid #ccc"
-          />
-          <Editor
-            :defaultConfig="editorConfig"
-            :mode="mode"
-            v-model="formData.valueHtml"
-            style="height: 450px; overflow-y: hidden"
-            @onCreated="handleCreated"
-            @onChange="handleChange"
-            @onDestroyed="handleDestroyed"
-            @onFocus="handleFocus"
-            @onBlur="handleBlur"
-            @customAlert="customAlert"
-            @customPaste="customPaste"
-          />
-        </div>
+      <div style="border: 1px solid #ccc">
+        <Toolbar
+          style="border-bottom: 1px solid #ccc"
+          :editor="editorRef"
+          :defaultConfig="toolbarConfig"
+          :mode="mode"
+        />
+        <Editor
+          style="height: 450px; overflow-y: hidden"
+          v-model="valueHtml"
+          :defaultConfig="editorConfig"
+          :mode="mode"
+          @onCreated="handleCreated"
+          @onChange="handleChange"
+        />
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-import '@wangeditor/editor/dist/css/style.css';
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue';
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue';
-export default{
-  components:{Editor, Toolbar},
-  data(){
-    return {
-      formData:[
-        {
-          valueHtml: "",
-          theme: "",
-        }
-      ]
-    }
-  },
-  methods: {
-    // 通过$emit监听父组件的事件，子组件向父组件传数据
-    getVal(){
-         this.$emit("ok",this.formData);
-      }
-  },
-  // 在页面数据更新时执行
-  updated(){
-    this.getVal();
-  },
+<script setup name="Write">
+import '@wangeditor/editor/dist/css/style.css'
+import { onBeforeUnmount, ref, shallowRef, inject, reactive, onUpdated } from 'vue'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+const props = defineProps({
+  isComplete: {
+    type: Boolean,
+    default: false
+  }
+})
 
-  //富文本编辑器的相关函数
-  setup() {
-    // 编辑器实例，必须用 shallowRef，重要！
-    const editorRef = shallowRef();
-    const toolbarConfig = {};
-    const editorConfig = { placeholder: '请输入内容...' };
+// 表单信息
+const formData = reactive({
+  noticeTheme: '', //通知主题
+  noticeContent: '' // 通知内容
+})
+// 使用emit向父组件传递数据
+const emit = defineEmits(['ok'])
+// 编辑器实例，必须用 shallowRef
+const editorRef = shallowRef()
 
-    // 组件销毁时，也及时销毁编辑器，重要！
-    onBeforeUnmount(() => {
-      const editor = editorRef.value;
-      if (editor == null) return;
+// 内容 HTML
+const valueHtml = ref('')
+// mode
+const mode = ref('default')
 
-      editor.destroy();
-    });
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...' }
 
-    // 编辑器回调函数
-    const handleCreated = (editor) => {
-      console.log('created', editor);
-      editorRef.value = editor; // 记录 editor 实例，重要！
-    };
-    const handleChange = (editor) => {
-      console.log('change:', editor.getHtml());
-    };
-    const handleDestroyed = (editor) => {
-      console.log('destroyed', editor);
-    };
-    const handleFocus = (editor) => {
-      console.log('focus', editor);
-    };
-    const handleBlur = (editor) => {
-      console.log('blur', editor);
-    };
-    const customAlert = (info, type) => {
-      alert(`【自定义提示】${type} - ${info}`);
-    };
-    const customPaste = (editor, event, callback) => {
-      console.log('ClipboardEvent 粘贴事件对象', event);
-
-      // 自定义插入内容
-      editor.insertText('xxx');
-
-      // 返回值（注意，vue 事件的返回值，不能用 return）
-      callback(false); // 返回 false ，阻止默认粘贴行为
-      // callback(true) // 返回 true ，继续默认的粘贴行为
-    };
-
-    const insertText = () => {
-      const editor = editorRef.value;
-      if (editor == null) return;
-
-      editor.insertText('hello world');
-    };
-
-    const printHtml = () => {
-      const editor = editorRef.value;
-      if (editor == null) return;
-      console.log(editor.getHtml());
-    };
-
-    const disable = () => {
-      const editor = editorRef.value;
-      if (editor == null) return;
-      editor.disable()
-    };
-
-    return {
-      editorRef,
-      mode: 'default',
-      toolbarConfig,
-      editorConfig,
-      handleCreated,
-      handleChange,
-      handleDestroyed,
-      handleFocus,
-      handleBlur,
-      customAlert,
-      customPaste,
-      insertText,
-      printHtml,
-      disable,
-    };
-  },
+// 组件销毁时，也及时销毁编辑器
+onBeforeUnmount(() => {
+  const editor = editorRef.value
+  if (editor == null) return
+  editor.destroy()
+})
+const handleCreated = (editor) => {
+  editorRef.value = editor // 记录 editor 实例，重要！
 }
-
-</script>
+function handleChange (editor) {
+  formData.noticeContent = editor.getText()
+  emit('ok', formData)
+}
+// 子组件监听父组件的isComplete,清空输入
+watch(() => props.isComplete, (nweProps) => {
+  formData.noticeTheme = ''
+  valueHtml.value = ''
+})
+</script>    
 
 <style lang="scss" scoped>
-.index{
+.index {
   height: 670px;
   width: 1142px;
 }
-.head{
-  span{
+.head {
+  span {
     margin-left: 20px;
   }
   position: relative;
@@ -166,21 +101,20 @@ export default{
   text-align: left;
   font-family: SourceHanSansSC-regular;
 }
-.item{
+.item {
   position: relative;
-  top:30px;
+  top: 30px;
   left: 67px;
   width: 350px;
   height: 70px;
   margin-right: 200px;
 }
-.write{
+.write {
   position: relative;
   left: 67px;
-  top:33px;
+  top: 33px;
   width: 763px;
-  height: 535px;
+  height: 450px;
   background-color: rgba(237, 241, 242, 1);
-  border: 2px solid rgba(187, 187, 187, 1);
 }
 </style>

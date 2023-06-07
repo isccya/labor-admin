@@ -46,7 +46,7 @@
       
     <!-- 数据展示 -->
     <div class="list">
-      <el-table :data="data.tableData" class="table">
+      <el-table :data="data.tableData">
           <el-table-column type="index" label="序号" />
           <el-table-column prop="userName" label="姓名">
             <template #default="scope">
@@ -92,7 +92,7 @@
       </el-table>
 
         <!-- 分页器 -->
-        <div class="pagination">
+        <div>
           <Pagination 
             :total="data.tableData.length" 
             v-model:page="data.pageParams.pageNum" 
@@ -208,13 +208,5 @@ function dataFilter(){
 }
 .list{
   padding: 20px;
-}
-.table{
-  height: 711px;
-}
-.pagination {
-  position:relative;
-  left:115px;
-  width: 773px;
 }
 </style>

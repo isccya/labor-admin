@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
-
+// 查询学院列表
 export function getDeptSelect() {
     return request({
-        url: '/labor/test/dept',
+        url: '/dept/util/listCollege',
         method: 'get'
     });
 }
@@ -14,3 +14,13 @@ export function getClassSelect() {
         method: 'get'
     });
 }
+
+// 查询学期列表
+export function getTermList (query) {
+    return request({
+        url: '/term/util/list',
+        method: 'get',
+        params: query
+    })
+}
+

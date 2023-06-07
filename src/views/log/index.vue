@@ -28,7 +28,7 @@
     </div>
     <!-- 数据展示 -->
     <div class="list">
-      <el-table :data="data.tableData" stripe  class="table">
+      <el-table :data="data.tableData" stripe>
           <el-table-column type="index" label="序号"/>
           <el-table-column prop="userName" label="姓名"/>
           <el-table-column prop="grade" label="年级"/>
@@ -37,7 +37,7 @@
           <el-table-column prop="operation" label="操作"/>
       </el-table>
       <!-- 分页器 -->
-      <div class="pagination">
+      <div>
         <Pagination 
           :total="data.tableData.length" 
           v-model:page="data.pageParams.pageNum" 
@@ -96,14 +96,5 @@ getList();
 }
 .list{
     padding: 20px;
-}
-.table{
-  width: 100%;
-  height: 711px;
-}
-.pagination {
-  position:relative;
-  left:115px;
-  width: 773px;
 }
 </style>

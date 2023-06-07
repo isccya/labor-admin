@@ -1,9 +1,19 @@
 import request from '@/utils/request'
 
 
-export function getNotice() {
+export function getNotice (query) {
     return request({
-        url: 'http://127.0.0.1:4523/m1/2398039-0-default/labor/test/user',
-        method: 'get'
-    });
+        url: '/labor/notice/list',
+        method: 'get',
+        params: query
+    })
+}
+
+// 新增劳动通知
+export function AddNotice (query) {
+    return request({
+        url: '/admins/labor/notice',
+        method: 'post',
+        data: query
+    })
 }
