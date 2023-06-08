@@ -136,7 +136,9 @@
             >
               完成
             </el-button>
-            <el-button type="danger">删除</el-button>
+            <el-button type="danger" @click="DeleteManager(scope.row)"
+              >删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -157,7 +159,7 @@
 
 <script setup name = "Manager" >
 import { reactive } from "vue"
-import { getManager } from "@/api/list/manager.js"
+import { getManager, deleteManager, updateManager } from "@/api/list/manager.js"
 import { getDeptSelect } from "@/api/list/select.js"
 import { ElMessage } from 'element-plus'
 
@@ -220,7 +222,7 @@ const getDeptSelectList = () => {
 }
 getDeptSelectList()
 //修改数据,当用户点击修改时，变成输入框  
-function handleEdit (row) {
+const handleEdit = (row) => {
   if (row.hasOwnProperty('isEdit')) {
     row.isEdit = true
   } else {
@@ -229,13 +231,36 @@ function handleEdit (row) {
   console.log(row)
 }
 //当点击完成时执行数据的修改  
-function EditComplete (row) {
-  row.isEdit = false
-  ElMessage({
-    message: '修改成功',
-    type: 'success',
+const EditComplete = (row) => {
+  console.log(row.roleId)
+  let oldRoleId = row.roleId
+  let newRoleId = row.roleId+1
+  const params = {...row,newRoleId,oldRoleId}
+  console.log(params);
+  updateManager(params).then(res => {
+    console.log(res)
+    if (res.code === 200) {
+      ElMessage({
+        message: '修改成功',
+        type: 'success',
+      })
+      // 重新获取管理员数据
+      getList()
+      row.isEdit = false
+    }
   })
+}
+const DeleteManager = (row) => {
   console.log(row)
+  deleteManager(row).then(res => {
+    console.log(res)
+    if (res.code === 200) {
+      ElMessage({
+        message: '删除成功',
+        type: 'success',
+      })
+    }
+  })
 }
 //筛选数据
 const dataFilter = (val) => {

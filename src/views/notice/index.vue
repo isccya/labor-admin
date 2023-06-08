@@ -32,127 +32,141 @@
             />
           </el-select>
         </el-form-item>
-        <!-- 按钮 -->
-        <el-form-item>
-          <el-button
-            type="success"
-            class="btn"
-            @click="data.dialogFormVisible = true"
-            >新建公告</el-button
-          >
-        </el-form-item>
-        <!-- 一键导入 -->
         <el-form-item class="Upload">
           <FileUpload></FileUpload>
         </el-form-item>
       </el-form>
     </div>
-    <!-- 新建公告弹窗 -->
-    <el-dialog v-model="data.dialogFormVisible" title="新建公告" width="400px">
-      <el-form :model="data.form" label-width="90px">
-        <el-form-item label="姓名">
+    <!-- 公告详情弹窗 -->
+    <el-dialog v-model="data.dialogFormVisible" title="公告详情" width="800px">
+      <el-form :model="data.detail" label-width="90px">
+        <el-form-item label="公告标题" class="notice-item">
           <el-input
-            v-model="data.form.name"
-            class="w-50 m-2"
+            v-model="data.detail.noticeTitle"
+            v-show="data.detail.isEdit"
             placeholder="请输入"
+            autofocus
+            class="w-40"
           />
+          <span v-show="!data.detail.isEdit">{{
+            data.detail.noticeTitle
+          }}</span>
         </el-form-item>
-        <el-form-item label="学期">
+        <el-form-item label="指导老师" class="notice-item">
           <el-input
-            v-model="data.form.semester"
-            class="w-50 m-2"
+            v-model="data.detail.guideTeacherName"
+            v-show="data.detail.isEdit"
             placeholder="请输入"
+            autofocus
+            class="w-50"
           />
+          <span v-show="!data.detail.isEdit">{{
+            data.detail.guideTeacherName
+          }}</span>
         </el-form-item>
-        <el-form-item label="创建者">
-          <el-input
-            v-model="data.form.founder"
-            class="w-50 m-2"
-            placeholder="请输入"
-          />
+        <el-form-item label="创建时间" class="notice-item">
+          <span>{{ data.detail.createTime }}</span>
         </el-form-item>
-        <el-form-item label="类型">
+        <el-form-item label="类型" class="notice-item">
+          <span>{{ data.detail.noticeTypeName }}</span>
+        </el-form-item>
+        <el-form-item label="面向对象" class="notice-item">
+          <el-select
+            v-model="data.detail.deptName"
+            v-show="data.detail.isEdit"
+            placeholder="data.detail.deptName"
+          >
+            <el-option
+              v-for="item in data.DeptOption"
+              :key="item.deptName"
+              :label="item.label"
+              :value="item.deptName"
+            />
+          </el-select>
+          <span v-show="!data.detail.isEdit">{{ data.detail.deptName }}</span>
+        </el-form-item>
+        <el-form-item label="学期" class="notice-item">
+          <el-select
+            v-model="data.detail.termName"
+            v-show="data.detail.isEdit"
+            placeholder="data.detail.termName"
+          >
+            <el-option
+              v-for="item in data.TermOption"
+              :key="item.termId"
+              :label="item.label"
+              :value="item.termName"
+            />
+          </el-select>
+          <span v-show="!data.detail.isEdit">{{ data.detail.termName }}</span>
+        </el-form-item>
+        <el-form-item label="公告内容" class="notice-item-content">
           <el-input
-            v-model="data.form.type"
-            class="w-50 m-2"
-            placeholder="请输入"
+            type="textarea"
+            maxlength="300"
+            show-word-limit
+            rows="13"
+            v-model="data.detail.noticeContent"
+            v-show="data.detail.isEdit"
+            placeholder="data.detail.noticeContent"
           />
+          <span v-show="!data.detail.isEdit">{{
+            data.detail.noticeContent
+          }}</span>
         </el-form-item>
       </el-form>
+
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="data.dialogFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="submit">提交</el-button>
+          <el-button plain type="danger" @click="data.dialogConfirm = true"> 删除 </el-button>
+          <el-button
+            type="warning"
+            plain
+            @click="handleEdit"
+            v-show="!data.detail.isEdit"
+            >修改</el-button
+          >
+          <el-button
+            type="warning"
+            plain
+            @click="EditComplete"
+            v-show="data.detail.isEdit"
+            >完成</el-button
+          >
+          <el-button
+            type="primary"
+            plain
+            @click="data.dialogFormVisible = false"
+            >关闭</el-button
+          >
         </span>
       </template>
     </el-dialog>
-
+    <!-- 确认删除 -->
+    <el-dialog v-model="data.dialogConfirm" title="确认删除该公告吗" width="450px">
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="data.dialogConfirm = false">取消</el-button>
+          <el-button 
+            type="primary" 
+            @click="deleteData">
+            确认
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
     <!-- 数据展示 -->
     <div class="list">
       <el-table :data="data.tableData.laborNoticeList">
         <el-table-column type="index" label="序号" />
-        <el-table-column prop="id" label="ID">
+        <el-table-column prop="id" label="ID" />
+        <el-table-column prop="noticeTitle" label="通知标题" />
+        <el-table-column prop="updateTime" label="更新时间" />
+        <el-table-column label="操作" align="center">
           <template #default="scope">
-            <el-input
-              v-model="scope.row.id"
-              v-show="scope.row.isEdit"
-              placeholder="scope.row.id"
-              class="w-50"
-              autofocus
-            />
-            <span v-show="!scope.row.isEdit">{{ scope.row.id }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="noticeTitle" label="通知标题">
-          <template #default="scope">
-            <el-input
-              v-model="scope.row.noticeTitle"
-              v-show="scope.row.isEdit"
-              placeholder="scope.row.noticeTitle"
-              class="w-50"
-            />
-            <span v-show="!scope.row.isEdit">{{ scope.row.noticeTitle }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="updateTime" label="更新时间">
-          <template #default="scope">
-            <el-input
-              v-model="scope.row.updateTime"
-              v-show="scope.row.isEdit"
-              placeholder="scope.row.updateTime"
-              class="w-50"
-            />
-            <span v-show="!scope.row.isEdit">{{ scope.row.updateTime }}</span>
-          </template>
-        </el-table-column>
-        <!-- <el-table-column prop="dept.type" label="类型">
-          <template #default="scope">
-            <el-input
-              v-model="scope.row.dept.type"
-              v-show="scope.row.isEdit"
-              placeholder="scope.row.dept.type"
-              class="w-50"
-            />
-            <span v-show="!scope.row.isEdit">{{ scope.row.dept.type }}</span>
-          </template>
-        </el-table-column> -->
-        <el-table-column label="操作">
-          <template #default="scope">
-            <el-button
-              type="warning"
-              @click="handleEdit(scope.row)"
-              v-show="!scope.row.isEdit"
-            >
-              修改
+            <el-button text type="primary" @click="handleDetails(scope.row)">
+              查看详细
             </el-button>
-            <el-button
-              type="warning"
-              @click="EditComplete(scope.row)"
-              v-show="scope.row.isEdit"
-            >
-              完成
-            </el-button>
-            <el-button type="danger">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -174,7 +188,7 @@
 <script setup name = "Notice" >
 import { reactive } from "vue"
 import FileUpload from "@/components/FileUpload"
-import { getNotice } from "@/api/list/notice"
+import { getNotice, deleteNotice, detailNotice } from "@/api/list/notice"
 import { getDeptSelect, getTermList } from "@/api/list/select.js"
 import { ElMessage } from 'element-plus'
 //最开始就调用的方法
@@ -183,11 +197,12 @@ const data = reactive({
   NoticeList: '',
   //添加管理员弹窗
   dialogFormVisible: false,
+  dialogConfirm: false,
   //表格数据
   tableData: '',
   //下拉框选项
   DeptOption: '', // 学院
-  TermOption:'', // 学期
+  TermOption: '', // 学期
   optionsParams: {
     startTime: '', // startTime
     endTime: '', // 结束时间
@@ -199,42 +214,20 @@ const data = reactive({
     department: '',
     semester: ''
   },
-  //新增管理员数据
-  form: {
-      name: '',
-      semester: '',
-      founder: '',
-      type: ''
-    },
+  //获取公告详情
+  detail: {},
   //请求参数
   queryParams: {
-    // id: 1,
-    // deptId: 1,
-    // guideTeacherName: "",
-    //pageNum: 1, //当前页码
-    //pageSize: 10, //页码显示数
-    // currentPage: "",
-    // noticeContent: "",
-    // noticeTheme: "",
-    // noticeType: 0,
-    // termId: 1,
     size: 10,
     current: 1
   },
-  total: 1000
+  total: 1000,
 })
-//提交新增公告
-function submit () {
-  console.log(data.form)
-  // ElMessage({
-  //   message: '添加成功',
-  //   type: 'success',
-  // })
-  data.dialogFormVisible = false
-}
+
 //获取公告数据
 const getList = () => {
   getNotice(data.queryParams).then(res => {
+    console.log(res)
     data.tableData = res.data
     data.total = res.data.total
   })
@@ -253,24 +246,48 @@ const getDept = () => {
     data.DeptOption = res.data
   })
 }
+// 点击查看公告的详细信息
+const handleDetails = (val) => {
+  data.dialogFormVisible = true
+  detailNotice(val).then(res => {
+    data.detail = res.data
+  })
+}
 getDept()
 //修改数据,当用户点击修改时，变成输入框  
-function handleEdit (row) {
-  if (row.hasOwnProperty('isEdit')) {
-    row.isEdit = true
+const handleEdit = () => {
+  if (data.detail.hasOwnProperty('isEdit')) {
+    data.detail.isEdit = true
   } else {
-    row['isEdit'] = true
+    data.detail['isEdit'] = true
   }
-  console.log(row)
+  console.log(data.detail)
 }
 //当点击完成时执行数据的修改  
-function EditComplete (row) {
-  row.isEdit = false
+const EditComplete = () => {
+  data.detail.isEdit = false
+  console.log([] === true)
   ElMessage({
     message: '修改成功',
     type: 'success',
   })
-  console.log(row)
+}
+// 删除通知
+const deleteData = () => {
+  let ids = data.detail.id.toString()
+  const params = { ...data.detail, ids }
+  deleteNotice(params).then(res => {
+    if (res.code === 200) {
+      ElMessage({
+        message: '删除成功',
+        type: 'success',
+      })
+    }
+    // 重新请求数据
+    getList()
+    data.dialogFormVisible = false
+    data.dialogConfirm = false
+  })
 }
 //筛选数据
 function dataFilter () {
@@ -307,5 +324,14 @@ function dataFilter () {
 .Upload {
   position: relative;
   top: 2px;
+}
+.notice-item {
+  width: 280px;
+}
+.notice-item-content {
+  width: 400px;
+  position: absolute;
+  top: 85px;
+  left: 40%;
 }
 </style>

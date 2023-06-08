@@ -111,19 +111,19 @@
 import { provide, reactive } from 'vue'
 import Write from './write'
 import { getTermList, getDeptSelect } from '@/api/list/select.js'
-import { AddNotice } from '@/api/list/notice.js'
+import { addNotice } from '@/api/list/notice.js'
 const data = reactive({
   dialogFormVisible: false,
   form: {
-    id: new Date().getTime().toString(), // 通知id 
+    id: Math.ceil(Math.random() * 100), // 通知id 
     termId: '', // 学期ID
-    termName:'', // 学期名
+    termName: '', // 学期名
     guideTeacherName: '', // 指导老师姓名
     noticeContent: "", // 通知内容
     noticeTheme: "",  // 通知主题
     deptId: '', // 院系id
     noticeType: 1, // 通知类型（0 - 公告 1 - 通知）
-    object:'' //面向对象
+    object: '' //面向对象
   },
   options: '',
   optionsParams: {
@@ -144,9 +144,10 @@ function handleEdit (message) {
 }
 //提交编辑数据
 function submit () {
-  AddNotice(data.form).then(res => {
+  addNotice(data.form).then(res => {
     console.log(res)
   })
+  console.log(data.form)
   data.dialogFormVisible = false
   setTimeout(() => {
     // 清空输入
