@@ -16,22 +16,6 @@
             />
           </el-select>
         </el-form-item>
-
-        <!-- <el-form-item label="年级">
-          <el-select
-            v-model="data.select.grade"
-            placeholder="请选择"
-            @change="dataFilter"
-          >
-            <el-option
-              v-for="item in data.select"
-              :key="item.grade"
-              :label="item.label"
-              :value="item.grade"
-            />
-          </el-select>
-        </el-form-item> -->
-
         <el-form-item>
           <el-button
             type="success"

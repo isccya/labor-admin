@@ -71,7 +71,7 @@
     </el-dialog>
     <!-- 数据展示 -->
     <div class="list">
-      <el-table :data="data.tableData">
+      <el-table :data="data.tableData" stripe>
         <el-table-column type="index" label="序号" />
         <el-table-column prop="nickName" label="姓名">
           <template #default="scope">

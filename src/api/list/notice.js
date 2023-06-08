@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-
+// 获取劳动通知
 export function getNotice (query) {
     return request({
         url: '/labor/notice/list',
@@ -31,5 +31,14 @@ export function detailNotice (query) {
     return request({
         url: `/labor/notice/${query.id}`,
         method: 'get',
+    })
+}
+
+// 修改劳动通知
+export function updateNotice(query){
+    return request({
+        url: '/admins/labor/notice',
+        method:'put',
+        data: query
     })
 }

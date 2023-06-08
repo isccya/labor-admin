@@ -75,6 +75,7 @@
             v-model="data.detail.deptName"
             v-show="data.detail.isEdit"
             placeholder="data.detail.deptName"
+            @change="getDeptId"
           >
             <el-option
               v-for="item in data.DeptOption"
@@ -90,6 +91,7 @@
             v-model="data.detail.termName"
             v-show="data.detail.isEdit"
             placeholder="data.detail.termName"
+            @change="getTermId"
           >
             <el-option
               v-for="item in data.TermOption"
@@ -118,7 +120,13 @@
 
       <template #footer>
         <span class="dialog-footer">
-          <el-button plain type="danger" @click="data.dialogConfirm = true"> 删除 </el-button>
+          <el-button
+            plain
+            type="danger"
+            @click="data.dialogDeleteConfirm = true"
+          >
+            删除
+          </el-button>
           <el-button
             type="warning"
             plain
@@ -129,7 +137,7 @@
           <el-button
             type="warning"
             plain
-            @click="EditComplete"
+            @click="data.dialogUpdateConfirm = true"
             v-show="data.detail.isEdit"
             >完成</el-button
           >
@@ -143,28 +151,41 @@
       </template>
     </el-dialog>
     <!-- 确认删除 -->
-    <el-dialog v-model="data.dialogConfirm" title="确认删除该公告吗" width="450px">
+    <el-dialog
+      v-model="data.dialogDeleteConfirm"
+      title="确认删除该公告吗"
+      width="450px"
+    >
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="data.dialogConfirm = false">取消</el-button>
-          <el-button 
-            type="primary" 
-            @click="deleteData">
-            确认
-          </el-button>
+          <el-button @click="data.dialogDeleteConfirm = false">取消</el-button>
+          <el-button type="primary" @click="deleteData"> 确认 </el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 确认修改 -->
+    <el-dialog
+      v-model="data.dialogUpdateConfirm"
+      title="确认提交已修改吗"
+      width="450px"
+    >
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="data.dialogUpdateConfirm = false">取消</el-button>
+          <el-button type="primary" @click="EditComplete"> 确认 </el-button>
         </span>
       </template>
     </el-dialog>
     <!-- 数据展示 -->
     <div class="list">
-      <el-table :data="data.tableData.laborNoticeList">
+      <el-table :data="data.tableData.laborNoticeList" stripe>
         <el-table-column type="index" label="序号" />
         <el-table-column prop="id" label="ID" />
         <el-table-column prop="noticeTitle" label="通知标题" />
         <el-table-column prop="updateTime" label="更新时间" />
         <el-table-column label="操作" align="center">
           <template #default="scope">
-            <el-button text type="primary" @click="handleDetails(scope.row)">
+            <el-button text type="primary" @click="getDetails(scope.row)">
               查看详细
             </el-button>
           </template>
@@ -188,7 +209,7 @@
 <script setup name = "Notice" >
 import { reactive } from "vue"
 import FileUpload from "@/components/FileUpload"
-import { getNotice, deleteNotice, detailNotice } from "@/api/list/notice"
+import { getNotice, deleteNotice, detailNotice, updateNotice } from "@/api/list/notice"
 import { getDeptSelect, getTermList } from "@/api/list/select.js"
 import { ElMessage } from 'element-plus'
 //最开始就调用的方法
@@ -197,7 +218,8 @@ const data = reactive({
   NoticeList: '',
   //添加管理员弹窗
   dialogFormVisible: false,
-  dialogConfirm: false,
+  dialogUpdateConfirm: false,
+  dialogDeleteConfirm: false,
   //表格数据
   tableData: '',
   //下拉框选项
@@ -227,7 +249,6 @@ const data = reactive({
 //获取公告数据
 const getList = () => {
   getNotice(data.queryParams).then(res => {
-    console.log(res)
     data.tableData = res.data
     data.total = res.data.total
   })
@@ -247,10 +268,12 @@ const getDept = () => {
   })
 }
 // 点击查看公告的详细信息
-const handleDetails = (val) => {
+const getDetails = (val) => {
   data.dialogFormVisible = true
   detailNotice(val).then(res => {
     data.detail = res.data
+    getDeptId()
+    getTermId()
   })
 }
 getDept()
@@ -261,15 +284,32 @@ const handleEdit = () => {
   } else {
     data.detail['isEdit'] = true
   }
-  console.log(data.detail)
+}
+//提交修改信息前对数据进行处理
+const ProcessData = () => {
+  data.detail.noticeTheme = data.detail.noticeTitle
+  data.detail.updateTime = ''
+  data.detail.createTime = ''
+  if (data.detail.noticeTypeName === '公告') {
+    data.detail.noticeType = 1
+  }
+  else {
+    data.detail.noticeType = 0
+  }
 }
 //当点击完成时执行数据的修改  
 const EditComplete = () => {
   data.detail.isEdit = false
-  console.log([] === true)
-  ElMessage({
-    message: '修改成功',
-    type: 'success',
+  ProcessData()
+  updateNotice(data.detail).then(res => {
+    if (res.code === 200) {
+      ElMessage({
+        message: '修改成功',
+        type: 'success',
+      })
+      data.dialogUpdateConfirm = false
+      data.dialogFormVisible = false
+    }
   })
 }
 // 删除通知
@@ -285,25 +325,35 @@ const deleteData = () => {
     }
     // 重新请求数据
     getList()
+    data.dialogDeleteConfirm = false
     data.dialogFormVisible = false
-    data.dialogConfirm = false
+  })
+}
+// 获取公告详情的学院ID
+const getDeptId = () => {
+  data.DeptOption.map(item => {
+    if (item.deptName === data.detail.deptName) {
+      data.detail.deptId = item.deptId
+    }
+  })
+}
+// 获取公告详情学期ID
+const getTermId = () => {
+  data.TermOption.map(item => {
+    if (item.termName === data.detail.termName) {
+      data.detail.termId = item.termId
+    }
   })
 }
 //筛选数据
-function dataFilter () {
-  // let result
-  // if (data.select.department && data.select.semester) {
-  //   console.log(111)
-  //   result = data.NoticeList.filter(ele => (ele.dept.deptName == data.select.department && ele.grade == data.select.semester))
-  // }
-  // else if (data.select.department) {
-  //   result = data.NoticeList.filter(ele => ele.dept.deptName == data.select.department)
-  // }
-  // else if (data.select.semester) {
-  //   result = data.NoticeList.filter(ele => ele.grade == data.select.semester)
-  // }
-  // console.log(result)
-  // this.data.tableData = result
+const dataFilter = (val) => {
+  console.log(val);
+  data.DeptOption.map(item=>{
+    if(item.deptName === val){
+      data.queryParams.deptId = item.deptId
+    }
+  })
+  getList()
 }
 </script>
 
