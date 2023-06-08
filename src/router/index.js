@@ -57,31 +57,50 @@ export const constantRoutes = [{
       name: 'Index',
       meta: {title: '首页', icon: 'index', affix: true},
     }],
-  }, //审核功能
+  },
+  //审核功能
   {
     path: '/audit',
     component: Layout,
     hidden: true,
     redirect: 'noredirect',
     meta: {title: "审核功能", icon: 'audit'},
-    children: [{
-      path: 'waitAudit',
-      component: () => import('@/views/audit/waitAudit'),
-      name: 'waitAudit',
-      meta: {title: '待审核'},
-    }, {
-      path: 'audited',
-      component: () => import('@/views/audit/waitAudit'),
-      name: 'audited',
-      meta: {title: '已审核'},
-    }],
-  }, //劳动计划
+    children: [
+      {
+        path: 'waitAudit',
+        component: () => import('@/views/audit/waitAudit'),
+        name: 'waitAudit',
+        meta: {title: '待审核'},
+      },
+      {
+        path: 'audited',
+        component: () => import('@/views/audit/waitAudit'),
+        name: 'audited',
+        meta: {title: '已审核'},
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/audit/component/detail'),
+        name: 'detail',
+        meta: {title: '详细'},
+      },
+    ],
+  },
+  //劳动计划
   {
-    path: '/laborplane', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+    path: '/laborplan', component: Layout, hidden: true, redirect: 'noredirect', children: [{
       path: 'index',
-      component: () => import('@/views/laborPlane'),
+      component: () => import('@/views/laborPlan'),
       name: '劳动计划',
-      meta: {title: '劳动计划', icon: 'laborPlane'},
+      meta: {title: '劳动计划', icon: 'laborPlan'},
+    }],
+  },
+  {
+    path: '/laborplan', component: Layout, hidden: true, redirect: 'noredirect', children: [{
+      path: 'colloge',
+      component: () => import('@/views/laborPlan/leverColloge'),
+      name: '劳动计划院级',
+      meta: {title: '劳动计划院级', icon: 'laborPlan'},
     }],
   },
   {

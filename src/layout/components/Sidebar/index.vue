@@ -4,30 +4,30 @@
     :style="{ backgroundColor:sideTheme === 'theme-dark'? variables.menuBackground : variables.menuLightBackground,}">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
-      <el-menu 
-      :default-active="activeMenu" 
-      :collapse="isCollapse" 
-      :background-color="sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground" 
-      :text-color="sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor" 
-      :unique-opened="true" 
-      :active-text-color="theme" 
-      :collapse-transition="false" 
-      mode="vertical">
+      <el-menu :default-active="activeMenu" :collapse="isCollapse" :background-color="
+        sideTheme === 'theme-dark'
+          ? variables.menuBackground
+          : variables.menuLightBackground
+      " :text-color="
+  sideTheme === 'theme-dark'
+    ? variables.menuColor
+    : variables.menuLightColor
+" :unique-opened="true" :active-text-color="theme" :collapse-transition="false" mode="vertical">
         <!-- 自己的侧边菜单 -->
         <!-- 首页 -->
         <el-menu-item index="/index">
           <el-icon>
-            <HomeFilled />
+            <HomeFilled/>
           </el-icon>
           <router-link to="/index">首页</router-link>
         </el-menu-item>
 
-        <!-- 审核功能 -->
-        <el-sub-menu index="/audit">
+                <!-- 审核功能 -->
+                <el-sub-menu index="/audit">
 
           <template #title>
             <el-icon>
-              <BellFilled />
+              <BellFilled/>
             </el-icon>
             <span>审核功能</span>
           </template>
@@ -35,27 +35,27 @@
           <el-menu-item index="/audit/waitAudit">
             <router-link to="/audit/waitAudit">待审核</router-link>
           </el-menu-item>
-          <el-menu-item index="/audit/audited">
-            <router-link to="/audit/audited">已审核</router-link>
-          </el-menu-item>
+<!--          <el-menu-item index="/audit/audited">-->
+          <!--            <router-link to="/audit/audited">已审核</router-link>-->
+          <!--          </el-menu-item>-->
         </el-sub-menu>
 
         <!-- 劳动计划 -->
         <el-menu-item index="/laborplane/index">
           <el-icon>
-            <List />
+            <List/>
           </el-icon>
-          <router-link to="/laborplane/index">劳动计划</router-link>
+          <router-link to="/laborplan/index">劳动计划</router-link>
         </el-menu-item>
         <el-menu-item index="/student/center">
               <el-icon>
-                <User />
+                <User/>
               </el-icon>
           <router-link to="/student/center">学生信息</router-link>
         </el-menu-item>
         <el-menu-item index="/manager/info">
               <el-icon>
-                <location />
+                <location/>
               </el-icon>
           <router-link to="/manager/info">管理员信息</router-link>
         </el-menu-item>
@@ -73,13 +73,13 @@
         </el-menu-item>
         <el-menu-item index="/log/info">
               <el-icon>
-                <Memo />
+                <Memo/>
               </el-icon>
           <router-link to="/log/info">系统日志</router-link>
         </el-menu-item>
         <el-menu-item index="/edit/info">           
               <el-icon>
-                <Bell />
+                <Bell/>
               </el-icon>
           <router-link to="/edit/info">通知编辑</router-link>
         </el-menu-item>
