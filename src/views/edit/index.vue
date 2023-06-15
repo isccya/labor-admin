@@ -112,6 +112,8 @@ import { provide, reactive } from 'vue'
 import Write from './write'
 import { getTermList, getDeptSelect } from '@/api/list/select.js'
 import { addNotice } from '@/api/list/notice.js'
+import { ElMessage } from 'element-plus'
+
 const data = reactive({
   dialogFormVisible: false,
   form: {
@@ -146,8 +148,13 @@ function handleEdit (message) {
 function submit () {
   addNotice(data.form).then(res => {
     console.log(res)
+    if (res.code === 200) {
+      ElMessage({
+        message: '提交成功',
+        type: 'success',
+      })
+    }
   })
-  console.log(data.form)
   data.dialogFormVisible = false
   setTimeout(() => {
     // 清空输入

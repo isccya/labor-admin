@@ -10,9 +10,10 @@ export function getStudent (query) {
 }
 
 // 获取学生详细信息
-export function getDetailStudent(){
+export function getDetailStudent(query){
     return request({
         method:'get',
-        url:'/labor/student'
+        url:'/labor/student',
+        params:query
     })
 }

@@ -192,7 +192,7 @@ const data = reactive({
   },
   //添加学生选框数据
   form: {
-    name: '',
+    name: '曾美林',
     grade: '',
     telephone: '',
     department: ''
@@ -229,7 +229,7 @@ const getList = () => {
 }
 getList()
 const getDetail = () => {
-  getDetailStudent().then(res => {
+  getDetailStudent(data.form).then(res => {
     console.log('getDetail', res)
   })
 }
