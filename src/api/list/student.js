@@ -8,3 +8,11 @@ export function getStudent (query) {
         params: query
     })
 }
+
+// 获取学生详细信息
+export function getDetailStudent(){
+    return request({
+        method:'get',
+        url:'/labor/student'
+    })
+}

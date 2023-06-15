@@ -166,7 +166,7 @@
 
 <script setup name = "Student">
 import { reactive } from "vue"
-import { getStudent } from "@/api/list/student"
+import { getStudent, getDetailStudent } from "@/api/list/student"
 import { getDeptSelect } from "@/api/list/select.js"
 import Pagination from "@/components/Pagination"
 import { ElMessage } from 'element-plus'
@@ -177,12 +177,12 @@ const data = reactive({
   //添加学生弹窗
   dialogFormVisible: false,
   //表格数据
-  tableData:[{
-      nickName: '',
-      grade: '',
-      userName: '',
-      collegeName: ''
-    }],
+  tableData: [{
+    nickName: '',
+    grade: '',
+    userName: '',
+    collegeName: ''
+  }],
   //下拉框选项
   option: '',
   //下拉框选择数据
@@ -192,11 +192,11 @@ const data = reactive({
   },
   //添加学生选框数据
   form: {
-      name: '',
-      grade: '',
-      telephone: '',
-      department: ''
-    },
+    name: '',
+    grade: '',
+    telephone: '',
+    department: ''
+  },
   //分页参数
   queryParams: {
     collegeName: "",
@@ -228,6 +228,12 @@ const getList = () => {
   })
 }
 getList()
+const getDetail = () => {
+  getDetailStudent().then(res => {
+    console.log('getDetail', res)
+  })
+}
+getDetail()
 //获取下拉框学院数据
 const getDeptSelectList = () => {
   getDeptSelect().then(res => {
