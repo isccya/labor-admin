@@ -2,7 +2,7 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/TickNet-Hnust/labor-education-admin
+git clone git@github.com:isccya/labor-education-admin.git
 
 # 进入项目目录
 cd labor-education-admin
@@ -21,11 +21,11 @@ pnpm dev
 
 ## 大致介绍
 
-项目框架使用[ RuoYi 权限后台管理系统 ](http://doc.ruoyi.vip/ruoyi/) 
+项目框架使用[ RuoYi 权限后台管理系统 ](http://doc.ruoyi.vip/ruoyi/) ,这个版本引入了windicss,并修改了样式bug
 
 ### 相关开发文档
 
-- 原型图：[墨刀 (modao.cc)](https://modao.cc/app/LlLdLtOfrm5lo0pZrj9oS1)
+
 - 若伊权限后台管理系统 : [RuoYi](http://doc.ruoyi.vip/)
 - `vue3`文档：[Vue.js - 渐进式 JavaScript 框架 | Vue.js (vuejs.org)](https://cn.vuejs.org/)
 - 组件库：[一个 Vue 3 UI 框架 | Element Plus (element-plus.org)](https://element-plus.org/zh-CN/#/zh-CN)
