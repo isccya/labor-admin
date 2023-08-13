@@ -13,7 +13,7 @@
           </el-icon>
           <span>&nbsp;&nbsp;首页</span>
         </el-menu-item>
-        <el-menu-item index="1">
+        <el-menu-item index="/audit">
           <el-icon>
             <BellFilled />
           </el-icon>
