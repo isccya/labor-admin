@@ -1,9 +1,20 @@
 <template>
   <div class="app-container">
+
     <div class="flex">
       <el-form :inline="true" :model="formInline" class="demo-form-inline" :rules="rules">
         <el-form-item label="院系">
           <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
+            <el-option label="Zone one" value="shanghai" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="年级">
+          <el-select v-model="formInline.grade" placeholder="请选择年级" clearable>
+            <el-option label="Zone one" value="shanghai" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="班级">
+          <el-select v-model="formInline.grade" placeholder="请选择班级" clearable>
             <el-option label="Zone one" value="shanghai" />
           </el-select>
         </el-form-item>
@@ -12,15 +23,18 @@
             <el-option v-for="item in stateList" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="年级">
-          <el-select v-model="formInline.grade" placeholder="请选择年级" clearable>
-            <el-option label="Zone one" value="shanghai" />
-          </el-select>
+        <el-form-item>
+          <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+          <el-button icon="Refresh" @click="resetQuery">重置</el-button>
         </el-form-item>
       </el-form>
-      <el-button type="primary">一键导出</el-button>
+    </div>
+
+    <div class="pb-3">
+      <el-button type="primary" @click="oneExport">一键导出</el-button>
       <el-button type="success">一键评分</el-button>
     </div>
+
     <div>
       <el-table :data="tableData" stripe style="width: 100%">
         <el-table-column prop="date" label="姓名" align="center" />
@@ -41,7 +55,6 @@
           <template #default="scope">
             <el-button v-if="scope.row.isConfirm === 1" type="primary">修改</el-button>
             <el-button v-else type="primary" @click="">审核</el-button>
-
           </template>
         </el-table-column>
       </el-table>
@@ -51,13 +64,28 @@
           @current-change="handleCurrentChange" />
       </div>
     </div>
+
+    <div>
+      <el-dialog v-model="dialogVisible" title="Tips" width="30%" :before-close="handleClose">
+        <span>This is a message</span>
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogVisible = false">取消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">
+              一键导出
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
+import { ElLoading, ElMessage } from "element-plus";
 
-const collegeList = reactive([]);
+const collegeList = reactive([]);//学院列表
 const stateList = reactive([
   {
     label: '全部',
@@ -69,13 +97,8 @@ const stateList = reactive([
     label: '待审核',
     value: '2',
   },
-]);
-const gradeList = reactive([]);
-const formInline = reactive({
-  college: '',
-  state: '',
-  grade: '',
-})
+]);//状态列表
+const gradeList = reactive([]);//年级列表
 const tableData = [
   {
     date: '2016-05-03',
@@ -122,8 +145,39 @@ const tableData = [
     address: 'No. 189, Grove St, Los Angeles',
   },
 ]
-const currentPage = ref(1);
-const pageSizes = reactive([10, 20, 30, 50])
+const currentPage = ref(1);//当前所在页面数
+const pageSize = ref(10)//每页内容数
+const pageSizes = reactive([10, 20, 30, 50])//可选择每页展示的内容数
+const formInline = reactive({
+  college: '',
+  state: '',
+  grade: '',
+  pageNum: currentPage, //当前页码
+  pageSize, //页码显示数
+})
+// 搜索表单
+function handleQuery(){
+  
+}
+// 重置表单
+function resetQuery(){
+  formInline.college = ''
+  formInline.state = ''
+  formInline.grade = ''
+
+}
+const dialogVisible = ref(false)//是否展示一键导出对话框
+function oneExport() {
+  if (formInline.college === "") {
+    ElMessage.error("请选择院系后再导出！！！");
+    return;
+  }
+  if (formInline.grade === "") {
+    ElMessage.error("请选择年级后再导出！！！");
+    return;
+  }
+  dialogVisible.value = true;
+}
 onMounted(() => {
 
 })
