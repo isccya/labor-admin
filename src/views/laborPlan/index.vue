@@ -5,14 +5,14 @@
             <el-form :inline="true" :model="formInline" class="demo-form-inline" :rules="rules">
                 <el-form-item label="院系">
                     <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
-                        <el-option label="Zone one" value="shanghai" />
+                        <el-option v-for="items in collegeList" :label="items.label" :value="items.value" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="年级">
                     <el-select v-model="formInline.grade" placeholder="请选择年级" clearable>
-                        <el-option label="Zone one" value="shanghai" />
+                        <el-option v-for="items in gradeList" :label="items.label" :value="items.value" />
                     </el-select>
-                </el-form-item>
+                    </el-form-item>
                 <el-form-item>
                     <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
                     <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -32,7 +32,7 @@
                 <el-table-column prop="name" label="主管老师" align="center" />
                 <el-table-column label="操作" align="center">
                     <template #default="scope">
-                        <el-button type="primary">查看详情</el-button>
+                        <el-button text type="primary">查看详情</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -126,24 +126,21 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 
-const collegeList = reactive([]);//学院列表
-const gradeList = reactive([]);//年级列表
+//学院列表
+const collegeList = reactive([
+    {
+        label: '计算机科学与工程学院',
+        value: '1'
+    }
+]);
+//年级列表
+const gradeList = reactive([
+    {
+        label: '2020级',
+        value: '1'
+    }
+]);
 const tableData = [
-    {
-        date: '2016-05-03',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-02',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
-    {
-        date: '2016-05-04',
-        name: 'Tom',
-        address: 'No. 189, Grove St, Los Angeles',
-    },
     {
         date: '2016-05-01',
         name: 'Tom',

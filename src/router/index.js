@@ -72,14 +72,20 @@ export const constantRoutes = [
         path: 'audit',
         component: () => import('@/views/audit'),
         name: 'Audit',
-        meta: { title: '审核功能'  }
+        meta: { title: '审核功能' }
       },
       {
         path: 'laborPlan',
         component: () => import('@/views/laborPlan'),
         name: 'LaborPlan',
-        meta: { title: '劳动计划'  }
-      }
+        meta: { title: '劳动计划' }
+      },
+      {
+        path: 'student',
+        component: () => import('@/views/student'),
+        name: 'Student',
+        meta: { title: '学生信息' }
+      },
     ]
   },
   // {

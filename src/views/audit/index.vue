@@ -5,12 +5,12 @@
       <el-form :inline="true" :model="formInline" class="demo-form-inline" :rules="rules">
         <el-form-item label="院系">
           <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
-            <el-option label="Zone one" value="shanghai" />
+            <el-option v-for="items in collegeList" :label="items.label" :value="items.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="年级">
           <el-select v-model="formInline.grade" placeholder="请选择年级" clearable>
-            <el-option label="Zone one" value="shanghai" />
+            <el-option v-for="items in gradeList" :label="items.label" :value="items.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="班级">
@@ -85,7 +85,21 @@
 import { onMounted, reactive, ref } from 'vue'
 import { ElLoading, ElMessage } from "element-plus";
 
-const collegeList = reactive([]);//学院列表
+//学院列表
+const collegeList = reactive([
+    {
+        label: '计算机科学与工程学院',
+        value: '1'
+    }
+]);
+//年级列表
+const gradeList = reactive([
+    {
+        label: '2020级',
+        value: '1'
+    }
+]);
+//状态列表
 const stateList = reactive([
   {
     label: '全部',
@@ -97,8 +111,8 @@ const stateList = reactive([
     label: '待审核',
     value: '2',
   },
-]);//状态列表
-const gradeList = reactive([]);//年级列表
+]);
+
 const tableData = [
   {
     date: '2016-05-03',

@@ -25,7 +25,7 @@
           </el-icon>
           <span>&nbsp;&nbsp;劳动计划</span>
         </el-menu-item>
-        <el-menu-item index="3">
+        <el-menu-item index="/student">
           <el-icon>
             <User />
           </el-icon>
