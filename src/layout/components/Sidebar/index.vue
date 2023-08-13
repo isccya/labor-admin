@@ -19,7 +19,7 @@
           </el-icon>
           <span>&nbsp;&nbsp;审核功能</span>
         </el-menu-item>
-        <el-menu-item index="2">
+        <el-menu-item index="/laborPlan">
           <el-icon>
             <List />
           </el-icon>

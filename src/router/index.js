@@ -63,16 +63,22 @@ export const constantRoutes = [
     redirect: '/index',
     children: [
       {
-        path: '/index',
+        path: 'index',
         component: () => import('@/views/index'),
         name: 'Index',
         meta: { title: '首页', icon: 'dashboard', affix: true }
       },
       {
-        path: '/audit',
+        path: 'audit',
         component: () => import('@/views/audit'),
         name: 'Audit',
         meta: { title: '审核功能'  }
+      },
+      {
+        path: 'laborPlan',
+        component: () => import('@/views/laborPlan'),
+        name: 'LaborPlan',
+        meta: { title: '劳动计划'  }
       }
     ]
   },
