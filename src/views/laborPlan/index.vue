@@ -12,7 +12,7 @@
                     <el-select v-model="formInline.grade" placeholder="请选择年级" clearable>
                         <el-option v-for="items in gradeList" :label="items.label" :value="items.value" />
                     </el-select>
-                    </el-form-item>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
                     <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -26,6 +26,7 @@
 
         <div>
             <el-table :data="tableData" stripe style="width: 100%">
+                <el-table-column label="序号" width="50" type="index" align="center" />
                 <el-table-column prop="address" label="学院" align="center" />
                 <el-table-column prop="name" label="年级" align="center" />
                 <el-table-column prop="name" label="学期" align="center" />

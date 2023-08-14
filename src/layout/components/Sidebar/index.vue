@@ -31,7 +31,7 @@
           </el-icon>
           <span>&nbsp;&nbsp;学生信息</span>
         </el-menu-item>
-        <el-menu-item index="4">
+        <el-menu-item index="/manager">
           <el-icon>
             <location />
           </el-icon>

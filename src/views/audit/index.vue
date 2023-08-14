@@ -13,11 +13,6 @@
             <el-option v-for="items in gradeList" :label="items.label" :value="items.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="班级">
-          <el-select v-model="formInline.grade" placeholder="请选择班级" clearable>
-            <el-option label="Zone one" value="shanghai" />
-          </el-select>
-        </el-form-item>
         <el-form-item label="状态">
           <el-select v-model="formInline.state" placeholder="请选择状态" clearable>
             <el-option v-for="item in stateList" :label="item.label" :value="item.value" />
@@ -37,6 +32,7 @@
 
     <div>
       <el-table :data="tableData" stripe style="width: 100%">
+        <el-table-column label="序号" width="50" type="index" align="center"/>
         <el-table-column prop="date" label="姓名" align="center" />
         <el-table-column prop="address" label="学院" align="center" />
         <el-table-column prop="name" label="年级" align="center" />
@@ -164,8 +160,9 @@ const pageSize = ref(10)//每页内容数
 const pageSizes = reactive([10, 20, 30, 50])//可选择每页展示的内容数
 const formInline = reactive({
   college: '',
-  state: '',
   grade: '',
+
+  state: '',
   pageNum: currentPage, //当前页码
   pageSize, //页码显示数
 })

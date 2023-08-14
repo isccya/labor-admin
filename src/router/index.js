@@ -86,6 +86,12 @@ export const constantRoutes = [
         name: 'Student',
         meta: { title: '学生信息' }
       },
+      {
+        path: 'manager',
+        component: () => import('@/views/manager'),
+        name: 'Manager',
+        meta: {title: '管理员信息'},
+      },
     ]
   },
   // {
