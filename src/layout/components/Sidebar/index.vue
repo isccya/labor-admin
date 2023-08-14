@@ -43,7 +43,7 @@
           </el-icon>
           <span>&nbsp;&nbsp;公告管理</span>
         </el-menu-item>
-        <el-menu-item index="6">
+        <el-menu-item index="log">
           <el-icon>
             <HomeFilled />
           </el-icon>

@@ -92,6 +92,12 @@ export const constantRoutes = [
         name: 'Manager',
         meta: {title: '管理员信息'},
       },
+      {
+        path: 'log',
+        component: () => import('@/views/log'),
+        name: 'Log',
+        meta: {title: '系统日志'},
+      },
     ]
   },
   // {
