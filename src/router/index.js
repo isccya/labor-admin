@@ -98,6 +98,12 @@ export const constantRoutes = [
         name: 'Log',
         meta: {title: '系统日志'},
       },
+      {
+        path: 'notice',
+        component: () => import('@/views/notice'),
+        name: 'Notice',
+        meta: {title: '公告管理'},
+      },
     ]
   },
   // {

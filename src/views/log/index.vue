@@ -104,6 +104,12 @@ const logList = reactive<Array<Log>>([
         college: '计算机科学与工程学院',
         contact: '15616591710',
         operType: 1,
+    },{
+        operAdminName: 'cc',
+        operTime: '2023-8-14',
+        college: '计算机科学与工程学院',
+        contact: '15616591710',
+        operType: 2,
     },
 ])
 

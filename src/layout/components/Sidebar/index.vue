@@ -37,23 +37,17 @@
           </el-icon>
           <span>&nbsp;&nbsp;管理员信息</span>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="/notice">
           <el-icon>
             <DataLine />
           </el-icon>
           <span>&nbsp;&nbsp;公告管理</span>
         </el-menu-item>
-        <el-menu-item index="log">
+        <el-menu-item index="/log">
           <el-icon>
             <HomeFilled />
           </el-icon>
           <span>&nbsp;&nbsp;系统日志</span>
-        </el-menu-item>
-        <el-menu-item index="7">
-          <el-icon>
-            <HomeFilled />
-          </el-icon>
-          <span>&nbsp;&nbsp;通知编辑</span>
         </el-menu-item>
       </el-menu>
     </el-scrollbar>
