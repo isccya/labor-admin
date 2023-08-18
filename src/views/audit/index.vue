@@ -2,7 +2,7 @@
   <div class="app-container">
 
     <div class="flex">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline" :rules="rules">
+      <el-form :inline="true" :model="formInline" class="demo-form-inline">
         <el-form-item label="院系">
           <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
             <el-option v-for="items in collegeList" :label="items.label" :value="items.value" />
@@ -31,38 +31,37 @@
     </div>
 
     <div>
-      <el-table :data="tableData" stripe style="width: 100%">
-        <el-table-column label="序号" width="50" type="index" align="center"/>
-        <el-table-column prop="date" label="姓名" align="center" />
-        <el-table-column prop="address" label="学院" align="center" />
-        <el-table-column prop="name" label="年级" align="center" />
-        <el-table-column prop="address" label="班级" align="center" />
-        <el-table-column label="审核状态" prop="isConfirm" align="center">
+      <el-table :data="tableData" stripe style="width: 100%" border>
+        <el-table-column label="序号" width="60" type="index" align="center" />
+        <el-table-column prop="name" label="姓名" align="center" />
+        <el-table-column prop="college" label="学院" align="center" />
+        <el-table-column prop="grade" label="年级" align="center" />
+        <el-table-column prop="class" label="班级" align="center" />
+        <el-table-column label="审核状态" align="center">
           <template #default="scope">
-            <div v-if="scope.row.isConfirm === 1">
-              <el-button type="primary" plain>已审核</el-button>
+            <div v-if="scope.row.status === 1">
+              <el-tag type="primary" size="large">已审核</el-tag>
             </div>
             <div v-else>
-              <el-button type="danger" plain>待审核</el-button>
+              <el-tag type="danger" size="large">待审核</el-tag>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template #default="scope">
             <el-button v-if="scope.row.isConfirm === 1" type="primary">修改</el-button>
-            <el-button v-else type="primary" @click="">审核</el-button>
+            <el-button v-else type="primary" @click="jumpToDetail()" >审核</el-button>
           </template>
         </el-table-column>
       </el-table>
       <div class="flex justify-end p-5">
         <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize" v-model:page-sizes="pageSizes"
-          background layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="handleSizeChange"
-          @current-change="handleCurrentChange" />
+          background layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="" @current-change="" />
       </div>
     </div>
 
     <div>
-      <el-dialog v-model="dialogVisible" title="Tips" width="30%" :before-close="handleClose">
+      <el-dialog v-model="dialogVisible" title="Tips" width="30%" before-close="">
         <span>This is a message</span>
         <template #footer>
           <span class="dialog-footer">
@@ -77,24 +76,36 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { ElLoading, ElMessage } from "element-plus";
+import { ElMessage } from "element-plus";
+import type { LaborList } from './type'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+function jumpToDetail() {
+  router.push({
+    name: 'LaborDetail'
+  })
+}
 
 //学院列表
 const collegeList = reactive([
-    {
-        label: '计算机科学与工程学院',
-        value: '1'
-    }
+  {
+    label: '计算机科学与工程学院',
+    value: '1'
+  }
 ]);
+
 //年级列表
 const gradeList = reactive([
-    {
-        label: '2020级',
-        value: '1'
-    }
+  {
+    label: '2020级',
+    value: '1'
+  }
 ]);
+
 //状态列表
 const stateList = reactive([
   {
@@ -109,69 +120,31 @@ const stateList = reactive([
   },
 ]);
 
-const tableData = [
+const tableData = reactive<Array<LaborList>>([
   {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  }, {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  }, {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  }, {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  }, {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  }, {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  }, {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
+    name: 'cc',
+    college: '计算机科学与工程学院',
+    grade: '2021级',
+    class: '信息安全三班',
+    status: 0,
+  }
+])
 const currentPage = ref(1);//当前所在页面数
 const pageSize = ref(10)//每页内容数
 const pageSizes = reactive([10, 20, 30, 50])//可选择每页展示的内容数
 const formInline = reactive({
   college: '',
   grade: '',
-
   state: '',
   pageNum: currentPage, //当前页码
   pageSize, //页码显示数
 })
 // 搜索表单
-function handleQuery(){
-  
+function handleQuery() {
+
 }
 // 重置表单
-function resetQuery(){
+function resetQuery() {
   formInline.college = ''
   formInline.state = ''
   formInline.grade = ''

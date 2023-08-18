@@ -3,10 +3,17 @@
     :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar :class="sideTheme" wrap-class="scrollbar-wrapper">
-      <el-menu :default-active="activeMenu" :collapse="isCollapse"
+      <el-menu 
+        :default-active="activeMenu" 
+        :collapse="isCollapse"
         :background-color="sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground"
-        :text-color="sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor" :unique-opened="true"
-        :active-text-color="theme" :collapse-transition="false" mode="vertical" router>
+        :text-color="sideTheme === 'theme-dark' ? variables.menuColor : variables.menuLightColor" 
+        :unique-opened="true"
+        :active-text-color="theme" 
+        :collapse-transition="false" 
+        mode="vertical" 
+        router
+      >
         <el-menu-item index="/index">
           <el-icon>
             <HomeFilled />

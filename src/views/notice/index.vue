@@ -83,7 +83,7 @@
                     <span>
                         <el-button @click="dialogVisible = false">取消</el-button>
                         <el-button type="primary" @click="dialogVisible = false">
-                            添加劳动计划
+                            添加公告
                         </el-button>
                     </span>
                 </template>

@@ -72,7 +72,13 @@ export const constantRoutes = [
         path: 'audit',
         component: () => import('@/views/audit'),
         name: 'Audit',
-        meta: { title: '审核功能' }
+        meta: { title: '审核功能' },
+      },
+      {
+        path: 'detail',
+        component: () => import('@/views/audit/components/DetailLabor.vue'),
+        name: 'LaborDetail',
+        meta: { title: '劳动详情' },
       },
       {
         path: 'laborPlan',
@@ -84,25 +90,25 @@ export const constantRoutes = [
         path: 'student',
         component: () => import('@/views/student'),
         name: 'Student',
-        meta: { title: '学生信息' }
+        meta: { title: '学生信息' },
       },
       {
         path: 'manager',
         component: () => import('@/views/manager'),
         name: 'Manager',
-        meta: {title: '管理员信息'},
+        meta: { title: '管理员信息' },
       },
       {
         path: 'log',
         component: () => import('@/views/log'),
         name: 'Log',
-        meta: {title: '系统日志'},
+        meta: { title: '系统日志' },
       },
       {
         path: 'notice',
         component: () => import('@/views/notice'),
         name: 'Notice',
-        meta: {title: '公告管理'},
+        meta: { title: '公告管理' },
       },
     ]
   },

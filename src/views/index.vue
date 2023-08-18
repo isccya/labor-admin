@@ -1,13 +1,14 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="12">
+
+    <el-row :gutter="50">
       <el-col :span="8">
         <el-card shadow="always" class="flex justify-center">
           <div class="statistic-card">
             <el-statistic :value="98500">
               <template #title>
                 <div style="display: inline-flex; align-items: center">
-                  Daily active users
+                  劳动计划总数
                   <el-tooltip effect="dark" content="Number of users who logged into the product in one day"
                     placement="top">
                     <el-icon style="margin-left: 4px" :size="12">
@@ -19,10 +20,10 @@
             </el-statistic>
             <div class="statistic-footer">
               <div class="footer-item">
-                <span>than yesterday</span>
+                <span>今日新增:</span>
                 <span class="green">
-                  24%
-                  <el-icon>
+                  24
+                  <el-icon size="18">
                     <CaretTop />
                   </el-icon>
                 </span>
@@ -37,7 +38,7 @@
             <el-statistic :value="98500">
               <template #title>
                 <div style="display: inline-flex; align-items: center">
-                  Daily active users
+                  系统登陆次数
                   <el-tooltip effect="dark" content="Number of users who logged into the product in one day"
                     placement="top">
                     <el-icon style="margin-left: 4px" :size="12">
@@ -49,10 +50,10 @@
             </el-statistic>
             <div class="statistic-footer">
               <div class="footer-item">
-                <span>than yesterday</span>
+                <span>比昨天:</span>
                 <span class="green">
-                  24%
-                  <el-icon>
+                  24
+                  <el-icon size="18">
                     <CaretTop />
                   </el-icon>
                 </span>
@@ -67,7 +68,7 @@
             <el-statistic :value="98500">
               <template #title>
                 <div style="display: inline-flex; align-items: center">
-                  Daily active users
+                  未审核总数
                   <el-tooltip effect="dark" content="Number of users who logged into the product in one day"
                     placement="top">
                     <el-icon style="margin-left: 4px" :size="12">
@@ -79,12 +80,10 @@
             </el-statistic>
             <div class="statistic-footer">
               <div class="footer-item">
-                <span>than yesterday</span>
+                <span>今日已审核:</span>
                 <span class="green">
-                  24%
-                  <el-icon>
-                    <CaretTop />
-                  </el-icon>
+                  24
+
                 </span>
               </div>
             </div>
@@ -92,23 +91,37 @@
         </el-card>
       </el-col>
     </el-row>
-    <div class="mt-10 p-2">
-            <el-card>
-              <template #header>
-                <div class="text-1.25rem font-600">
-                  用户统计
-                </div>
-              </template>
-              <el-row :gutter="14">
-                <el-col :span="12" class="text-center">
-                  <el-progress type="circle" :percentage="100" status="success" />
-                </el-col>
-                <el-col :span="12" class="text-center">
-                  <el-progress type="circle" :percentage="100" status="success" />
-                </el-col>
-              </el-row>
-            </el-card>
+
+    <div class="mt-10 p-2 w-2/3">
+      <el-card>
+        <template #header>
+          <div class="text-1.25rem font-600">
+            用户统计
           </div>
+        </template>
+        <el-row :gutter="14">
+          <el-col :span="12" class="text-center">
+            <el-progress type="dashboard" :percentage="80">
+              <template #default="{ percentage }">
+                <span class="percentage-value">{{ percentage }}%</span>
+              </template>
+            </el-progress>
+            <div>学生今日提交记录数:</div>
+            <div class="font-bold">900</div>
+          </el-col>
+          <el-col :span="12" class="text-center">
+            <el-progress type="dashboard" :percentage="80">
+              <template #default="{ percentage }">
+                <span class="percentage-value">{{ percentage }}%</span>
+              </template>
+            </el-progress>
+            <div>学生昨日提交记录数:</div>
+            <div class="font-bold">900</div>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
+
   </div>
 </template>
 
