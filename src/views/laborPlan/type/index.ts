@@ -1,5 +1,9 @@
 export interface LaborPlan {
     /**
+     * 等级
+     */
+    level:string
+    /**
      * 学院
      */
     college: string;

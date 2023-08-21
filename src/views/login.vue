@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">劳动教育管理系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -58,9 +58,9 @@
       </el-form-item>
     </el-form>
     <!--  底部  -->
-    <div class="el-login-footer">
+    <!-- <div class="el-login-footer">
       <span>Copyright © 2018-2022 ruoyi.vip All Rights Reserved.</span>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -75,8 +75,8 @@ const router = useRouter();
 const { proxy } = getCurrentInstance();
 
 const loginForm = ref({
-  username: "admin",
-  password: "admin123",
+  username: "",
+  password: "",
   rememberMe: false,
   code: "",
   uuid: ""
@@ -91,7 +91,7 @@ const loginRules = {
 const codeUrl = ref("");
 const loading = ref(false);
 // 验证码开关
-const captchaEnabled = ref(true);
+const captchaEnabled = ref(false);
 // 注册开关
 const register = ref(false);
 const redirect = ref(undefined);
@@ -146,7 +146,7 @@ function getCookie() {
   };
 }
 
-getCode();
+// getCode();
 getCookie();
 </script>
 

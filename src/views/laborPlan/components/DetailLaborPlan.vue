@@ -13,12 +13,6 @@
                     <el-option label="院级" value="2" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="学期">
-                <el-select v-model="laborPlanForm.term" placeholder="请选择学期">
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
-                </el-select>
-            </el-form-item>
             <el-form-item label="院系">
                 <el-select v-model="laborPlanForm.college" placeholder="请选择院系"
                     :disabled="judgeCollegeLaborLevel(laborPlanForm.level)">
@@ -28,6 +22,12 @@
             </el-form-item>
             <el-form-item label="年级">
                 <el-select v-model="laborPlanForm.grade" placeholder="请选择年级">
+                    <el-option label="Zone one" value="shanghai" />
+                    <el-option label="Zone two" value="beijing" />
+                </el-select>
+            </el-form-item>
+            <el-form-item label="学期">
+                <el-select v-model="laborPlanForm.term" placeholder="请选择学期">
                     <el-option label="Zone one" value="shanghai" />
                     <el-option label="Zone two" value="beijing" />
                 </el-select>
@@ -101,7 +101,7 @@ const laborPlanForm = reactive<LaborPlanForm>({
 const deliverLaborPlanForm = (laborPlanInfo) => {
     ({
         level: laborPlanForm.level,
-        college: laborPlanForm.college, 
+        college: laborPlanForm.college,
         term: laborPlanForm.term,
         grade: laborPlanForm.grade,
         mentorName: laborPlanForm.mentorName,

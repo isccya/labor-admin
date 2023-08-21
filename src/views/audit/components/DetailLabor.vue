@@ -12,6 +12,7 @@
                 <div class="px-5"> <span>学院: {{ userInfo.college }}</span></div>
                 <div class="px-5"><span>年级: {{ userInfo.grade }}</span></div>
                 <div class="px-5"> <span>班级: {{ userInfo.class }}</span></div>
+                <div class="px-5"><span>学号: {{ userInfo.studentNo }}</span></div>
                 <div class="px-5"><span>成绩: {{ userInfo.score }}</span></div>
             </div>
             <div class="mr-10">
@@ -37,8 +38,11 @@
                 <el-table-column prop="date" label="类型"  align = 'center'/>
                 <el-table-column prop="date" label="学期" align = 'center' />
                 <el-table-column prop="date" label="劳动时间" align = 'center' />
-                <el-table-column prop="name" label="Name" align = 'center'/>
-                <el-table-column prop="address" label="操作" align = 'center'/>
+                <el-table-column prop="address" label="操作" align = 'center'>
+                    <template #default>
+                        <el-button type="primary">查看</el-button>
+                    </template>
+                </el-table-column>
             </el-table>
             </div>
             

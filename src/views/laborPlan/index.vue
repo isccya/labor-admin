@@ -3,6 +3,11 @@
 
         <div class="flex">
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
+                <el-form-item label="等级">
+                    <el-select v-model="formInline.level" placeholder="请选择等级" clearable>
+                        <el-option v-for="items in levelList" :label="items.label" :value="items.value" />
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="院系">
                     <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
                         <el-option v-for="items in collegeList" :label="items.label" :value="items.value" />
@@ -26,11 +31,12 @@
 
         <div>
             <el-table :data="tableData" stripe style="width: 100%" border>
-                <el-table-column label="序号" width="50" type="index" align="center" />
+                <el-table-column label="序号" width="60" type="index" align="center" />
+                <el-table-column prop="level" label="等级" align="center" />
                 <el-table-column prop="college" label="学院" align="center" />
                 <el-table-column prop="grade" label="年级" align="center" />
                 <el-table-column prop="term" label="学期" align="center" />
-                <el-table-column prop="mentorName" label="主管老师" align="center" />
+                <el-table-column prop="mentorName" label="指导老师" align="center" />
                 <el-table-column label="操作" align="center">
                     <template #default="scope">
                         <el-button text type="primary" @click="clickDetailLaborPlan">查看详情</el-button>
@@ -45,7 +51,7 @@
             </div>
         </div>
 
-        <AddLaborPlan ref="addLaborPlan"/>
+        <AddLaborPlan ref="addLaborPlan" />
         <DetailLaborPlan ref="detailLaborPlan"></DetailLaborPlan>
     </div>
 </template>
@@ -56,15 +62,34 @@ import AddLaborPlan from './components/AddLaborPlan.vue';
 import DetailLaborPlan from './components/DetailLaborPlan.vue';
 import type { LaborPlan } from './type';
 
-const addLaborPlan : any = ref(null);
+const addLaborPlan: any = ref(null);
+const detailLaborPlan: any = ref(null);
 
-const detailLaborPlan : any = ref(null);
+// 等级列表
+const levelList = reactive([
+{
+        label: '校级',
+        value: '0'
+    },
+    {
+        label: '院级',
+        value: '1'
+    },
+])
 
 //学院列表
 const collegeList = reactive([
     {
+        label: '全部',
+        value: '0'
+    },
+    {
         label: '计算机科学与工程学院',
         value: '1'
+    },
+    {
+        label: '土木学院',
+        value: '2'
     }
 ]);
 
@@ -78,22 +103,28 @@ const gradeList = reactive([
 
 const tableData = reactive<Array<LaborPlan>>([
     {
+        level: '校级',
+        college: '湖南科技大学',
+        grade: "2021级",
+        term: '2021-2022上学期',
+        mentorName: 'cc'
+    },
+    {
+        level: '院级',
         college: '计算机科学与工程学院',
         grade: "2021级",
         term: '2021-2022上学期',
         mentorName: 'cc'
     },
     {
+        level: '院级',
         college: '计算机科学与工程学院',
         grade: "2021级",
         term: '2021-2022上学期',
         mentorName: 'cc'
-    }, {
-        college: '计算机科学与工程学院',
-        grade: "2021级",
-        term: '2021-2022上学期',
-        mentorName: 'cc'
-    }, {
+    },
+    {
+        level: '院级',
         college: '计算机科学与工程学院',
         grade: "2021级",
         term: '2021-2022上学期',
@@ -105,7 +136,10 @@ const tableData = reactive<Array<LaborPlan>>([
 const currentPage = ref(1);
 const pageSize = ref(10)
 const pageSizes = reactive([10, 20, 30, 50])
+
+// 搜索表单
 const formInline = reactive({
+    level:'',
     college: '',
     grade: '',
     pageNum: currentPage, //当前页码
@@ -121,22 +155,23 @@ function handleQuery() {
 function resetQuery() {
     formInline.college = ''
     formInline.grade = ''
+    formInline.level = ''
 
 }
 
-function clickAddLaborPlan(){
+function clickAddLaborPlan() {
     addLaborPlan.value.addLaborVisible = true
 }
 
-function clickDetailLaborPlan(){
-    detailLaborPlan.value.detailLaborVisable = true; 
+function clickDetailLaborPlan() {
+    detailLaborPlan.value.detailLaborVisable = true;
     detailLaborPlan.value.deliverLaborPlanForm();
 }
 
 
 
 onMounted(() => {
-    
+
 })
 </script>
   

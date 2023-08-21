@@ -14,7 +14,7 @@
         mode="vertical" 
         router
       >
-        <el-menu-item index="/index">
+        <!-- <el-menu-item index="/index">
           <el-icon>
             <HomeFilled />
           </el-icon>
@@ -55,7 +55,13 @@
             <HomeFilled />
           </el-icon>
           <span>&nbsp;&nbsp;系统日志</span>
-        </el-menu-item>
+        </el-menu-item> -->
+        <sidebar-item
+          v-for="(route, index) in sidebarRouters"
+          :key="route.path + index"
+          :item="route"
+          :base-path="route.path"
+        />
       </el-menu>
     </el-scrollbar>
   </div>

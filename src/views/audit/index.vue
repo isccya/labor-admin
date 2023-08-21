@@ -2,7 +2,7 @@
   <div class="app-container">
 
     <div class="flex">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline">
+      <el-form :inline="true" :model="formInline">
         <el-form-item label="院系">
           <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
             <el-option v-for="items in collegeList" :label="items.label" :value="items.value" />
@@ -32,6 +32,7 @@
 
     <div>
       <el-table :data="tableData" stripe style="width: 100%" border>
+        <el-table-column type="selection" width="55" />
         <el-table-column label="序号" width="60" type="index" align="center" />
         <el-table-column prop="name" label="姓名" align="center" />
         <el-table-column prop="college" label="学院" align="center" />
@@ -92,10 +93,18 @@ function jumpToDetail() {
 
 //学院列表
 const collegeList = reactive([
-  {
-    label: '计算机科学与工程学院',
-    value: '1'
-  }
+    {
+        label: '全部',
+        value: '0'
+    },
+    {
+        label: '计算机科学与工程学院',
+        value: '1'
+    },
+    {
+        label: '土木学院',
+        value: '2'
+    }
 ]);
 
 //年级列表
@@ -109,9 +118,6 @@ const gradeList = reactive([
 //状态列表
 const stateList = reactive([
   {
-    label: '全部',
-    value: '0',
-  }, {
     label: '已审核',
     value: '1',
   }, {
@@ -127,11 +133,21 @@ const tableData = reactive<Array<LaborList>>([
     grade: '2021级',
     class: '信息安全三班',
     status: 0,
+  },
+  {
+    name: 'cc',
+    college: '计算机科学与工程学院',
+    grade: '2021级',
+    class: '信息安全三班',
+    status: 0,
   }
 ])
-const currentPage = ref(1);//当前所在页面数
-const pageSize = ref(10)//每页内容数
-const pageSizes = reactive([10, 20, 30, 50])//可选择每页展示的内容数
+
+// 分页数据
+const currentPage = ref(1);
+const pageSize = ref(10)
+const pageSizes = reactive([10, 20, 30, 50])
+
 const formInline = reactive({
   college: '',
   grade: '',
@@ -148,9 +164,9 @@ function resetQuery() {
   formInline.college = ''
   formInline.state = ''
   formInline.grade = ''
-
 }
 const dialogVisible = ref(false)//是否展示一键导出对话框
+
 function oneExport() {
   if (formInline.college === "") {
     ElMessage.error("请选择院系后再导出！！！");
@@ -162,6 +178,7 @@ function oneExport() {
   }
   dialogVisible.value = true;
 }
+
 onMounted(() => {
 
 })

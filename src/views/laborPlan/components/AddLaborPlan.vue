@@ -13,21 +13,21 @@
                     <el-option label="院级" value="2" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="学期">
-                <el-select v-model="laborPlanForm.term" placeholder="请选择学期">
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
-                </el-select>
-            </el-form-item>
             <el-form-item label="院系">
                 <el-select v-model="laborPlanForm.college" placeholder="请选择院系"
                     :disabled="judgeCollegeLaborLevel(laborPlanForm.level)">
                     <el-option label="计算机科学与工程学院" value="1" />
                     <el-option label="土木工程学院" value="2" />
                 </el-select>
-            </el-form-item>
+            </el-form-item> 
             <el-form-item label="年级">
                 <el-select v-model="laborPlanForm.grade" placeholder="请选择年级">
+                    <el-option label="Zone one" value="shanghai" />
+                    <el-option label="Zone two" value="beijing" />
+                </el-select>
+            </el-form-item>
+            <el-form-item label="学期">
+                <el-select v-model="laborPlanForm.term" placeholder="请选择学期">
                     <el-option label="Zone one" value="shanghai" />
                     <el-option label="Zone two" value="beijing" />
                 </el-select>
