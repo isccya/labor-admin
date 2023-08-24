@@ -24,10 +24,12 @@
             <el-table :data="tableData" stripe style="width: 100%">
                 <el-table-column label="序号" width="50" type="index" align="center" />
                 <el-table-column prop="address" label="姓名" align="center" />
+                <el-table-column prop="name" label="院系" align="center" />
                 <el-table-column prop="name" label="年级" align="center" />
                 <el-table-column prop="name" label="班级" align="center" />
                 <el-table-column prop="name" label="联系方式" align="center" />
-                <el-table-column prop="name" label="院系" align="center" />
+                <el-table-column prop="name" label="学号" align="center" />
+
             </el-table>
             <div class="flex justify-end p-5">
                 <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"

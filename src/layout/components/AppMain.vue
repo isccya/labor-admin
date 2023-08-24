@@ -12,10 +12,19 @@
 </template>
 
 <script setup>
+
 import iframeToggle from "./IframeToggle/index"
 import useTagsViewStore from '@/store/modules/tagsView'
+import useBasicInfoStore from '@/store/modules/basicInfo'
 
 const tagsViewStore = useTagsViewStore()
+const basicInfoStore = useBasicInfoStore();
+onMounted(()=> {
+  basicInfoStore.getTermList();
+  basicInfoStore.getCollegeList();
+  basicInfoStore.getGradeList();
+
+})
 </script>
 
 <style lang="scss" scoped>
