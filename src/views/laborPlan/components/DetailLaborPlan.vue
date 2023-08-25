@@ -8,35 +8,34 @@
                 <span>基本信息</span>
             </div>
             <el-form-item label="劳动计划等级">
-                <el-select v-model="laborPlanForm.level" placeholder="请选择劳动计划等级">
-                    <el-option label="校级" value="1" />
-                    <el-option label="院级" value="2" />
+                <el-select v-model="laborPlanForm.planRank" placeholder="请选择劳动计划等级">
+                    <el-option v-for="items in levelList" :label="items.label" :value="items.value" />
                 </el-select>
             </el-form-item>
             <el-form-item label="院系">
-                <el-select v-model="laborPlanForm.college" placeholder="请选择院系"
-                    :disabled="judgeCollegeLaborLevel(laborPlanForm.level)">
-                    <el-option label="计算机科学与工程学院" value="1" />
-                    <el-option label="土木工程学院" value="2" />
+                <el-select v-model="laborPlanForm.collegeId" placeholder="请选择院系"
+                    :disabled="judgeCollegeLaborLevel(laborPlanForm.planRank)">
+                    <el-option v-for="items in collegeList" :label="items.collegeName" :value="items.collegeId" />
                 </el-select>
             </el-form-item>
             <el-form-item label="年级">
                 <el-select v-model="laborPlanForm.grade" placeholder="请选择年级">
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
+                    <el-option v-for="items in gradeList" :label="items" :value="items" />
                 </el-select>
             </el-form-item>
             <el-form-item label="学期">
-                <el-select v-model="laborPlanForm.term" placeholder="请选择学期">
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
+                <el-select v-model="laborPlanForm.termId" placeholder="请选择学期">
+                    <el-option v-for="items in termList" :label="items.termName" :value="items.termId" />
                 </el-select>
             </el-form-item>
             <el-form-item label="指导老师">
-                <el-input v-model="laborPlanForm.mentorName" placeholder="请输入" class="w-55" />
+                <el-input v-model="laborPlanForm.advisor" placeholder="请输入" class="w-55" />
             </el-form-item>
-            <el-form-item label="期限">
-                <el-date-picker v-model="laborPlanForm.deadline" type="date" placeholder="请选择期限" />
+            <el-form-item label="开始时间">
+                <el-date-picker v-model="laborPlanForm.startTime" type="date" placeholder="请选择期限" />
+            </el-form-item>
+            <el-form-item label="结束时间">
+                <el-date-picker v-model="laborPlanForm.endTime" type="date" placeholder="请选择期限" />
             </el-form-item>
             <div style="font-size: 20px;margin-bottom: 10px">
                 <span class="svg"><el-icon>
@@ -49,19 +48,19 @@
             </div>
             <div>
                 <el-form-item label="日常劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.dailyLabor" />
+                    <el-input v-model="laborPlanForm.dailyAmount" />
                 </el-form-item>
                 <el-form-item label="集中实践劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.collectiveLabor" />
+                    <el-input v-model="laborPlanForm.centralAmount" />
                 </el-form-item>
             </div>
             <div>
                 <el-form-item label="社会实践劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.societyLabor" />
+                    <el-input v-model="laborPlanForm.societyAmount" />
                 </el-form-item>
 
                 <el-form-item label="其他劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.otherLabor" />
+                    <el-input v-model="laborPlanForm.otherAmount" />
                 </el-form-item>
             </div>
         </el-form>
@@ -78,54 +77,81 @@
   
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import type { LaborPlanForm } from '../type';
+import type { CollegeList, LaborPlanForm, TermList } from '../type';
 
 // 控制查看劳动计划表单展示
 const detailLaborVisable = ref(false)
 
+// 等级列表
+const levelList = reactive([
+    {
+        label: '院级',
+        value: 0
+    },
+    {
+        label: '校级',
+        value: 1
+    },
+])
+
+// 学期列表
+const termList = reactive<Array<TermList>>([])
+
+//学院列表
+const collegeList = reactive<Array<CollegeList>>([]);
+
+//年级列表
+const gradeList = reactive([]);
+
 const laborPlanForm = reactive<LaborPlanForm>({
-    level: '',//劳动计划等级
-    college: '',
-    term: '',
+    planRank: '',
+    collegeId: '',
     grade: '',
-    mentorName: '',//指导老师
-    mentor: '',//指导老师工号
-    deadline: '',//期限
-    dailyLabor: 0,
-    collectiveLabor: 0,
-    societyLabor: 0,
-    otherLabor: 0,
+    termId: '',
+    advisor: '',//指导老师
+    startTime: '',
+    endTime: '',
+    dailyAmount: 0,
+    centralAmount: 0, 
+    societyAmount: 0,
+    otherAmount: 0,
 })
 
 // 子组件对外暴露方法,父组件传数据给子组件,类似props功能
 const deliverLaborPlanForm = (laborPlanInfo) => {
     ({
-        level: laborPlanForm.level,
-        college: laborPlanForm.college,
-        term: laborPlanForm.term,
+        planRank: laborPlanForm.planRank,
+        collegeId: laborPlanForm.collegeId,
+        termId: laborPlanForm.termId,
         grade: laborPlanForm.grade,
-        mentorName: laborPlanForm.mentorName,
-        mentor: laborPlanForm.mentor,
-        deadline: laborPlanForm.deadline,
-        dailyLabor: laborPlanForm.dailyLabor,
-        collectiveLabor: laborPlanForm.collectiveLabor,
-        societyLabor: laborPlanForm.societyLabor,
-        otherLabor: laborPlanForm.otherLabor,
+        advisor: laborPlanForm.advisor,
+        startTime: laborPlanForm.startTime,
+        endTime: laborPlanForm.endTime,
+        dailyAmount: laborPlanForm.dailyAmount,
+        centralAmount: laborPlanForm.centralAmount,
+        societyAmount: laborPlanForm.societyAmount,
+        otherAmount: laborPlanForm.otherAmount,
     } = laborPlanInfo);
 }
 
 function judgeCollegeLaborLevel(level) {
-    if (level === '1') {
+    if (level === 1) {
         // 如果是校级
-        laborPlanForm.term = '';
         return true;
     } else
         return false;
 }
 
+function changeLaborPlan(){
+
+}
+
 defineExpose({
     detailLaborVisable,
     deliverLaborPlanForm,
+    termList,
+    collegeList,
+    gradeList,
 })
 </script>
    

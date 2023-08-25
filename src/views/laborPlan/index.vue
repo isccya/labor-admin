@@ -4,17 +4,17 @@
         <div class="flex">
             <el-form :inline="true" :model="formInline" class="demo-form-inline">
                 <el-form-item label="等级">
-                    <el-select v-model="formInline.level" placeholder="请选择等级" clearable>
+                    <el-select v-model="formInline.planRank" placeholder="请选择等级" clearable>
                         <el-option v-for="items in levelList" :label="items.label" :value="items.value" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="学期">
-                    <el-select v-model="formInline.term" placeholder="请选择学期" clearable>
+                    <el-select v-model="formInline.termId" placeholder="请选择学期" clearable>
                         <el-option v-for="items in termList" :label="items.termName" :value="items.termId" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="院系">
-                    <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
+                    <el-select v-model="formInline.collegeId" placeholder="请选择院系" clearable>
                         <el-option v-for="items in collegeList" :label="items.collegeName" :value="items.collegeId" />
                     </el-select>
                 </el-form-item>
@@ -35,7 +35,7 @@
         </div>
 
         <div>
-            <el-table :data="tableData" stripe style="width: 100%" border>
+            <el-table :data="tableData" stripe style="width: 100%" border v-loading="loading">
                 <el-table-column label="序号" width="60" type="index" align="center" />
                 <el-table-column prop="planRank" label="等级" align="center">
                     <template #default="scope">
@@ -53,20 +53,21 @@
                 <el-table-column prop="advisor" label="指导老师" align="center" />
                 <el-table-column label="操作" align="center">
                     <template #default="scope">
-                        <el-button text type="primary" @click="clickDetailLaborPlan">查看详情</el-button>
-                        <el-button text type="danger">删除</el-button>
+                        <el-button text type="primary" @click="clickDetailLaborPlan(scope.row)">查看详情</el-button>
+                        <el-button text type="danger" @click="clickDeleteLaborPlan(scope.row.planId)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="flex justify-end p-5">
                 <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-                    v-model:page-sizes="pageSizes" background layout="total, sizes, prev, pager, next, jumper" :total="40"
-                    @size-change="" @current-change="" />
+                    v-model:page-sizes="pageSizes" background layout="total, sizes, prev, pager, next, jumper"
+                    :total="total" @size-change="queryLaborPlan" @current-change="queryLaborPlan" />
             </div>
         </div>
 
-        <AddLaborPlan ref="addLaborPlan" />
-        <DetailLaborPlan ref="detailLaborPlan"></DetailLaborPlan>
+        <AddLaborPlan ref="addLaborPlan" @updateLaborPlan="queryLaborPlan"/>
+        <DetailLaborPlan ref="detailLaborPlan" @updateLaborPlan="queryLaborPlan"/>
+        <DeleteLaborPlan ref="deleteLaborPlan" @updateLaborPlan="queryLaborPlan"/>
     </div>
 </template>
   
@@ -74,18 +75,20 @@
 import { onMounted, reactive, ref } from 'vue';
 import AddLaborPlan from './components/AddLaborPlan.vue';
 import DetailLaborPlan from './components/DetailLaborPlan.vue';
-import type { CollegeList, LaborPlan ,TermList } from './type';
-import { getLaborList } from '../../api/laborPlan';
+import DeleteLaborPlan from './components/DeleteLaborPlan.vue'
+import type { CollegeList, LaborPlan, TermList } from './type';
+import { getLaborPlanList } from '../../api/laborPlan';
 import useBasicInfoStore from '../../store/modules/basicInfo';
 
 const addLaborPlan: any = ref(null);
 const detailLaborPlan: any = ref(null);
+const deleteLaborPlan: any = ref(null);
 
 const basicInfoStore = useBasicInfoStore();
 
 // 判断劳动计划等级
-function judgePlanRank(planRank){
-    if(planRank === 0)
+function judgePlanRank(planRank) {
+    if (planRank === 0)
         return '院级';
     else
         return '校级';
@@ -95,11 +98,11 @@ function judgePlanRank(planRank){
 const levelList = reactive([
     {
         label: '院级',
-        value: '0'
+        value: 0
     },
     {
         label: '校级',
-        value: '1'
+        value: 1
     },
 ])
 
@@ -112,52 +115,65 @@ const collegeList = reactive<Array<CollegeList>>([]);
 //年级列表
 const gradeList = reactive([]);
 
+const loading = ref(false);
 let tableData = reactive<Array<LaborPlan>>([])
 
 // 分页数据
 const currentPage = ref(1);
 const pageSize = ref(10)
 const pageSizes = reactive([10, 20, 30, 50])
+const total = ref(0);
 
 // 搜索表单项
 const formInline = reactive({
-    level: '',
-    term:'',
-    college: '',
+    planRank: '',
+    termId: '',
+    collegeId: '',
     grade: '',
-    pageNum: currentPage, //当前页码
-    pageSize, //页码显示数
+    current: currentPage, //当前页码
+    size: pageSize, //页码显示数
 })
 
 // 获取劳动计划列表
 function queryLaborPlan() {
-    getLaborList().then((res) => {
+    loading.value = true;
+    getLaborPlanList(formInline).then((res) => {
+        total.value = res.data.total;
         tableData.length = 0;
         tableData.push(...res.data.dataList);
+        loading.value = false;
     })
 }
 
 // 搜索表单
 function handleQuery() {
-
+    queryLaborPlan();
 }
 
 // 重置表单
 function resetQuery() {
-    formInline.college = ''
+    formInline.termId = ''
+    formInline.collegeId = ''
     formInline.grade = ''
-    formInline.level = ''
+    formInline.planRank = ''
 }
 
 function clickAddLaborPlan() {
     addLaborPlan.value.addLaborVisible = true
 }
 
-function clickDetailLaborPlan() {
+function clickDetailLaborPlan(laborPlanInfo) {
+    detailLaborPlan.value.termList.push(...termList);
+    detailLaborPlan.value.collegeList.push(...collegeList);
+    detailLaborPlan.value.gradeList.push(...gradeList);
+    detailLaborPlan.value.deliverLaborPlanForm(laborPlanInfo);
     detailLaborPlan.value.detailLaborVisable = true;
-    detailLaborPlan.value.deliverLaborPlanForm();
 }
 
+function clickDeleteLaborPlan(id) {
+    deleteLaborPlan.value.deleteDialogVisable = true;
+    deleteLaborPlan.value.deleteId = id;
+}
 
 
 onMounted(() => {

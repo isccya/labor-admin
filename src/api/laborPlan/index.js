@@ -1,15 +1,16 @@
 import request from '@/utils/request'
 
 // 查询劳动计划列表
-export function getLaborList(){
+export function getLaborPlanList(params){
     return request({
         url:"/admin/plan/list",
         method:"get",
+        params,
     })
 } 
 
 // 添加劳动计划
-export function addLaborList(data){
+export function addLaborPlan(data){
     return request({
         url:"/admin/plan/add",
         method:"post",
@@ -18,15 +19,18 @@ export function addLaborList(data){
 } 
 
 // 删除劳动计划
-export function deleteLaborList(){
+export function deleteLaborPlan(id){
     return request({
         url:"/admin/plan/delete",
         method:"delete",
+        params:{
+            id,
+        }
     })
 } 
 
 // 修改劳动计划
-export function putLaborList(){
+export function putLaborPlan(){
     return request({
         url:"/admin/plan/add",
         method:"put",

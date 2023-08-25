@@ -8,14 +8,14 @@
                 <span>基本信息</span>
             </div>
             <el-form-item label="劳动计划等级">
-                <el-select v-model="laborPlanForm.level" placeholder="请选择劳动计划等级">
+                <el-select v-model="laborPlanForm.planRank" placeholder="请选择劳动计划等级">
                     <el-option label="校级" value="1" />
                     <el-option label="院级" value="2" />
                 </el-select>
             </el-form-item>
             <el-form-item label="院系">
-                <el-select v-model="laborPlanForm.college" placeholder="请选择院系"
-                    :disabled="judgeCollegeLaborLevel(laborPlanForm.level)">
+                <el-select v-model="laborPlanForm.collegeId" placeholder="请选择院系"
+                    :disabled="judgeCollegeLaborLevel(laborPlanForm.planRank)">
                     <el-option label="计算机科学与工程学院" value="1" />
                     <el-option label="土木工程学院" value="2" />
                 </el-select>
@@ -27,13 +27,13 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="学期">
-                <el-select v-model="laborPlanForm.term" placeholder="请选择学期">
+                <el-select v-model="laborPlanForm.termId" placeholder="请选择学期">
                     <el-option label="Zone one" value="shanghai" />
                     <el-option label="Zone two" value="beijing" />
                 </el-select>
             </el-form-item>
             <el-form-item label="指导老师">
-                <el-input v-model="laborPlanForm.mentorName" placeholder="请输入" class="w-55" />
+                <el-input v-model="laborPlanForm.advisor" placeholder="请输入" class="w-55" />
             </el-form-item>
             <el-form-item label="开始时间">
                 <el-date-picker v-model="laborPlanForm.startTime" type="date" placeholder="请选择时间" />
@@ -52,19 +52,19 @@
             </div>
             <div>
                 <el-form-item label="日常劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.dailyLabor" />
+                    <el-input v-model="laborPlanForm.dailyAmount" />
                 </el-form-item>
                 <el-form-item label="集中实践劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.collectiveLabor" />
+                    <el-input v-model="laborPlanForm.centralAmount" />
                 </el-form-item>
             </div>
             <div>
                 <el-form-item label="社会实践劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.societyLabor" />
+                    <el-input v-model="laborPlanForm.societyAmount" />
                 </el-form-item>
 
                 <el-form-item label="其他劳动记录" label-width="200px">
-                    <el-input v-model="laborPlanForm.otherLabor" />
+                    <el-input v-model="laborPlanForm.otherAmount" />
                 </el-form-item>
             </div>
         </el-form>
@@ -87,23 +87,23 @@ import type { LaborPlanForm } from '../type';
 const addLaborVisible = ref(false)
 
 const laborPlanForm = reactive<LaborPlanForm>({
-    planRank: '',//劳动计划等级
-    college: '',
-    term: '',
+    planRank: '',
+    collegeId: '',
     grade: '',
+    termId: '',
     advisor: '',//指导老师
-    startTime:'',
-    endTime:'',
-    dailyLabor: 0,
-    collectiveLabor: 0,
-    societyLabor: 0,
-    otherLabor: 0,
+    startTime: '',
+    endTime: '',
+    dailyAmount: 0,
+    centralAmount: 0, 
+    societyAmount: 0,
+    otherAmount: 0,
 })
 
 function judgeCollegeLaborLevel(level) {
     if (level === '1') {
         // 如果是校级
-        laborPlanForm.term = '';
+        laborPlanForm.termId = '';
         return true;
     } else
         return false;

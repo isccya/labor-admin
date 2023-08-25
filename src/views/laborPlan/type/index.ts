@@ -29,11 +29,11 @@ export interface LaborPlanForm {
     /**
      * 学期
      */
-    term: string;
+    termId: number|string;
     /**
      * 学院
      */
-    college ?: string;
+    collegeId ?: number|string;
     /**
      * 年级
      */
@@ -51,21 +51,21 @@ export interface LaborPlanForm {
      */
     endTime: string;
     /**
-     * 
+     * 日常劳动记录
      */
-    dailyLabor: number;
+    dailyAmount: number;
     /**
-     * 指导老师工号
+     * 集中劳动记录
      */
-    collectiveLabor: number;
+    centralAmount: number;
     /**
-     * 指导老师工号
+     * 社会实践劳动记录
      */
-    societyLabor: number;
+    societyAmount: number;
     /**
-     * 指导老师工号
+     * 其它劳动记录
      */
-    otherLabor: number;
+    otherAmount: number;
 }
 
 export interface TermList{
