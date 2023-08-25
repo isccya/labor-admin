@@ -3,7 +3,7 @@
     <router-view v-slot="{ Component, route }">
       <transition name="fade-transform" mode="out-in">
         <keep-alive :include="tagsViewStore.cachedViews">
-          <component v-if="!route.meta.link" :is="Component" :key="route.path"/>
+          <component v-if="!route.meta.link" :is="Component" :key="route.path" />
         </keep-alive>
       </transition>
     </router-view>
@@ -18,13 +18,6 @@ import useTagsViewStore from '@/store/modules/tagsView'
 import useBasicInfoStore from '@/store/modules/basicInfo'
 
 const tagsViewStore = useTagsViewStore()
-const basicInfoStore = useBasicInfoStore();
-onMounted(()=> {
-  basicInfoStore.getTermList();
-  basicInfoStore.getCollegeList();
-  basicInfoStore.getGradeList();
-
-})
 </script>
 
 <style lang="scss" scoped>
@@ -36,7 +29,7 @@ onMounted(()=> {
   overflow: hidden;
 }
 
-.fixed-header + .app-main {
+.fixed-header+.app-main {
   padding-top: 50px;
 }
 
@@ -46,7 +39,7 @@ onMounted(()=> {
     min-height: calc(100vh - 84px);
   }
 
-  .fixed-header + .app-main {
+  .fixed-header+.app-main {
     padding-top: 84px;
   }
 }

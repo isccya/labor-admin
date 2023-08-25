@@ -8,14 +8,19 @@
                         <el-option v-for="items in levelList" :label="items.label" :value="items.value" />
                     </el-select>
                 </el-form-item>
+                <el-form-item label="学期">
+                    <el-select v-model="formInline.term" placeholder="请选择学期" clearable>
+                        <el-option v-for="items in termList" :label="items.termName" :value="items.termId" />
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="院系">
                     <el-select v-model="formInline.college" placeholder="请选择院系" clearable>
-                        <el-option v-for="items in collegeList" :label="items.label" :value="items.value" />
+                        <el-option v-for="items in collegeList" :label="items.collegeName" :value="items.collegeId" />
                     </el-select>
                 </el-form-item>
                 <el-form-item label="年级">
                     <el-select v-model="formInline.grade" placeholder="请选择年级" clearable>
-                        <el-option v-for="items in gradeList" :label="items.label" :value="items.value" />
+                        <el-option v-for="items in gradeList" :label="items" :value="items" />
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -32,11 +37,20 @@
         <div>
             <el-table :data="tableData" stripe style="width: 100%" border>
                 <el-table-column label="序号" width="60" type="index" align="center" />
-                <el-table-column prop="level" label="等级" align="center" />
-                <el-table-column prop="college" label="学院" align="center" />
+                <el-table-column prop="planRank" label="等级" align="center">
+                    <template #default="scope">
+                        {{ judgePlanRank(scope.row.planRank) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="collegeName" label="学院" align="center">
+                    <template #default="scope">
+                        <span v-if="scope.row.collegeName">{{ scope.row.collegeName }}</span>
+                        <span v-else>湖南科技大学</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="grade" label="年级" align="center" />
-                <el-table-column prop="term" label="学期" align="center" />
-                <el-table-column prop="mentorName" label="指导老师" align="center" />
+                <el-table-column prop="termName" label="学期" align="center" />
+                <el-table-column prop="advisor" label="指导老师" align="center" />
                 <el-table-column label="操作" align="center">
                     <template #default="scope">
                         <el-button text type="primary" @click="clickDetailLaborPlan">查看详情</el-button>
@@ -60,91 +74,68 @@
 import { onMounted, reactive, ref } from 'vue';
 import AddLaborPlan from './components/AddLaborPlan.vue';
 import DetailLaborPlan from './components/DetailLaborPlan.vue';
-import type { LaborPlan } from './type';
+import type { CollegeList, LaborPlan ,TermList } from './type';
+import { getLaborList } from '../../api/laborPlan';
+import useBasicInfoStore from '../../store/modules/basicInfo';
 
 const addLaborPlan: any = ref(null);
 const detailLaborPlan: any = ref(null);
 
+const basicInfoStore = useBasicInfoStore();
+
+// 判断劳动计划等级
+function judgePlanRank(planRank){
+    if(planRank === 0)
+        return '院级';
+    else
+        return '校级';
+}
+
 // 等级列表
 const levelList = reactive([
-{
-        label: '校级',
-        value: '0'
-    },
     {
         label: '院级',
-        value: '1'
-    },
-])
-
-//学院列表
-const collegeList = reactive([
-    {
-        label: '全部',
         value: '0'
     },
     {
-        label: '计算机科学与工程学院',
+        label: '校级',
         value: '1'
     },
-    {
-        label: '土木学院',
-        value: '2'
-    }
-]);
+])
+
+// 学期列表
+const termList = reactive<Array<TermList>>([])
+
+//学院列表
+const collegeList = reactive<Array<CollegeList>>([]);
 
 //年级列表
-const gradeList = reactive([
-    {
-        label: '2020级',
-        value: '1'
-    }
-]);
+const gradeList = reactive([]);
 
-const tableData = reactive<Array<LaborPlan>>([
-    {
-        level: '校级',
-        college: '湖南科技大学',
-        grade: "2021级",
-        term: '2021-2022上学期',
-        mentorName: 'cc'
-    },
-    {
-        level: '院级',
-        college: '计算机科学与工程学院',
-        grade: "2021级",
-        term: '2021-2022上学期',
-        mentorName: 'cc'
-    },
-    {
-        level: '院级',
-        college: '计算机科学与工程学院',
-        grade: "2021级",
-        term: '2021-2022上学期',
-        mentorName: 'cc'
-    },
-    {
-        level: '院级',
-        college: '计算机科学与工程学院',
-        grade: "2021级",
-        term: '2021-2022上学期',
-        mentorName: 'cc'
-    }
-])
+let tableData = reactive<Array<LaborPlan>>([])
 
 // 分页数据
 const currentPage = ref(1);
 const pageSize = ref(10)
 const pageSizes = reactive([10, 20, 30, 50])
 
-// 搜索表单
+// 搜索表单项
 const formInline = reactive({
-    level:'',
+    level: '',
+    term:'',
     college: '',
     grade: '',
     pageNum: currentPage, //当前页码
     pageSize, //页码显示数
 })
+
+// 获取劳动计划列表
+function queryLaborPlan() {
+    getLaborList().then((res) => {
+        tableData.length = 0;
+        tableData.push(...res.data.dataList);
+    })
+}
 
 // 搜索表单
 function handleQuery() {
@@ -156,7 +147,6 @@ function resetQuery() {
     formInline.college = ''
     formInline.grade = ''
     formInline.level = ''
-
 }
 
 function clickAddLaborPlan() {
@@ -171,7 +161,10 @@ function clickDetailLaborPlan() {
 
 
 onMounted(() => {
-
+    queryLaborPlan();
+    basicInfoStore.getTermList(termList);
+    basicInfoStore.getCollegeList(collegeList);
+    basicInfoStore.getGradeList(gradeList);
 })
 </script>
   

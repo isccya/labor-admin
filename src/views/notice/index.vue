@@ -10,7 +10,7 @@
                 </el-form-item>
                 <el-form-item label="学期">
                     <el-select v-model="formInline.term" placeholder="请选择学期" clearable>
-                        <el-option v-for="items in termList" :label="items.label" :value="items.value" />
+                        <el-option v-for="items in termList" :label="items.termName" :value="items.termId" />
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -94,6 +94,10 @@
   
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
+import type { TermList } from '../laborPlan/type';
+import useBasicInfoStore from '../../store/modules/basicInfo';
+
+const basicInfoStore = useBasicInfoStore();
 
 //学院列表
 const collegeList = reactive([
@@ -104,12 +108,7 @@ const collegeList = reactive([
 ]);
 
 //学期列表
-const termList = reactive([
-    {
-        label: '2020-2021上半年',
-        value: '1'
-    }
-]);
+const termList = reactive<Array<TermList>>([]);
 
 const noticeList = [
     {
@@ -186,7 +185,7 @@ const noticeForm = reactive({
 
 
 onMounted(() => {
-
+    basicInfoStore.getTermList(termList);
 })
 </script>
   

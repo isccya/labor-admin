@@ -35,8 +35,11 @@
             <el-form-item label="指导老师">
                 <el-input v-model="laborPlanForm.mentorName" placeholder="请输入" class="w-55" />
             </el-form-item>
-            <el-form-item label="期限">
-                <el-date-picker v-model="laborPlanForm.deadline" type="date" placeholder="请选择期限" />
+            <el-form-item label="开始时间">
+                <el-date-picker v-model="laborPlanForm.startTime" type="date" placeholder="请选择时间" />
+            </el-form-item>
+            <el-form-item label="结束时间">
+                <el-date-picker v-model="laborPlanForm.endTime" type="date" placeholder="请选择时间" />
             </el-form-item>
             <div style="font-size: 20px;margin-bottom: 10px">
                 <span class="svg"><el-icon>
@@ -84,13 +87,13 @@ import type { LaborPlanForm } from '../type';
 const addLaborVisible = ref(false)
 
 const laborPlanForm = reactive<LaborPlanForm>({
-    level: '',//劳动计划等级
+    planRank: '',//劳动计划等级
     college: '',
     term: '',
     grade: '',
-    mentorName: '',//指导老师
-    mentor: '',//指导老师工号
-    deadline: '',//期限
+    advisor: '',//指导老师
+    startTime:'',
+    endTime:'',
     dailyLabor: 0,
     collectiveLabor: 0,
     societyLabor: 0,

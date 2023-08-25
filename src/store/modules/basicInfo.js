@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getTermList, getCollegeList, getGradeList} from '@/api/basicInfo'
+import { getTermList, getCollegeList, getGradeList } from '@/api/basicInfo'
 
 const useBasicInfoStore = defineStore(
     'basicInfo',
@@ -10,35 +10,38 @@ const useBasicInfoStore = defineStore(
             gradeList: []
         }),
         actions: {
-            getTermList() {
-                return new Promise((resolve, reject) => {
+            getTermList(TermList) {
+                if (this.termList.length === 0) {
                     getTermList().then((res) => {
                         this.termList = res.data;
-                        resolve();
-                    }).catch((error) => {
-                        reject(error)
+                        TermList.push(...this.termList);
                     })
-                })
+                }
+                else {
+                    TermList.push(...this.termList);
+                }
             },
-            getCollegeList() {
-                return new Promise((resolve, reject) => {
+            getCollegeList(CollegeList) {
+                if (this.collegeList.length === 0) {
                     getCollegeList().then((res) => {
                         this.collegeList = res.data;
-                        resolve();
-                    }).catch((error) => {
-                        reject(error)
+                        CollegeList.push(...this.collegeList);
                     })
-                })
+                }
+                else {
+                    CollegeList.push(...this.collegeList);
+                }
             },
-            getGradeList() {
-                    return new Promise((resolve, reject) => {
-                        getGradeList().then((res) => {
-                            this.gradeList = res.data;
-                            resolve();
-                        }).catch((error) => {
-                            reject(error)
-                        })
+            getGradeList(GradeList) {
+                if (this.gradeList.length === 0) {
+                    getGradeList().then((res) => {
+                        this.gradeList = res.data;
+                        GradeList.push(...this.gradeList);
                     })
+                }
+                else {
+                    GradeList.push(...this.gradeList);
+                }
             }
         }
     },

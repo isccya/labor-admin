@@ -2,7 +2,7 @@ export interface LaborPlan {
     /**
      * 等级
      */
-    level:string
+    planRank:string
     /**
      * 学院
      */
@@ -14,18 +14,18 @@ export interface LaborPlan {
     /**
      * 学期
      */
-    term: string;
+    termName: string;
     /**
      * 主管老师
      */
-    mentorName: string;
+    advisor: string;
 }
 
 export interface LaborPlanForm {
     /**
      * 等级
      */
-    level: string;
+    planRank: string;
     /**
      * 学期
      */
@@ -41,15 +41,15 @@ export interface LaborPlanForm {
     /**
      * 指导老师
      */
-    mentorName: string;
-    /**
-     * 指导老师工号
+    advisor: string;
+     /**
+     * 开始时间
      */
-    mentor: string;
+    startTime: string;
     /**
-     * 期限
+     * 结束时间
      */
-    deadline: string;
+    endTime: string;
     /**
      * 
      */
@@ -66,4 +66,26 @@ export interface LaborPlanForm {
      * 指导老师工号
      */
     otherLabor: number;
+}
+
+export interface TermList{
+    /**
+     * 学期id
+     */
+    termId:number,
+    /**
+     * 学期名
+     */
+    termName:string,
+}
+
+export interface CollegeList{
+    /**
+     * 学院id
+     */
+    collegeId:string,
+    /**
+     * 学院名
+     */
+    collegeName:string,
 }
