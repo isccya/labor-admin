@@ -9,27 +9,23 @@
             </div>
             <el-form-item label="劳动计划等级">
                 <el-select v-model="laborPlanForm.planRank" placeholder="请选择劳动计划等级">
-                    <el-option label="校级" value="1" />
-                    <el-option label="院级" value="2" />
+                    <el-option v-for="items in levelList" :label="items.label" :value="items.value" />
                 </el-select>
             </el-form-item>
             <el-form-item label="院系">
                 <el-select v-model="laborPlanForm.collegeId" placeholder="请选择院系"
                     :disabled="judgeCollegeLaborLevel(laborPlanForm.planRank)">
-                    <el-option label="计算机科学与工程学院" value="1" />
-                    <el-option label="土木工程学院" value="2" />
+                    <el-option v-for="items in collegeList" :label="items.collegeName" :value="items.collegeId" />
                 </el-select>
             </el-form-item> 
             <el-form-item label="年级">
                 <el-select v-model="laborPlanForm.grade" placeholder="请选择年级">
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
+                    <el-option v-for="items in gradeList" :label="items" :value="items" />
                 </el-select>
             </el-form-item>
             <el-form-item label="学期">
                 <el-select v-model="laborPlanForm.termId" placeholder="请选择学期">
-                    <el-option label="Zone one" value="shanghai" />
-                    <el-option label="Zone two" value="beijing" />
+                    <el-option v-for="items in termList" :label="items.termName" :value="items.termId" />
                 </el-select>
             </el-form-item>
             <el-form-item label="指导老师">
@@ -71,7 +67,7 @@
         <template #footer>
             <span>
                 <el-button @click="addLaborVisible = false">取消</el-button>
-                <el-button type="primary" @click="addLaborVisible = false">
+                <el-button type="primary" @click="AddLaborPlan()">
                     添加劳动计划
                 </el-button>
             </span>
@@ -81,17 +77,42 @@
   
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import type { LaborPlanForm } from '../type';
+import type { CollegeList, LaborPlanForm, TermList } from '../type';
+import { addLaborPlan } from '../../../api/laborPlan';
+import { ElMessage } from 'element-plus';
 
 // 控制添加劳动计划表单展示
 const addLaborVisible = ref(false)
 
+const emit = defineEmits(['updateLaborPlan'])
+
+// 等级列表
+const levelList = reactive([
+    {
+        label: '院级',
+        value: 0
+    },
+    {
+        label: '校级',
+        value: 1
+    },
+])
+
+// 学期列表
+const termList = reactive<Array<TermList>>([])
+
+//学院列表
+const collegeList = reactive<Array<CollegeList>>([]);
+
+//年级列表
+const gradeList = reactive([]);
+
 const laborPlanForm = reactive<LaborPlanForm>({
-    planRank: '',
+    planRank: '', 
     collegeId: '',
     grade: '',
     termId: '',
-    advisor: '',//指导老师
+    advisor: '',
     startTime: '',
     endTime: '',
     dailyAmount: 0,
@@ -101,16 +122,30 @@ const laborPlanForm = reactive<LaborPlanForm>({
 })
 
 function judgeCollegeLaborLevel(level) {
-    if (level === '1') {
+    if (level === 1) {
         // 如果是校级
-        laborPlanForm.termId = '';
+        laborPlanForm.collegeId = '';
         return true;
     } else
         return false;
 }
 
+function AddLaborPlan(){
+    addLaborPlan(laborPlanForm).then((res)=>{
+        ElMessage({
+            type:'success',
+            message:'添加成功',
+        })
+        emit('updateLaborPlan')
+        addLaborVisible.value = false;
+    })
+}
+
 defineExpose({
     addLaborVisible,
+    termList,
+    collegeList,
+    gradeList,
 })
 </script>
    

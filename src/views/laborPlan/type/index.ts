@@ -23,9 +23,13 @@ export interface LaborPlan {
 
 export interface LaborPlanForm {
     /**
+     * 劳动计划id
+     */
+    planId?:string|number;
+    /**
      * 等级
      */
-    planRank: string;
+    planRank: string|number;
     /**
      * 学期
      */

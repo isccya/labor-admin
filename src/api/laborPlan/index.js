@@ -30,9 +30,10 @@ export function deleteLaborPlan(id){
 } 
 
 // 修改劳动计划
-export function putLaborPlan(){
+export function putLaborPlan(data){
     return request({
-        url:"/admin/plan/add",
+        url:"/admin/plan/update",
         method:"put",
+        data,
     })
 } 

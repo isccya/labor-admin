@@ -160,6 +160,9 @@ function resetQuery() {
 
 function clickAddLaborPlan() {
     addLaborPlan.value.addLaborVisible = true
+    addLaborPlan.value.termList.push(...termList);
+    addLaborPlan.value.collegeList.push(...collegeList);
+    addLaborPlan.value.gradeList.push(...gradeList);
 }
 
 function clickDetailLaborPlan(laborPlanInfo) {
@@ -171,7 +174,7 @@ function clickDetailLaborPlan(laborPlanInfo) {
 }
 
 function clickDeleteLaborPlan(id) {
-    deleteLaborPlan.value.deleteDialogVisable = true;
+    deleteLaborPlan.value.deleteLaborVisable = true;
     deleteLaborPlan.value.deleteId = id;
 }
 

@@ -67,7 +67,7 @@
         <template #footer>
             <span>
                 <el-button @click="detailLaborVisable = false">取消</el-button>
-                <el-button type="primary" @click="detailLaborVisable = false">
+                <el-button type="primary" @click="changeLaborPlan">
                     修改
                 </el-button>
             </span>
@@ -76,11 +76,15 @@
 </template>
   
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref, watchEffect } from 'vue';
+import { ElMessage } from 'element-plus'
 import type { CollegeList, LaborPlanForm, TermList } from '../type';
+import { putLaborPlan } from '../../../api/laborPlan';
 
 // 控制查看劳动计划表单展示
 const detailLaborVisable = ref(false)
+
+const emit = defineEmits(['updateLaborPlan'])
 
 // 等级列表
 const levelList = reactive([
@@ -104,6 +108,7 @@ const collegeList = reactive<Array<CollegeList>>([]);
 const gradeList = reactive([]);
 
 const laborPlanForm = reactive<LaborPlanForm>({
+    planId: '',
     planRank: '',
     collegeId: '',
     grade: '',
@@ -112,14 +117,21 @@ const laborPlanForm = reactive<LaborPlanForm>({
     startTime: '',
     endTime: '',
     dailyAmount: 0,
-    centralAmount: 0, 
+    centralAmount: 0,
     societyAmount: 0,
     otherAmount: 0,
 })
 
+// watchEffect(() => {  
+//     if(laborPlanForm.planRank === 1){
+//         laborPlanForm.collegeId ='';
+//     }
+// })
+
 // 子组件对外暴露方法,父组件传数据给子组件,类似props功能
 const deliverLaborPlanForm = (laborPlanInfo) => {
     ({
+        planId: laborPlanForm.planId,
         planRank: laborPlanForm.planRank,
         collegeId: laborPlanForm.collegeId,
         termId: laborPlanForm.termId,
@@ -137,12 +149,21 @@ const deliverLaborPlanForm = (laborPlanInfo) => {
 function judgeCollegeLaborLevel(level) {
     if (level === 1) {
         // 如果是校级
+        laborPlanForm.collegeId = '';
         return true;
     } else
         return false;
 }
 
-function changeLaborPlan(){
+function changeLaborPlan() {
+    putLaborPlan(laborPlanForm).then((res) => {
+        ElMessage({
+            type: 'success',
+            message: res.description,
+        })
+        detailLaborVisable.value = false;
+        emit('updateLaborPlan');
+    })
 
 }
 

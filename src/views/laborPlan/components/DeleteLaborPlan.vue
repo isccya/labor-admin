@@ -1,10 +1,10 @@
 <template>
     <!-- 确认删除弹窗 -->
-    <el-dialog v-model="deleteDialogVisable" title="提示" width="30%" align-center>
+    <el-dialog v-model="deleteLaborVisable" title="提示" width="30%" align-center>
         <span>是否确定该劳动计划删除?</span>
         <template #footer>
             <span>
-                <el-button @click="deleteDialogVisable = false">取消</el-button>
+                <el-button @click="deleteLaborVisable = false">取消</el-button>
                 <el-button type="primary" @click="delteLaborPlan">
                     确定
                 </el-button>
@@ -19,10 +19,10 @@ import { deleteLaborPlan } from '../../../api/laborPlan';
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits(['updateLaborPlan'])
-const deleteDialogVisable = ref(false);
+const deleteLaborVisable = ref(false);
 const deleteId = ref(0);
 function delteLaborPlan() {
-    deleteDialogVisable.value = false;
+    deleteLaborVisable.value = false;
     deleteLaborPlan(deleteId.value).then(() => {
         ElMessage({
             message: '删除成功',
@@ -38,7 +38,7 @@ function delteLaborPlan() {
 }
 
 defineExpose({
-    deleteDialogVisable,
+    deleteLaborVisable,
     deleteId,
 })
 </script>
