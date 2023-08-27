@@ -57,19 +57,19 @@ export interface LaborPlanForm {
     /**
      * 日常劳动记录
      */
-    dailyAmount: number;
+    dailyAmount:  string|number;
     /**
      * 集中劳动记录
      */
-    centralAmount: number;
+    centralAmount:  string|number;
     /**
      * 社会实践劳动记录
      */
-    societyAmount: number;
+    societyAmount:  string|number;
     /**
      * 其它劳动记录
      */
-    otherAmount: number;
+    otherAmount:  string|number;
 }
 
 export interface TermList{

@@ -65,9 +65,9 @@
             </div>
         </div>
 
-        <AddLaborPlan ref="addLaborPlan" @updateLaborPlan="queryLaborPlan"/>
-        <DetailLaborPlan ref="detailLaborPlan" @updateLaborPlan="queryLaborPlan"/>
-        <DeleteLaborPlan ref="deleteLaborPlan" @updateLaborPlan="queryLaborPlan"/>
+        <AddLaborPlan ref="addLaborPlan" @updateLaborPlan="queryLaborPlan" />
+        <DetailLaborPlan ref="detailLaborPlan" @updateLaborPlan="queryLaborPlan" />
+        <DeleteLaborPlan ref="deleteLaborPlan" @updateLaborPlan="queryLaborPlan" />
     </div>
 </template>
   
@@ -160,15 +160,27 @@ function resetQuery() {
 
 function clickAddLaborPlan() {
     addLaborPlan.value.addLaborVisible = true
-    addLaborPlan.value.termList.push(...termList);
-    addLaborPlan.value.collegeList.push(...collegeList);
-    addLaborPlan.value.gradeList.push(...gradeList);
+    if (addLaborPlan.value.termList.length === 0) {
+        addLaborPlan.value.termList.push(...termList);
+    }
+    if (addLaborPlan.value.gradeList.length === 0) {
+        addLaborPlan.value.gradeList.push(...gradeList);
+    }
+    if (addLaborPlan.value.collegeList.length === 0) {
+        addLaborPlan.value.collegeList.push(...collegeList);
+    }
 }
 
 function clickDetailLaborPlan(laborPlanInfo) {
-    detailLaborPlan.value.termList.push(...termList);
-    detailLaborPlan.value.collegeList.push(...collegeList);
-    detailLaborPlan.value.gradeList.push(...gradeList);
+    if (detailLaborPlan.value.termList.length === 0) {
+        detailLaborPlan.value.termList.push(...termList);
+    }
+    if (detailLaborPlan.value.gradeList.length === 0) {
+        detailLaborPlan.value.gradeList.push(...gradeList);
+    }
+    if (detailLaborPlan.value.collegeList.length === 0) {
+        detailLaborPlan.value.collegeList.push(...collegeList);
+    }
     detailLaborPlan.value.deliverLaborPlanForm(laborPlanInfo);
     detailLaborPlan.value.detailLaborVisable = true;
 }
