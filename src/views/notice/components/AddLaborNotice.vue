@@ -64,7 +64,7 @@
 import { reactive, ref } from 'vue'
 import { CollegeList, TermList } from '../../laborPlan/type';
 import { ElMessage, FormInstance, FormRules } from 'element-plus';
-import { addLaborNotice } from '../../../api/log'
+import { addLaborNotice } from '../../../api/laborNotice'
 
 const addLaborNoticeVisible = ref(false);
 

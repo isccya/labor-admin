@@ -186,7 +186,7 @@ function clickDetailLaborPlan(laborPlanInfo) {
 }
 
 function clickDeleteLaborPlan(id) {
-    deleteLaborPlan.value.deleteLaborVisable = true;
+    deleteLaborPlan.value.deleteLaborPlanVisable = true;
     deleteLaborPlan.value.deleteId = id;
 }
 

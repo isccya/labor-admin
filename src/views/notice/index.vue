@@ -43,8 +43,8 @@
                 <el-table-column prop="advisor" label="主管老师" align="center" />
                 <el-table-column label="操作" align="center">
                     <template #default="scope">
-                        <el-button text type="primary" @click="clickDeleteNoticePlan()">查看详情</el-button>
-                        <el-button text type="danger" @click="clickDeleteNoticePlan()">删除</el-button>
+                        <el-button text type="primary" @click="clickDetailNoticePlan(scope.row)">查看详情</el-button>
+                        <el-button text type="danger" @click="clickDeleteNoticePlan(scope.row.noticeId)">删除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -66,7 +66,7 @@
 import { onMounted, reactive, ref } from 'vue'
 import type { CollegeList, TermList } from '../laborPlan/type';
 import useBasicInfoStore from '../../store/modules/basicInfo';
-import { getLaborNoticeList } from '../../api/log';
+import { getLaborNoticeList } from '../../api/laborNotice';
 import { timeFormate } from '../../utils/formate.js';
 import AddLaborNotice from './components/AddLaborNotice.vue';
 import DeleteLaborNotice from './components/DeleteLaborNotice.vue'
@@ -132,12 +132,20 @@ function clickAddNoticePlan() {
     addLaborNotice.value.addLaborNoticeVisible = true;
 }
 
-function clickDeleteNoticePlan() {
-    addLaborNotice.value.addLaborNoticeVisible = true;
+function clickDeleteNoticePlan(id) {
+    deleteLaborNotice.value.deleteLaborNoticeVisable = true;
+    deleteLaborNotice.value.deleteId = id;
 }
 
-function clickDetailNoticePlan() {
-    addLaborNotice.value.addLaborNoticeVisible = true;
+function clickDetailNoticePlan(laborNoticeInfo) {
+    if (detailLaborNotice.value.termList.length === 0) {
+        detailLaborNotice.value.termList.push(...termList);
+    }
+    if (detailLaborNotice.value.collegeList.length === 0) {
+        detailLaborNotice.value.collegeList.push(...collegeList);
+    }
+    detailLaborNotice.value.detailLaborNoticeVisible = true;
+    detailLaborNotice.value.deliverLaborNoticeForm(laborNoticeInfo);
 }
 
 
