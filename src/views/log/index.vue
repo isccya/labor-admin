@@ -9,8 +9,8 @@
                     </el-select>
                 </el-form-item> -->
                 <el-form-item label="时间">
-                    <el-date-picker v-model="formInline.time" range-separator="To" start-placeholder="Start time" type="daterange"
-                        end-placeholder="End time" />
+                    <el-date-picker v-model="formInline.time" range-separator="To" start-placeholder="Start time"
+                        type="daterange" end-placeholder="End time" />
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -35,8 +35,8 @@
             </el-table>
             <div class="flex justify-end p-5">
                 <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-                    v-model:page-sizes="pageSizes" background layout="total, sizes, prev, pager, next, jumper" :total="total"
-                    @size-change="queryLogList" @current-change="queryLogList" />
+                    v-model:page-sizes="pageSizes" background layout="total, sizes, prev, pager, next, jumper"
+                    :total="total" @size-change="queryLogList" @current-change="queryLogList" />
             </div>
         </div>
     </div>
@@ -44,7 +44,7 @@
   
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { getLogList } from '../../api/log'; 
+import { getLogList } from '../../api/log';
 import { timeFormate } from '../../utils/formate'
 
 const loading = ref(false);
@@ -68,17 +68,22 @@ const pageSizes = reactive([10, 20, 30, 50]);
 
 // 表单数据
 const formInline: any = reactive({
-    time:[],
+    time: [],
     current: currentPage,
     size: pageSize,
 })
 
 function queryLogList() {
+    // 因为点清除后，值变成null,访问null的下标为0 ,1就报错,之前没报错是因为不是数组没访问.
+    if(!formInline.time){
+        formInline.time = [];
+    }
+    const startTime = formInline.time[0] && timeFormate(formInline.time[0]);
+    const endTime = formInline.time[1] && timeFormate(formInline.time[1]);
     loading.value = true;
-    console.log(formInline.time[0] && timeFormate(formInline.time[0]));
     getLogList({
-        startTime:formInline.time[0] && timeFormate(formInline.time[0]),
-        endTime:formInline.time[1] && timeFormate(formInline.time[1]),
+        startTime,
+        endTime,
         current: currentPage.value,
         size: pageSize.value,
     }).then((res) => {
