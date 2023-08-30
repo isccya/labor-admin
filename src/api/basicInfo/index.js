@@ -25,9 +25,10 @@ export function getGradeList(){
 }
 
 // 获取班级列表
-export function getClassList(){
+export function getClassList(params){
     return request({
         url:'/admin/class/list',
         method:'get',
+        params,
     })
 }

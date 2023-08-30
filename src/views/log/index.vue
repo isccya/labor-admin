@@ -29,7 +29,7 @@
                 <el-table-column width="50" type="index" align="center" />
                 <el-table-column prop="operAdminName" label="操作人员" align="center" />
                 <el-table-column prop="operTime" label="操作时间" align="center" />
-                <el-table-column prop="college" label="院系" align="center" />
+                <el-table-column prop="operAdminName" label="院系" align="center" />
                 <el-table-column prop="contact" label="联系方式" align="center" />
                 <el-table-column prop="operType" label="操作类型" align="center">
                     <template #default="scope">
@@ -74,6 +74,10 @@ const operateList = reactive([
     },
     {
         label: '劳动计划内容修改',
+        value: '2'
+    },
+    {
+        label: '公告',
         value: '2'
     }
 ]);
