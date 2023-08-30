@@ -50,8 +50,8 @@
             </el-table>
             <div class="flex justify-end p-5">
                 <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-                    v-model:page-sizes="pageSizes" background layout="total, sizes, prev, pager, next, jumper" :total="40"
-                    @size-change="" @current-change="" />
+                    v-model:page-sizes="pageSizes" background layout="total, sizes, prev, pager, next, jumper" :total="total"
+                    @size-change="queryLaborNotice" @current-change="queryLaborNotice" />
             </div>
         </div>
 
@@ -86,7 +86,8 @@ const collegeList = reactive<Array<CollegeList>>([]);
 const termList = reactive<Array<TermList>>([]);
 
 const loading = ref(false);
-const laborNoticeList: any = reactive([])
+const total = ref(0);
+const laborNoticeList: any = reactive([]);
 
 // 分页数据
 const currentPage = ref(1);
@@ -105,6 +106,7 @@ function queryLaborNotice() {
     loading.value = true;
     getLaborNoticeList(formInline).then((res) => {
         laborNoticeList.length = 0;
+        total.value = res.data.total;
         laborNoticeList.push(...res.data.dataList);
         loading.value = false;
     })

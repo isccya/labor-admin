@@ -1,11 +1,17 @@
 /**
  * 时间格式化
- * */ 
+ * */
 
-export function timeFormate(val){
-    const date = new Date(val)
-    const year = date.getFullYear()
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    return `${year}年${month}月${day}日`
+export function timeFormate(val) {
+    let date = new Date(val)
+    let year = date.getFullYear()
+    let month = date.getMonth() + 1
+    let day = date.getDate()
+    if (day < 10) {
+        day = `0${day}`;
+    }
+    if (month < 10) {
+        month = `0${month}`;
+    }
+    return `${year}-${month}-${day}`
 }
