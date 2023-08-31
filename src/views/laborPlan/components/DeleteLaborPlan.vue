@@ -1,7 +1,7 @@
 <template>
     <!-- 确认删除弹窗 -->
     <el-dialog v-model="deleteLaborPlanVisable" title="提示" width="30%" align-center>
-        <span>是否确定该劳动计划删除?</span>
+        <span>是否确定删除该劳动计划?</span>
         <template #footer>
             <span>
                 <el-button @click="deleteLaborPlanVisable = false">取消</el-button>
