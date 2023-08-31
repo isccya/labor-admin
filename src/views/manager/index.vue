@@ -103,7 +103,8 @@ function clickAddManager() {
 }
 
 function clickDeleteManager(userId) {
-
+    deleteManager.value.deleteId = userId;
+    deleteManager.value.deleteManagerVisable = true;
 }
 
 onMounted(() => {

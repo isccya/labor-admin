@@ -27,3 +27,22 @@ export function addManagerList(data){
     })
 }
 
+// 修改管理员信息
+export function updateManagerList(data){
+    return request({
+        url:'/admin/update',
+        method:'PUT',
+        data,
+    })
+}
+
+// 删除管理员
+export function deleteManager(userId){
+    return request({
+        url:'/admin/delete',
+        method:'delete',
+        params:{
+            userId,
+        }
+    })
+}
