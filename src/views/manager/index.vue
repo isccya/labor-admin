@@ -33,11 +33,8 @@
                 <el-table-column prop="phone" label="联系方式" align="center" />
                 <el-table-column label="操作" align="center">
                     <template #default="scope">
-                        <el-button type="warning" @click="">
+                        <el-button type="warning" @click="clickModifyManager(scope.row)">
                             修改
-                        </el-button>
-                        <el-button type="warning" @click="" v-if="scope.row.isEdit">
-                            完成
                         </el-button>
                         <el-button type="danger" @click="clickDeleteManager(scope.row.userId)">删除
                         </el-button>
@@ -52,24 +49,28 @@
         </div>
 
         <AddManager ref="addManager" @updateManager="queryManagerList" />
+        <ModifyManager ref="modifyManager" @updateManager="queryManagerList"/>
         <DeleteManager ref="deleteManager" @updateManager="queryManagerList" />
-
     </div>
 </template>
   
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { getManagerList } from '../../api/manager'
+import useUserStore from '../../store/modules/user'
 import AddManager from './components/AddManager.vue';
+import ModifyManager from './components/ModifyManager.vue';
 import DeleteManager from './components/DeleteManager.vue'
 
 const addManager: any = ref(null);
+const modifyManager:any = ref(null);
 const deleteManager: any = ref(null);
+
+const userStore = useUserStore();
 
 const managerList: any = reactive([]);
 const total = ref(0);
 const loading = ref(false);
-
 
 // 分页数据 
 const currentPage = ref(1);
@@ -102,7 +103,15 @@ function clickAddManager() {
     addManager.value.addManagerVisble = true;
 }
 
+function clickModifyManager(managerInfo){
+    modifyManager.value.modifyManagerVisble = true;
+    modifyManager.value.deliverMangerInfo(managerInfo);
+}
+
 function clickDeleteManager(userId) {
+    if(userId === userStore.userId){
+        console.log('考虑自己删自己情况');
+    }
     deleteManager.value.deleteId = userId;
     deleteManager.value.deleteManagerVisable = true;
 }
