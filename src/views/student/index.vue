@@ -46,7 +46,7 @@
 </template>
   
 <script setup lang="ts">
-import { onMounted, reactive, ref , watch} from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
 import type { StudentList, ClassList } from './type';
 import type { CollegeList } from '../laborPlan/type';
 import { getStudentList } from '../../api/student';
@@ -85,26 +85,30 @@ const pageSizes = reactive([10, 20, 30, 50]);
 
 const formInline = reactive({
     collegeId: '',
-    classId:'',
+    classId: '',
     grade: '',
     current: currentPage,
-    size: pageSize, 
+    size: pageSize,
 })
 
+const classForm = computed(() => {
+    return {
+        collegeId: formInline.collegeId,
+        grade: formInline.grade,
+    }
+});
+
 // 获取班级列表
-function queryClassList(){
-    const classForm = reactive({
-        collegeId:formInline.collegeId,
-        grade:formInline.grade,
-    })
-    getClassList(classForm).then((res)=>{
+function queryClassList() {
+    getClassList(classForm.value).then((res) => {
         classList.length = 0;
         classList.push(...res.data);
     })
 }
-watch(formInline,()=>{
+watch(classForm, () => {    
+    formInline.classId = '';
     queryClassList();
-})
+});
 
 // 搜索表单
 function handleQuery() {
