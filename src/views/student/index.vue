@@ -105,7 +105,7 @@ function queryClassList() {
         classList.push(...res.data);
     })
 }
-watch(classForm, () => {    
+watch(classForm, () => {
     formInline.classId = '';
     queryClassList();
 });

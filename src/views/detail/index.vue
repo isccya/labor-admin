@@ -53,17 +53,13 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import type { UserInfo } from '../type'
+import type { UserInfo } from '../audit/type'
+import { TermList } from '../laborPlan/type';
 
 const router = useRouter();
 
 //学期列表
-const termList = reactive([
-    {
-        label: '2020-2021上半年',
-        value: '1'
-    }
-]);
+const termList = reactive<Array<TermList>>([]);
 
 // 查询个人劳动信息参数
 const searchLaborInfo = reactive({
@@ -125,3 +121,4 @@ defineExpose({
   
 <style scoped>
 </style>
+
