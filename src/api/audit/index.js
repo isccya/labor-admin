@@ -10,10 +10,11 @@ export function getAuditList(params){
 }
 
 // 获取劳动记录列表
-export function getLaborRecordList(){
+export function getLaborRecordList(params){
     return request({
         url:'/admin/record/list',
         method:'GET',
+        params,
     })
 }
 

@@ -3,17 +3,17 @@
         <div class="h-15 flex justify-between items-center border rounded-lg">
             <div class="p-3 ml-3">
                 <span>学期: </span>
-                <el-select v-model="searchLaborInfo.term" placeholder="请选择学期">
-                    <el-option v-for="items in termList" :label="items.label" :value="items.value" />
+                <el-select v-model="searchLaborRecord.termId" placeholder="请选择学期" @change="queryLaborRecord" clearable>
+                    <el-option v-for="items in termList" :label="items.termName" :value="items.termId" />
                 </el-select>
             </div>
             <div class="font-bold w-300 flex">
-                <div class="px-5"><span>姓名: {{ userInfo.name }}</span></div>
-                <div class="px-5"> <span>学院: {{ userInfo.college }}</span></div>
+                <div class="px-5"><span>姓名: {{ userInfo.studentName }}</span></div>
+                <div class="px-5"> <span>学院: {{ userInfo.collegeName }}</span></div>
                 <div class="px-5"><span>年级: {{ userInfo.grade }}</span></div>
-                <div class="px-5"> <span>班级: {{ userInfo.class }}</span></div>
-                <div class="px-5"><span>学号: {{ userInfo.studentNo }}</span></div>
-                <div class="px-5"><span>成绩: {{ userInfo.score }}</span></div>
+                <div class="px-5"> <span>班级: {{ userInfo.className }}</span></div>
+                <div class="px-5"><span>学号: {{ userInfo.studentId }}</span></div>
+                <div class="px-5"><span>成绩: {{ userInfo.score }} <span v-if="!userInfo.score"> 无</span> </span></div>
             </div>
             <div class="mr-10">
                 <el-button type="primary">评分</el-button>
@@ -30,95 +30,112 @@
                 <el-menu-item index="0">全部</el-menu-item>
                 <el-menu-item index="1">日常劳动记录</el-menu-item>
                 <el-menu-item index="2">集中实践劳动记录</el-menu-item>
-                <el-menu-item index="3">其他劳动记录</el-menu-item>
-                <el-menu-item index="4">社会实践劳动记录</el-menu-item>
+                <el-menu-item index="3">社会实践劳动记录</el-menu-item>
+                <el-menu-item index="4">其他劳动记录</el-menu-item>
             </el-menu>
-            <div class="p-2" >
-                <el-table :data="tableData"  border >
-                <el-table-column prop="date" label="类型"  align = 'center'/>
-                <el-table-column prop="date" label="学期" align = 'center' />
-                <el-table-column prop="date" label="劳动时间" align = 'center' />
-                <el-table-column prop="address" label="操作" align = 'center'>
-                    <template #default>
-                        <el-button type="primary">查看</el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
+            <div class="p-2">
+                <el-table :data="recordList" border v-loading="loading">
+                    <el-table-column prop="date" label="类型" align='center'>
+                        <template #default="scope">
+                            {{ laborType(scope.row.typeId) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="termName" label="学期" align='center' />
+                    <el-table-column prop="laborDate" label="劳动时间" align='center' />
+                    <el-table-column prop="address" label="操作" align='center'>
+                        <template #default>
+                            <el-button type="primary">查看</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
             </div>
-            
+            <div class="flex justify-end p-5">
+                <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
+                    v-model:page-sizes="pageSizes" background layout="total, sizes, prev, pager, next, jumper"
+                    :total="total" @size-change="queryLaborRecord" @current-change="queryLaborRecord" />
+            </div>
         </div>
+        <Score ref="score" @updateAuditList="" />
     </div>
 </template>
   
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import type { UserInfo } from '../audit/type'
 import { TermList } from '../laborPlan/type';
+import useBasicInfoStore from '../../store/modules/basicInfo';
+import Score from './components/Score.vue'
+import { getLaborDetailList, getLaborRecordList } from '../../api/audit';
 
+const score = ref(null);
+
+// 路由跳回
 const router = useRouter();
+function goBack() {
+    router.push({
+        name: 'Audit',
+    })
+    localStorage.removeItem('userInfo');
+}
+
+const basicInfoStore = useBasicInfoStore();
 
 //学期列表
 const termList = reactive<Array<TermList>>([]);
 
-// 查询个人劳动信息参数
-const searchLaborInfo = reactive({
-    term: '',
-    laborType: '',
-})
-
 // 个人信息
-const userInfo = reactive<UserInfo>({
-    name: 'cc',
-    college: '计算机科学与工程学院',
-    grade: '2021级',
-    class: '信息安全三班',
-    studentNo: '2105030305',
-    score: 1,
+const userInfo = reactive<UserInfo>(JSON.parse(localStorage.getItem('userInfo')));
+
+const laborType = (index) => {
+    if (index === 1) return '日常劳动记录'
+    else if (index === 2) return '集中实践劳动记录'
+    else if (index === 3) return '社会实践劳动记录'
+    else if (index === 4) return '其他劳动记录'
+}
+
+// 分页数据
+const currentPage = ref(1);
+const pageSize = ref(10);
+const pageSizes = reactive([10, 20, 30, 50]);
+
+// 查询个人劳动信息参数
+const searchLaborRecord = reactive({
+    studentId: userInfo.studentId,
+    termId: '',
+    typeId: '',
+    current: currentPage,
+    size: pageSize,
 })
 
-function goBack() {
-    router.push({
-        name: 'Audit'
-    })
-}
+const loading = ref(false);
+const total = ref(0);
+const recordList: any = reactive([]);
 
 // 默认展示的组件
 const activeIndex = ref("0")
 
+function queryLaborRecord() {
+    loading.value = true;
+    getLaborRecordList(searchLaborRecord).then((res) => {
+        recordList.length = 0;
+        total.value = res.data.total;
+        recordList.push(...res.data.dataList);
+        loading.value = false;
+    })
+}
 
-function handleSelect() {
+function handleSelect(index) {
+    searchLaborRecord.typeId = index;
+    queryLaborRecord();
 
 }
 
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles',
-  },
-]
-
-defineExpose({
-
+onMounted(() => {
+    basicInfoStore.getTermList(termList);
+    queryLaborRecord();
 })
 </script>
   
-<style scoped>
-</style>
+<style scoped></style>
 

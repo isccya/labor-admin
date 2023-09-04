@@ -18,7 +18,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="状态">
-          <el-select v-model="formInline.state" placeholder="请选择状态" clearable>
+          <el-select v-model="formInline.checked" placeholder="请选择状态" clearable>
             <el-option v-for="item in stateList" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -55,7 +55,7 @@
         <el-table-column label="操作" align="center">
           <template #default="scope">
             <el-button v-if="scope.row.isConfirm === 1" type="primary">修改</el-button>
-            <el-button v-else type="primary" @click="jumpToDetail()">审核</el-button>
+            <el-button v-else type="primary" @click="jumpToDetail(scope.row)">审核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -97,9 +97,10 @@ const router = useRouter();
 
 const basicInfoStore = useBasicInfoStore();
 
-function jumpToDetail() {
+function jumpToDetail(userInfo) {
+  localStorage.setItem('userInfo',JSON.stringify(userInfo));
   router.push({
-    name: "Detail"
+    name: "Detail",
   })
 }
 
@@ -132,9 +133,9 @@ const formInline = reactive({
   collegeId: '',
   grade: '',
   classId: '',
-  state: '',
-  current: currentPage, //当前页码
-  size: pageSize, //页码显示数
+  checked: '',
+  current: currentPage,
+  size: pageSize,
 })
 
 const loading = ref(false);
@@ -178,7 +179,7 @@ function handleQuery() {
 // 重置表单
 function resetQuery() {
   formInline.collegeId = ''
-  formInline.state = ''
+  formInline.checked = ''
   formInline.grade = ''
   formInline.classId = ''
 }

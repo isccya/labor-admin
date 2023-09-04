@@ -23,25 +23,29 @@ export interface LaborList {
 
 export interface UserInfo{
     /*
+    * 是否被审核 0-否 1-是
+    */ 
+    checkted:number,
+    /*
     * 姓名
     */
-    name:string,
+    studentName:string,
     /*
     * 学院
     */
-    college:string,
+    collegeName:string,
     /*
     * 年级
     */
-    grade:string,
+    grade:string|number,
     /*
     * 班级
     */
-    class:string,
+    className:string,
     /*
     * 学号
     */
-    studentNo:string,
+    studentId:string,
     /*
     * 成绩
     */

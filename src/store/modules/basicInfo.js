@@ -5,6 +5,7 @@ const useBasicInfoStore = defineStore(
     'basicInfo',
     {
         state: () => ({
+            auditUser:{},
             termList: [],
             collegeList: [],
             gradeList: []
@@ -42,7 +43,8 @@ const useBasicInfoStore = defineStore(
                 else {
                     GradeList.push(...this.gradeList);
                 }
-            }
+            },
+            
         }
     },
 )
