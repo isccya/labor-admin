@@ -67,7 +67,7 @@ async function ModifyScore(formEl: FormInstance | undefined) {
                         type: 'success',
                         message: '修改成功'
                     })
-                    emits('updateAuditDetail', scoreForm.score);
+                    emits('updateAuditDetail', scoreForm);
                     formEl.resetFields();
                 } else {
                     ElMessage({

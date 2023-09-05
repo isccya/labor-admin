@@ -64,8 +64,8 @@ async function JudgeScore(formEl: FormInstance | undefined) {
                         type: 'success',
                         message: '评分成功'
                     })
-                    emits('updateAuditDetail', scoreForm.score);
-                    formEl.resetFields();
+                    emits('updateAuditDetail', scoreForm);
+                    // formEl.resetFields();
                 } else {
                     ElMessage({
                         type: 'error',

@@ -49,5 +49,9 @@ export interface UserInfo{
     /*
     * 成绩
     */
-    score:number
+    score:number,
+    /*
+    * 评语
+    */
+    remark:string
 }

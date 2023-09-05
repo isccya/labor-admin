@@ -45,7 +45,7 @@
                     <el-table-column prop="laborDate" label="劳动时间" align='center' />
                     <el-table-column prop="address" label="操作" align='center'>
                         <template #default>
-                            <el-button type="primary">查看</el-button>
+                            <el-button type="primary" @click="clickDetailInfo">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -58,6 +58,7 @@
         </div>
         <AddScore ref="addScore" @updateAuditDetail="updateAuditDetail" />
         <ModifyScore ref="modifyScore" @updateAuditDetail="updateAuditDetail"/>
+        <DetailInfo ref="detailInfo"/>
     </div>
 </template>
   
@@ -69,10 +70,12 @@ import { TermList } from '../laborPlan/type';
 import useBasicInfoStore from '../../store/modules/basicInfo';
 import AddScore from './components/AddScore.vue'
 import ModifyScore from './components/ModifyScore.vue'
+import DetailInfo from './components/DetailInfo.vue'
 import { getLaborDetail, getLaborRecordList } from '../../api/audit';
 
 const addScore :any = ref(null);
 const modifyScore :any = ref(null);
+const detailInfo :any = ref(null);
 
 // 路由跳回
 const router = useRouter();
@@ -146,8 +149,14 @@ function clickModifyScore(userInfo){
     modifyScore.value.deliverStudent(userInfo);
 }
 
-function updateAuditDetail(score){
-    userInfo.score = score;
+function clickDetailInfo(){
+    detailInfo.value.detailInfoVisable = true;
+}
+
+function updateAuditDetail(scoreForm){
+    userInfo.score = scoreForm.score;
+    userInfo.remark = scoreForm.remark;
+    userInfo.checked = 1;
     console.log(userInfo);
     localStorage.clear();
     localStorage.setItem('userInfo',JSON.stringify(userInfo));
