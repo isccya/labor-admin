@@ -16,7 +16,7 @@
                 <div class="px-5"><span>成绩: {{ userInfo.score }} <span v-if="!userInfo.score"> 无</span> </span></div>
             </div>
             <div class="mr-10">
-                <el-button type="primary">评分</el-button>
+                <el-button type="primary" @click="clickScore(userInfo.studentId)">评分</el-button>
             </div>
             <el-page-header @back="goBack()">
                 <template #content>
@@ -27,7 +27,7 @@
 
         <div class="border mt-5 h-170 ">
             <el-menu mode="horizontal" :default-active="activeIndex" :ellipsis="false" @select="handleSelect">
-                <el-menu-item index="0">全部</el-menu-item>
+                <el-menu-item index="">全部</el-menu-item>
                 <el-menu-item index="1">日常劳动记录</el-menu-item>
                 <el-menu-item index="2">集中实践劳动记录</el-menu-item>
                 <el-menu-item index="3">社会实践劳动记录</el-menu-item>
@@ -55,7 +55,7 @@
                     :total="total" @size-change="queryLaborRecord" @current-change="queryLaborRecord" />
             </div>
         </div>
-        <Score ref="score" @updateAuditList="" />
+        <Score ref="score" @updateAuditDetail="updateAuditDetail" />
     </div>
 </template>
   
@@ -66,9 +66,9 @@ import type { UserInfo } from '../audit/type'
 import { TermList } from '../laborPlan/type';
 import useBasicInfoStore from '../../store/modules/basicInfo';
 import Score from './components/Score.vue'
-import { getLaborDetailList, getLaborRecordList } from '../../api/audit';
+import { getLaborDetail, getLaborRecordList } from '../../api/audit';
 
-const score = ref(null);
+const score :any = ref(null);
 
 // 路由跳回
 const router = useRouter();
@@ -81,17 +81,24 @@ function goBack() {
 
 const basicInfoStore = useBasicInfoStore();
 
-//学期列表
-const termList = reactive<Array<TermList>>([]);
-
 // 个人信息
 const userInfo = reactive<UserInfo>(JSON.parse(localStorage.getItem('userInfo')));
+
+//学期列表
+const termList = reactive<Array<TermList>>([]);
 
 const laborType = (index) => {
     if (index === 1) return '日常劳动记录'
     else if (index === 2) return '集中实践劳动记录'
     else if (index === 3) return '社会实践劳动记录'
     else if (index === 4) return '其他劳动记录'
+}
+
+// 选择劳动类型
+const activeIndex = ref("")
+function handleSelect(index) {
+    searchLaborRecord.typeId = index;
+    queryLaborRecord();
 }
 
 // 分页数据
@@ -108,12 +115,10 @@ const searchLaborRecord = reactive({
     size: pageSize,
 })
 
+// 劳动记录数据
 const loading = ref(false);
 const total = ref(0);
 const recordList: any = reactive([]);
-
-// 默认展示的组件
-const activeIndex = ref("0")
 
 function queryLaborRecord() {
     loading.value = true;
@@ -125,10 +130,17 @@ function queryLaborRecord() {
     })
 }
 
-function handleSelect(index) {
-    searchLaborRecord.typeId = index;
-    queryLaborRecord();
+// 评分
+function clickScore(id){
+    score.value.scoreVisible = true;
+    score.value.deliverStudentId(id);
+}
 
+function updateAuditDetail(score){
+    userInfo.score = score;
+    console.log(userInfo);
+    localStorage.clear();
+    localStorage.setItem('userInfo',JSON.stringify(userInfo));
 }
 
 onMounted(() => {
