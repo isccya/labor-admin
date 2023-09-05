@@ -16,7 +16,8 @@
                 <div class="px-5"><span>成绩: {{ userInfo.score }} <span v-if="!userInfo.score"> 无</span> </span></div>
             </div>
             <div class="mr-10">
-                <el-button type="primary" v-if="userInfo.checked === 0" @click="clickScore(userInfo.studentId)">评分</el-button>
+                <el-button type="primary" v-if="userInfo.checked === 0"
+                    @click="clickScore(userInfo.studentId)">评分</el-button>
                 <el-button type="primary" v-else @click="clickModifyScore(userInfo)">修改</el-button>
             </div>
             <el-page-header @back="goBack()">
@@ -44,8 +45,8 @@
                     <el-table-column prop="termName" label="学期" align='center' />
                     <el-table-column prop="laborDate" label="劳动时间" align='center' />
                     <el-table-column prop="address" label="操作" align='center'>
-                        <template #default>
-                            <el-button type="primary" @click="clickDetailInfo">查看</el-button>
+                        <template #default="scope">
+                            <el-button type="primary" @click="clickDetailInfo(scope.row.recordId)">查看</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -57,8 +58,8 @@
             </div>
         </div>
         <AddScore ref="addScore" @updateAuditDetail="updateAuditDetail" />
-        <ModifyScore ref="modifyScore" @updateAuditDetail="updateAuditDetail"/>
-        <DetailInfo ref="detailInfo"/>
+        <ModifyScore ref="modifyScore" @updateAuditDetail="updateAuditDetail" />
+        <DetailInfo ref="detailInfo" />
     </div>
 </template>
   
@@ -73,9 +74,9 @@ import ModifyScore from './components/ModifyScore.vue'
 import DetailInfo from './components/DetailInfo.vue'
 import { getLaborDetail, getLaborRecordList } from '../../api/audit';
 
-const addScore :any = ref(null);
-const modifyScore :any = ref(null);
-const detailInfo :any = ref(null);
+const addScore: any = ref(null);
+const modifyScore: any = ref(null);
+const detailInfo: any = ref(null);
 
 // 路由跳回
 const router = useRouter();
@@ -127,6 +128,12 @@ const loading = ref(false);
 const total = ref(0);
 const recordList: any = reactive([]);
 
+// 劳动记录详情
+const detail: any = reactive({
+    content: '',
+    imgUrls: [],
+})
+
 function queryLaborRecord() {
     loading.value = true;
     getLaborRecordList(searchLaborRecord).then((res) => {
@@ -138,28 +145,35 @@ function queryLaborRecord() {
 }
 
 // 评分
-function clickScore(id){
+function clickScore(id) {
     addScore.value.scoreVisible = true;
     addScore.value.deliverStudentId(id);
 }
 
 // 修改评分
-function clickModifyScore(userInfo){
+function clickModifyScore(userInfo) {
     modifyScore.value.scoreVisible = true;
     modifyScore.value.deliverStudent(userInfo);
 }
 
-function clickDetailInfo(){
+// 查看详情
+function clickDetailInfo(recordId) {
     detailInfo.value.detailInfoVisable = true;
+    getLaborDetail(recordId).then((res) => {
+        detail.content = res.data.content;
+        detail.imgUrls.length = 0;
+        detail.imgUrls.push(...res.data.imgUrls);
+        detailInfo.value.deliverDetail(detail);
+    })
 }
 
-function updateAuditDetail(scoreForm){
+function updateAuditDetail(scoreForm) {
     userInfo.score = scoreForm.score;
     userInfo.remark = scoreForm.remark;
     userInfo.checked = 1;
     console.log(userInfo);
     localStorage.clear();
-    localStorage.setItem('userInfo',JSON.stringify(userInfo));
+    localStorage.setItem('userInfo', JSON.stringify(userInfo));
 }
 
 onMounted(() => {

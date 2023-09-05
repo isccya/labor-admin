@@ -19,10 +19,13 @@ export function getLaborRecordList(params){
 }
 
 // 获取劳动详情
-export function getLaborDetail(){
+export function getLaborDetail(recordId){
     return request({
-        url:'/admin/record/detatil',
+        url:'/admin/record/detail',
         method:"GET",
+        params:{
+            recordId,
+        }
     })
 }
 
