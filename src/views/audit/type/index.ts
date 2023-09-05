@@ -25,7 +25,7 @@ export interface UserInfo{
     /*
     * 是否被审核 0-否 1-是
     */ 
-    checkted:number,
+    checked:number,
     /*
     * 姓名
     */

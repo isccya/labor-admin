@@ -42,3 +42,12 @@ export function judgeScore(data){
         data,
     })
 }
+
+// 修改评分
+export function modifyScore(data){
+    return request({
+        url:'/admin/score',
+        method:'PUT',
+        data,
+    })
+}

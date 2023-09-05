@@ -44,8 +44,8 @@
         <el-table-column prop="className" label="班级" align="center" />
         <el-table-column label="审核状态" align="center">
           <template #default="scope">
-            <div v-if="scope.row.score">
-              <el-tag type="primary" size="large">已审核</el-tag>
+            <div v-if="scope.row.checked === 1">
+              <el-tag size="large">已审核</el-tag>
             </div>
             <div v-else>
               <el-tag type="danger" size="large">待审核</el-tag>
@@ -67,7 +67,7 @@
     </div>
 
     <div>
-      <el-dialog v-model="dialogVisible" title="Tips" width="30%" before-close="">
+      <el-dialog v-model="dialogVisible" title="Tips" width="30%">
         <span>This is a message</span>
         <template #footer>
           <span class="dialog-footer">

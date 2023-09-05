@@ -16,7 +16,8 @@
                 <div class="px-5"><span>成绩: {{ userInfo.score }} <span v-if="!userInfo.score"> 无</span> </span></div>
             </div>
             <div class="mr-10">
-                <el-button type="primary" @click="clickScore(userInfo.studentId)">评分</el-button>
+                <el-button type="primary" v-if="userInfo.checked === 0" @click="clickScore(userInfo.studentId)">评分</el-button>
+                <el-button type="primary" v-else @click="clickModifyScore(userInfo)">修改</el-button>
             </div>
             <el-page-header @back="goBack()">
                 <template #content>
@@ -55,7 +56,8 @@
                     :total="total" @size-change="queryLaborRecord" @current-change="queryLaborRecord" />
             </div>
         </div>
-        <Score ref="score" @updateAuditDetail="updateAuditDetail" />
+        <AddScore ref="addScore" @updateAuditDetail="updateAuditDetail" />
+        <ModifyScore ref="modifyScore" @updateAuditDetail="updateAuditDetail"/>
     </div>
 </template>
   
@@ -65,10 +67,12 @@ import { useRouter } from 'vue-router';
 import type { UserInfo } from '../audit/type'
 import { TermList } from '../laborPlan/type';
 import useBasicInfoStore from '../../store/modules/basicInfo';
-import Score from './components/Score.vue'
+import AddScore from './components/AddScore.vue'
+import ModifyScore from './components/ModifyScore.vue'
 import { getLaborDetail, getLaborRecordList } from '../../api/audit';
 
-const score :any = ref(null);
+const addScore :any = ref(null);
+const modifyScore :any = ref(null);
 
 // 路由跳回
 const router = useRouter();
@@ -132,8 +136,14 @@ function queryLaborRecord() {
 
 // 评分
 function clickScore(id){
-    score.value.scoreVisible = true;
-    score.value.deliverStudentId(id);
+    addScore.value.scoreVisible = true;
+    addScore.value.deliverStudentId(id);
+}
+
+// 修改评分
+function clickModifyScore(userInfo){
+    modifyScore.value.scoreVisible = true;
+    modifyScore.value.deliverStudent(userInfo);
 }
 
 function updateAuditDetail(score){
