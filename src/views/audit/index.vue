@@ -78,12 +78,13 @@ import type { LaborList } from './type'
 import type { CollegeList } from '../laborPlan/type';
 import type { ClassList } from '../student/type'
 import { ElTable } from 'element-plus'
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useBasicInfoStore from '../../store/modules/basicInfo';
 import { getClassList } from '../../api/basicInfo';
 import { getAuditList } from '../../api/audit'
 import OneScore from './components/OneScore.vue'
 import { exportLaborScore } from '../../api/audit';
+import { number } from 'echarts';
 
 const oneScore: any = ref(null);
 
@@ -91,10 +92,19 @@ const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 const basicInfoStore = useBasicInfoStore();
 
 const router = useRouter();
+const route = useRoute();
 function jumpToDetail(userInfo) {
   localStorage.setItem('userInfo', JSON.stringify(userInfo));
   router.push({
     name: "Detail",
+    query: {
+      collegeId: formInline.collegeId,
+      grade: formInline.grade,
+      classId: formInline.classId,
+      checked: formInline.checked,
+      current: formInline.current,
+      size: formInline.size,
+    }
   })
 }
 
@@ -123,14 +133,27 @@ const currentPage = ref(1);
 const pageSize = ref(10);
 const pageSizes = reactive([10, 20, 30, 50]);
 
-const formInline = reactive({
+let formInline: any = reactive({
   collegeId: '',
   grade: '',
   classId: '',
   checked: '',
   current: currentPage,
   size: pageSize,
-})
+});
+
+(function () {
+  if (route.query.current !== undefined) {
+    formInline.collegeId = route.query.collegeId;
+    formInline.grade = route.query.grade;
+    formInline.classId = route.query.classId;
+    formInline.checked = route.query.checked;
+    formInline.current = route.query.current;
+    currentPage.value = parseInt(formInline.current);
+    formInline.size = route.query.size;
+    pageSize.value = parseInt(formInline.size);
+  }
+})()
 
 const loading = ref(false);
 const total = ref(0);
@@ -188,7 +211,7 @@ function clickOneExport() {
     ElMessage.error("请选择年级后再导出！！！");
     return;
   }
-  if (formInline.grade === "") {
+  if (formInline.classId === "") {
     ElMessage.error("请选择班级后再导出！！！");
     return;
   }
@@ -197,12 +220,12 @@ function clickOneExport() {
     grade: formInline.grade,
     classId: formInline.classId,
   }).then((res) => {
-    const blob = new Blob([res],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' })
+    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' })
     const a = document.createElement('a') // 转换完成，创建一个a标签用于下载
-          a.download = `劳动成绩单.xls`
-          a.href = window.URL.createObjectURL(blob)
-          a.click()
-          a.remove()
+    a.download = `劳动成绩单.xls`
+    a.href = window.URL.createObjectURL(blob)
+    a.click()
+    a.remove()
   })
 }
 
@@ -210,16 +233,21 @@ function clickOneExport() {
 let selectionScore = reactive([]);
 function handleSelectionChange(selection) {
   selectionScore = selection;
-  console.log(selectionScore);
 }
 function clickOneScore() {
+  if (selectionScore.length === 0) {
+    ElMessage({
+      message: '请选择要评分的学生',
+      type: 'error',
+    })
+    return;
+  }
   oneScore.value.scoreVisible = true;
   const fields = selectionScore.map((items: any) => {
     return items.studentId;
   })
   oneScore.value.deliverStudentId(fields);
 }
-
 
 onMounted(() => {
   basicInfoStore.getCollegeList(collegeList);

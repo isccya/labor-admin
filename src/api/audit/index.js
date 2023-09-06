@@ -39,20 +39,11 @@ export function exportLaborScore(params){
     })
 }
 
-// 评分
+// 评分(包括修改)
 export function judgeScore(data){
     return request({
         url:'/admin/score',
         method:'POST',
-        data,
-    })
-}
-
-// 修改评分
-export function modifyScore(data){
-    return request({
-        url:'/admin/score',
-        method:'PUT',
         data,
     })
 }

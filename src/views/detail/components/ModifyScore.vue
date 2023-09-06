@@ -25,7 +25,7 @@
   
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
-import { modifyScore } from '../../../api/audit'
+import { judgeScore } from '../../../api/audit'
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus'
 
@@ -60,7 +60,7 @@ async function ModifyScore(formEl: FormInstance | undefined) {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            modifyScore(scoreForm).then((res) => {
+            judgeScore(scoreForm).then((res) => {
                 scoreVisible.value = false;
                 if (res.code === 200) {
                     ElMessage({

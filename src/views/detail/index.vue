@@ -65,7 +65,7 @@
   
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import type { UserInfo } from '../audit/type'
 import { TermList } from '../laborPlan/type';
 import useBasicInfoStore from '../../store/modules/basicInfo';
@@ -80,9 +80,18 @@ const detailInfo: any = ref(null);
 
 // 路由跳回
 const router = useRouter();
+const route = useRoute();
 function goBack() {
     router.push({
         name: 'Audit',
+        query: {
+            collegeId: route.query.collegeId,
+            grade: route.query.grade,
+            classId: route.query.classId,
+            checked: route.query.checked,
+            current: route.query.current,
+            size: route.query.size,
+        }
     })
     localStorage.removeItem('userInfo');
 }
