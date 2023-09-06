@@ -30,10 +30,12 @@ export function getLaborDetail(recordId){
 }
 
 // 导出劳动成绩excel表格
-export function exportLaborScore(){
+export function exportLaborScore(params){
     return request({
         url:'/admin/score/excel',
         method:'GET',
+        responseType:'blob',
+        params,
     })
 }
 

@@ -30,12 +30,13 @@
     </div>
 
     <div class="pb-3">
-      <el-button type="primary" @click="oneExport">一键导出</el-button>
-      <el-button type="success">一键评分</el-button>
+      <el-button type="primary" @click="clickOneExport">一键导出</el-button>
+      <el-button type="success" @click="clickOneScore">一键评分</el-button>
     </div>
 
     <div>
-      <el-table :data="tableData" stripe style="width: 100%" border v-loading="loading">
+      <el-table :data="tableData" stripe style="width: 100%" border v-loading="loading" ref="multipleTableRef"
+        @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column label="序号" width="60" type="index" align="center" />
         <el-table-column prop="studentName" label="姓名" align="center" />
@@ -66,19 +67,7 @@
       </div>
     </div>
 
-    <div>
-      <el-dialog v-model="dialogVisible" title="Tips" width="30%">
-        <span>This is a message</span>
-        <template #footer>
-          <span class="dialog-footer">
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="dialogVisible = false">
-              一键导出
-            </el-button>
-          </span>
-        </template>
-      </el-dialog>
-    </div>
+    <OneScore ref="oneScore" @updateAuditList="queryAuditList" />
   </div>
 </template>
 
@@ -86,19 +75,24 @@
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { ElMessage } from "element-plus";
 import type { LaborList } from './type'
-import { useRouter } from 'vue-router';
 import type { CollegeList } from '../laborPlan/type';
 import type { ClassList } from '../student/type'
+import { ElTable } from 'element-plus'
+import { useRouter } from 'vue-router';
 import useBasicInfoStore from '../../store/modules/basicInfo';
 import { getClassList } from '../../api/basicInfo';
 import { getAuditList } from '../../api/audit'
+import OneScore from './components/OneScore.vue'
+import { exportLaborScore } from '../../api/audit';
 
-const router = useRouter();
+const oneScore: any = ref(null);
 
+const multipleTableRef = ref<InstanceType<typeof ElTable>>()
 const basicInfoStore = useBasicInfoStore();
 
+const router = useRouter();
 function jumpToDetail(userInfo) {
-  localStorage.setItem('userInfo',JSON.stringify(userInfo));
+  localStorage.setItem('userInfo', JSON.stringify(userInfo));
   router.push({
     name: "Detail",
   })
@@ -179,13 +173,13 @@ function handleQuery() {
 // 重置表单
 function resetQuery() {
   formInline.collegeId = ''
-  formInline.checked = ''
   formInline.grade = ''
   formInline.classId = ''
+  formInline.checked = ''
 }
-const dialogVisible = ref(false)//是否展示一键导出对话框
 
-function oneExport() {
+// 一键导出
+function clickOneExport() {
   if (formInline.collegeId === "") {
     ElMessage.error("请选择院系后再导出！！！");
     return;
@@ -194,8 +188,38 @@ function oneExport() {
     ElMessage.error("请选择年级后再导出！！！");
     return;
   }
-  dialogVisible.value = true;
+  if (formInline.grade === "") {
+    ElMessage.error("请选择班级后再导出！！！");
+    return;
+  }
+  exportLaborScore({
+    collegeId: formInline.collegeId,
+    grade: formInline.grade,
+    classId: formInline.classId,
+  }).then((res) => {
+    const blob = new Blob([res],{ type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' })
+    const a = document.createElement('a') // 转换完成，创建一个a标签用于下载
+          a.download = `劳动成绩单.xls`
+          a.href = window.URL.createObjectURL(blob)
+          a.click()
+          a.remove()
+  })
 }
+
+// 一键评分
+let selectionScore = reactive([]);
+function handleSelectionChange(selection) {
+  selectionScore = selection;
+  console.log(selectionScore);
+}
+function clickOneScore() {
+  oneScore.value.scoreVisible = true;
+  const fields = selectionScore.map((items: any) => {
+    return items.studentId;
+  })
+  oneScore.value.deliverStudentId(fields);
+}
+
 
 onMounted(() => {
   basicInfoStore.getCollegeList(collegeList);
