@@ -76,7 +76,7 @@ service.interceptors.response.use(res => {
     return res.data
   }
   if (code === 401) {
-    if (isRelogin.show) {
+    if (!isRelogin.show) {
       let info = '登录状态已过期，您可以继续留在该页面，或者重新登录';
       if (res.data.description == "账号或密码错误") {
         info = '账号或密码错误'

@@ -50,7 +50,7 @@
             </el-statistic>
             <div class="statistic-footer">
               <div class="footer-item">
-                <span>比昨天:</span>
+                <span>今日登陆次数:</span>
                 <span class="green">
                   24
                   <el-icon size="18">
@@ -68,7 +68,7 @@
             <el-statistic :value="98500">
               <template #title>
                 <div style="display: inline-flex; align-items: center">
-                  未审核总数
+                  未审核人数
                   <el-tooltip effect="dark" content="Number of users who logged into the product in one day"
                     placement="top">
                     <el-icon style="margin-left: 4px" :size="12">

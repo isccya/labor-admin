@@ -44,7 +44,7 @@
                 <span>劳动内容</span>
             </div>
             <div class="pb-3">
-                <span style="color: red">注意:</span> <span> 院级劳动记录条数不得少于校级</span>
+                <span style="color: red">注意:</span> <span> 院级劳动记录条数不得少于校级,请先查看对应学期校级劳动计划数</span>
             </div>
             <div>
                 <el-form-item label="日常劳动记录" label-width="200px" prop="dailyAmount">
