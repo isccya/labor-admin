@@ -1,11 +1,10 @@
 <template>
   <div class="app-container">
-
     <el-row :gutter="50">
       <el-col :span="8">
         <el-card shadow="always" class="flex justify-center">
           <div class="statistic-card">
-            <el-statistic :value="98500">
+            <el-statistic :value="totalPlan ">
               <template #title>
                 <div style="display: inline-flex; align-items: center">
                   劳动计划总数
@@ -22,7 +21,7 @@
               <div class="footer-item">
                 <span>今日新增:</span>
                 <span class="green">
-                  24
+                  {{todayPlan}}
                   <el-icon size="18">
                     <CaretTop />
                   </el-icon>
@@ -35,7 +34,7 @@
       <el-col :span="8">
         <el-card shadow="always" class="flex justify-center">
           <div class="statistic-card">
-            <el-statistic :value="98500">
+            <el-statistic :value="totalLogin">
               <template #title>
                 <div style="display: inline-flex; align-items: center">
                   系统登陆次数
@@ -52,7 +51,7 @@
               <div class="footer-item">
                 <span>今日登陆次数:</span>
                 <span class="green">
-                  24
+                  {{todayLogin}}
                   <el-icon size="18">
                     <CaretTop />
                   </el-icon>
@@ -65,7 +64,7 @@
       <el-col :span="8">
         <el-card shadow="always" class="flex justify-center">
           <div class="statistic-card">
-            <el-statistic :value="98500">
+            <el-statistic :value="unCheckTotal">
               <template #title>
                 <div style="display: inline-flex; align-items: center">
                   未审核人数
@@ -82,8 +81,7 @@
               <div class="footer-item">
                 <span>今日已审核:</span>
                 <span class="green">
-                  24
-
+                  {{todayCheck}}
                 </span>
               </div>
             </div>
@@ -107,7 +105,7 @@
               </template>
             </el-progress>
             <div>学生今日提交记录数:</div>
-            <div class="font-bold">900</div>
+            <div class="font-bold">{{todayRecord}}</div>
           </el-col>
           <el-col :span="12" class="text-center">
             <el-progress type="dashboard" :percentage="80">
@@ -116,7 +114,7 @@
               </template>
             </el-progress>
             <div>学生昨日提交记录数:</div>
-            <div class="font-bold">900</div>
+            <div class="font-bold">{{yesterdayRecord}}</div>
           </el-col>
         </el-row>
       </el-card>
@@ -125,8 +123,34 @@
   </div>
 </template>
 
-<script setup name="Index">
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { getHomeData } from '../api/home';
 
+const totalPlan = ref(0);
+const todayPlan = ref(0);
+const totalLogin = ref(0);
+const todayLogin = ref(0);
+const unCheckTotal = ref(0);
+const todayCheck = ref(0);
+const todayRecord = ref(0);
+const yesterdayRecord = ref(0);
+
+
+onMounted(() => {
+  getHomeData().then((res) => {
+    ({
+      totalPlan: totalPlan.value,
+      todayPlan: todayPlan.value,
+      totalLogin: totalLogin.value,
+      todayLogin: todayLogin.value,
+      unCheckTotal: unCheckTotal.value,
+      todayCheck: todayCheck.value,
+      todayRecord: todayRecord.value,
+      yesterdayRecord: yesterdayRecord.value,
+    } = res.data);
+  })
+})
 </script>
 
 <style scoped lang="scss">
