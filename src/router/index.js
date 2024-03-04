@@ -191,6 +191,7 @@ export const dynamicRoutes = [
 const router = createRouter({
   history: createWebHistory(),
   routes: constantRoutes,
+  // scrollBehavior，来管理组件滚动行为
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition

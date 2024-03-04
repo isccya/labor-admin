@@ -107,7 +107,7 @@ const collegeList = reactive<Array<CollegeList>>([]);
 //年级列表
 const gradeList = reactive([]);
 
-const laborPlanForm = reactive<LaborPlanForm>({
+let laborPlanForm = reactive<LaborPlanForm>({
     planId: '',
     planRank: '',
     collegeId: '',
@@ -191,6 +191,7 @@ const deliverLaborPlanForm = (laborPlanInfo) => {
         societyAmount: laborPlanForm.societyAmount,
         otherAmount: laborPlanForm.otherAmount,
     } = laborPlanInfo);
+    laborPlanForm = reactive({...laborPlanInfo})
 }
 
 defineExpose({

@@ -54,6 +54,7 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center">
+
           <template #default="scope">
             <el-button v-if="scope.row.isConfirm === 1" type="primary">修改</el-button>
             <el-button v-else type="primary" @click="jumpToDetail(scope.row)">审核</el-button>
@@ -84,7 +85,8 @@ import { getClassList } from '../../api/basicInfo';
 import { getAuditList } from '../../api/audit'
 import OneScore from './components/OneScore.vue'
 import { exportLaborScore } from '../../api/audit';
-import { number } from 'echarts';
+import { getToken } from '@/utils/auth'
+
 
 const oneScore: any = ref(null);
 
@@ -215,19 +217,43 @@ function clickOneExport() {
     ElMessage.error("请选择班级后再导出！！！");
     return;
   }
-  exportLaborScore({
+
+  // 在主线程中创建 Web Worker
+  const worker = new Worker(new URL('excelExport.js', import.meta.url), { type: 'module' });
+
+  // 向 Web Worker 发送数据
+  worker.postMessage({
     collegeId: formInline.collegeId,
     grade: formInline.grade,
     classId: formInline.classId,
-  }).then((res) => {
-    const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' })
+    token: getToken()
+    // exportLaborScore:exportLaborScore,  //webworker里面不能传不能克隆的参数,比如dom元素.
+  });
+
+  worker.onmessage = res => {
+    console.log(res);
+    let blob = res.data
     const a = document.createElement('a') // 转换完成，创建一个a标签用于下载
     a.download = `劳动成绩单.xls`
     a.href = window.URL.createObjectURL(blob)
     a.click()
     a.remove()
-  })
+  }
+
+  // exportLaborScore({
+  //   collegeId: formInline.collegeId,
+  //   grade: formInline.grade,
+  //   classId: formInline.classId,
+  // }).then((res) => {
+  //   const blob = new Blob([res], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' })
+  //   const a = document.createElement('a') // 转换完成，创建一个a标签用于下载
+  //   a.download = `劳动成绩单.xls`
+  //   a.href = window.URL.createObjectURL(blob)
+  //   a.click()
+  //   a.remove()
+  // })
 }
+
 
 // 一键评分
 let selectionScore = reactive([]);
